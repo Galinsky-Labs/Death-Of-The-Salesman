@@ -1,0 +1,19 @@
+.deployment { min-width: 0; }
+.deployment-header { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
+.deployment button, .deployment input, .deployment select { min-height: 44px; max-width: 100%; }
+.bucket-selection { display: flex; gap: 1rem; flex-wrap: wrap; border: 1px solid var(--border, #53627c); border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+.bucket-selection label { display: flex; align-items: center; gap: .5rem; }
+.deployment-layout { display: grid; grid-template-columns: minmax(240px, 280px) minmax(0, 1fr); gap: 1rem; }
+.deployment-buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1rem; align-items: start; }
+.deployment-bucket { min-height: 260px; border: 1px dashed var(--border, #6b7c9b); border-radius: 16px; padding: 1rem; }
+.deployment ul { list-style: none; padding: 0; }
+.deployment li { display: flex; flex-direction: column; gap: .5rem; padding: 1rem; border: 1px solid var(--border, #53627c); border-radius: 12px; margin-bottom: .75rem; overflow-wrap: anywhere; }
+.deployment [draggable="true"] { cursor: grab; }
+.deployment [draggable="true"]:active { cursor: grabbing; }
+.deployment label { display: flex; flex-direction: column; gap: .35rem; }
+.deployment-error { color: var(--text, #fff); padding: 1rem; border: 2px solid #db5275; border-radius: 10px; }
+.deployment dialog { background: var(--surface, #172238); color: var(--text, #f4f7ff); border: 1px solid #667894; border-radius: 16px; max-width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; }
+.deployment dialog::backdrop { background: #000a; }
+.deployment form { display: grid; gap: 1rem; }
+.deployment-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+@media (max-width: 767px) { .deployment-layout { grid-template-columns: minmax(0, 1fr); } .deployment-header { flex-direction: column; } }

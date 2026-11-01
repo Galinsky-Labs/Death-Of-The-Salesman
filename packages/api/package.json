@@ -3,6 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "start": "node dist/index.js" },
-  "dependencies": { "@dots/domain": "workspace:*" }
+  "scripts": {
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@dots/auth": "workspace:*",
+    "@dots/database": "workspace:*",
+    "@dots/domain": "workspace:*",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
+  }
 }

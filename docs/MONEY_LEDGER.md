@@ -37,6 +37,22 @@ not reserve a spending cap or authorize a charge. Spending policies and atomic r
 behavior belong to DOTS-033/034. This implementation makes no external calls, starts no worker and
 adds no credential or paid resource.
 
+## Bounded read-only journal history
+
+`LedgerRepository.journalHistory` provides a tenant-authorized, owner/admin-only
+view of posted journals and exact signed minor-unit account postings. Pages default
+to 25 journals and cannot exceed 100. A deterministic `(occurred_at, journal_id)`
+cursor retains all six PostgreSQL fractional second digits; JavaScript's
+millisecond `Date` serialization risks skipping same-millisecond journals.
+The page is read in one SQL statement and its entries must contain two or more
+postings summing to zero. Unauthorized memberships, malformed cursors and
+unbounded requests are rejected. This is evidence, **not** an invoice, payment
+receipt or spending authority.
+
+Synthetic PostgreSQL-engine tests cover pagination, exact amounts exceeding
+JavaScript's safe-integer range, cursor validation and tenant authorization.
+Invoice/reservation journal provenance and anti-double-counting are still pending.
+
 ## Verification, migration and remaining work
 
 `tests/ledger.test.mjs` exercises exact conversion above the JavaScript safe-integer boundary,

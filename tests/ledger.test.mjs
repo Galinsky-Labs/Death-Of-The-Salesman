@@ -25,6 +25,26 @@ test('ledger SQL: balanced atomic journals, exact reconciliation, idempotency, i
     const journal={id:randomUUID(),organizationId:org,currency:'USD',idempotencyKey:'synthetic-opening',postings:[{accountId:cash.id,amountMinor:'9007199254740993'},{accountId:offset.id,amountMinor:'-9007199254740993'}]};
     assert.equal((await repo.postJournal(actor,journal)).replay,false);assert.equal((await repo.postJournal(actor,{...journal,id:randomUUID()})).replay,true);
     assert.deepEqual(Object.fromEntries((await repo.balances(actor)).map(r=>[r.accountId,r.balanceMinor])),reconcile([cash,offset],[journal]));
+    const firstHistory=await repo.journalHistory(actor,{limit:1});
+    assert.equal(firstHistory.journals.length,1);
+    assert.equal(firstHistory.journals[0].id,journal.id);
+    assert.match(firstHistory.journals[0].occurredAt,/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z$/);
+    assert.deepEqual(firstHistory.journals[0].postings.map(p=>p.amountMinor).sort(),journal.postings.map(p=>p.amountMinor).sort());
+    assert.equal(firstHistory.nextCursor,null);
+    const secondJournal={...journal,id:randomUUID(),idempotencyKey:'synthetic-second',
+      postings:[{accountId:cash.id,amountMinor:'7'},{accountId:offset.id,amountMinor:'-7'}]};
+    await repo.postJournal(actor,secondJournal);
+    const firstPage=await repo.journalHistory(actor,{limit:1});
+    assert.ok(firstPage.nextCursor);
+    const secondPage=await repo.journalHistory(actor,{limit:1,after:firstPage.nextCursor});
+    assert.equal(secondPage.journals.length,1);
+    assert.equal(secondPage.nextCursor,null);
+    assert.deepEqual(new Set([...firstPage.journals,...secondPage.journals].map(j=>j.id)),new Set([journal.id,secondJournal.id]));
+    assert.equal((await repo.journalHistory(actor)).journals.length,2);
+    for(const limit of [0,-1,1.5,101])assert.throws(()=>repo.journalHistory(actor,{limit}),/limit/);
+    assert.throws(()=>repo.journalHistory(actor,{after:{id:'invalid',occurredAt:firstPage.nextCursor.occurredAt}}),/cursor/);
+    assert.throws(()=>repo.journalHistory(actor,{after:{id:journal.id,occurredAt:'2026-11-01T00:00:00Z'}}),/cursor/);
+    await assert.rejects(repo.journalHistory({organizationId:other,membershipId:owner}),/not authorized/);
     await assert.rejects(repo.postJournal(actor,{...journal,postings:[{accountId:cash.id,amountMinor:'2'},{accountId:offset.id,amountMinor:'-2'}]}),/Idempotency/);
     assert.throws(()=>validateJournal({...journal,postings:[{accountId:cash.id,amountMinor:'2'},{accountId:offset.id,amountMinor:'-1'}]},[cash,offset]),/balance/);
     await assert.rejects(repo.balances({organizationId:other,membershipId:owner}),/not authorized/);

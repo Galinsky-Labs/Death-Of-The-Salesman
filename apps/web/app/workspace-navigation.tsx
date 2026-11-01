@@ -59,7 +59,7 @@ export function WorkspaceNavigation({ children, preview = true }: { children: Re
             <details className="user-controls">
               <summary aria-label="Open user controls">
                 <span className="user-monogram" aria-hidden="true">{preview ? "PG" : "?"}</span>
-                <span className="user-name">{preview ? "Workspace owner" : "Owner session required"}</span>
+                <span className="user-name">{preview ? "Workspace owner" : "Owner access"}</span>
               </summary>
               <div className="user-menu">
                 <button type="button">Preferences</button>

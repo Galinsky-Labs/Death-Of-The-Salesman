@@ -24,10 +24,12 @@
     "test:failure-contract": "node scripts/verify-test-failure.mjs",
     "typecheck": "tsc --build",
     "db:migrate": "node scripts/migrate.mjs up",
-    "db:rollback": "node scripts/migrate.mjs down"
+    "db:rollback": "node scripts/migrate.mjs down",
+    "test:deployment:browser": "node scripts/test-deployment-browser.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.14",
+    "@playwright/test": "1.64.1",
     "@types/node": "24.10.1",
     "typescript": "5.9.3"
   }

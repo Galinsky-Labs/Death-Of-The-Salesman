@@ -27,6 +27,7 @@
     "db:rollback": "node scripts/migrate.mjs down"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.14",
     "@types/node": "24.10.1",
     "typescript": "5.9.3"
   }

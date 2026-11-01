@@ -82,10 +82,7 @@ export function deriveOverview(input: OverviewInput): OverviewView {
       : explanation,
   });
 
-  return Object.freeze({
-    mode: input.source === "synthetic" ? "Synthetic preview" : "Verified observation",
-    observedAt: input.observedAt,
-    metrics: Object.freeze([
+  const metrics: OverviewMetric[] = [
       measured("agents", "Agent identities", input.agentIdentities,
         "Roster records in the stated source, not a count of running workers."),
       measured("running", "Running agents", input.runningAgents,
@@ -111,6 +108,10 @@ export function deriveOverview(input: OverviewInput): OverviewView {
           ? "Additional consent, suppression, policy and send-approval gates still apply."
           : "No email, messaging, payment or model dispatch can be initiated by this preview.",
       },
-    ]),
+  ];
+  return Object.freeze({
+    mode: input.source === "synthetic" ? "Synthetic preview" : "Verified observation",
+    observedAt: input.observedAt,
+    metrics: Object.freeze(metrics),
   });
 }

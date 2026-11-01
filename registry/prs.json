@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-01T17:56:43Z",
+  "observedAt": "2026-11-01T19:00:53Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -633,7 +633,9 @@
       "id": "DOTS-026",
       "title": "Desktop visual drag-and-drop deployment board",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        33
+      ],
       "phase": "F2",
       "priority": "P0",
       "dependsOn": [
@@ -730,7 +732,9 @@
       "id": "DOTS-030",
       "title": "Append-only audit and actor provenance",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        34
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -776,7 +780,9 @@
       "id": "DOTS-032",
       "title": "Money and invoice ledger domain",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        35
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -3895,13 +3901,49 @@
       "id": 5110003862,
       "number": 32,
       "title": "DOTS-028: Evidence-grounded owner dashboard and truthful KPI cards",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/32",
       "createdAt": "2026-11-01T17:55:40Z",
-      "updatedAt": "2026-11-01T17:56:43Z",
+      "updatedAt": "2026-11-01T17:58:03Z",
+      "mergedAt": "2026-11-01T17:58:02Z",
+      "closedAt": "2026-11-01T17:58:02Z",
+      "draft": false
+    },
+    {
+      "id": 5110157069,
+      "number": 33,
+      "title": "DOTS-026: Desktop visual drag-and-drop deployment board",
+      "state": "open",
+      "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/33",
+      "createdAt": "2026-11-01T18:14:57Z",
+      "updatedAt": "2026-11-01T18:28:35Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false
+    },
+    {
+      "id": 5110402852,
+      "number": 34,
+      "title": "DOTS-030: Append-only audit and actor provenance",
+      "state": "open",
+      "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/34",
+      "createdAt": "2026-11-01T18:42:21Z",
+      "updatedAt": "2026-11-01T18:42:21Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": true
+    },
+    {
+      "id": 5110472219,
+      "number": 35,
+      "title": "DOTS-032: Money and invoice ledger domain",
+      "state": "open",
+      "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/35",
+      "createdAt": "2026-11-01T18:50:50Z",
+      "updatedAt": "2026-11-01T19:00:53Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": true
     }
   ]
 }

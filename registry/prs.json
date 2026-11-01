@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-10-18T16:53:39Z",
+  "observedAt": "2026-10-26T10:16:12Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -582,7 +582,9 @@
       "id": "DOTS-024",
       "title": "Hover/focus/tap agent detail preview",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        30
+      ],
       "phase": "F2",
       "priority": "P0",
       "dependsOn": [
@@ -3874,6 +3876,18 @@
       "mergedAt": null,
       "closedAt": null,
       "draft": false
+    },
+    {
+      "number": 30,
+      "title": "DOTS-024: Add accessible verified agent detail preview",
+      "state": "open",
+      "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/30",
+      "createdAt": "2026-10-26T10:16:12Z",
+      "updatedAt": "2026-10-26T10:16:12Z",
+      "mergedAt": null,
+      "closedAt": null,
+      "draft": true,
+      "id": 5015730113
     }
   ]
 }

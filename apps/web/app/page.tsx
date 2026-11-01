@@ -18,6 +18,23 @@ const rosterAgents: readonly RosterAgent[] = [
     status: "waiting",
     statusLabel: "Waiting — no provider",
     availability: "No provider or campaign assigned",
+    detail: {
+      currentTask: "Awaiting an owner-approved synthetic campaign brief",
+      strategy: "No strategy assigned; outbound and paid execution remain disabled",
+      observedAt: "2026-10-26T08:20:00.000Z",
+      lastActivityAt: "2026-10-26T08:18:00.000Z",
+      spendMinor: 0,
+      currency: "USD",
+      events: [
+        {
+          id: "event-eddie-preview-ready",
+          occurredAt: "2026-10-26T08:18:00.000Z",
+          label: "Synthetic profile prepared",
+          result: "Preview evidence recorded; no provider or campaign activated",
+          verified: true,
+        },
+      ],
+    },
   },
   {
     id: "agent-harry-wormwood",
@@ -27,6 +44,23 @@ const rosterAgents: readonly RosterAgent[] = [
     status: "inactive",
     statusLabel: "Inactive — dispatch disabled",
     availability: "Outbound actions disabled",
+    detail: {
+      currentTask: "No active task",
+      strategy: "Research remains disabled until owner authority and source policy are configured",
+      observedAt: "2026-10-26T08:20:00.000Z",
+      lastActivityAt: "2026-10-26T08:15:00.000Z",
+      spendMinor: 0,
+      currency: "USD",
+      events: [
+        {
+          id: "event-harry-dispatch-disabled",
+          occurredAt: "2026-10-26T08:15:00.000Z",
+          label: "Dispatch gate checked",
+          result: "Outbound actions remained disabled",
+          verified: true,
+        },
+      ],
+    },
   },
 ];
 

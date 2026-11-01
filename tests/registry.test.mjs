@@ -12,7 +12,7 @@ test('canonical plan validates and planned unit count matches',()=>{
  const {document,items,pullRequests}=parsePrRegistry(raw,source.repository);
  assert.equal(document.plannedPrCount,items.length);
  assert.ok(items.length>100);
- assert.equal(pullRequests.length,2);
+ assert.equal(pullRequests.length,3);
  assert.equal(items[0].sourceItemId,'DOTS-001');
  assert.equal(items[1].sourceItemId,'DOTS-002');
  assert.deepEqual(items[2].numbers,[4]);
@@ -37,7 +37,7 @@ test('canonical plan validates and planned unit count matches',()=>{
  assert.deepEqual(items[21].numbers,[27]);
  assert.deepEqual(items[22].numbers,[28]);
  assert.deepEqual(items[24].numbers,[29]);
- assert.ok(items.slice(23).filter((_,index)=>index!==1).every(x=>x.numbers.length===0));
+ assert.ok(items.slice(25).every(x=>x.numbers.length===0));
 });
 
 test('future PR titles use stable exact work IDs',()=>{
@@ -77,7 +77,7 @@ test('rejects cross-repo dependencies using this repository',()=>{
 
 test('only real created PR numbers are linked; future work does not claim completed PRs',()=>{
  const refs=source.units.flatMap(u=>u.prs);
- assert.deepEqual(refs,[1,2,4,5,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,27,28,29]);
+ assert.deepEqual(refs,[1,2,4,5,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,27,28,30,29]);
  assert.ok(source.pullRequests.find(p=>p.number===1)?.mergedAt);
  assert.ok(['open','closed'].includes(source.pullRequests.find(p=>p.number===2)?.state), 'dated snapshot may be open or closed');
 });

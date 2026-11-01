@@ -55,8 +55,8 @@ and API origin for the harness before running it.
 
 The browser checks native drag/drop, unsaved settings, in-flight placement, confirmed refresh,
 conflict rollback, lost-confirmation reconciliation and hide/show preservation. It also rejects an
-oversized request and an untrusted origin. Screenshots in `docs/evidence/DOTS-026/` use synthetic data
-at 1440, 1024, 768, 390 and 320 pixels. These are local acceptance evidence, not a deployed service
+oversized request and an untrusted origin. The harness writes local screenshots to `docs/evidence/DOTS-026/` using synthetic data
+at 1440, 1024, 768, 390 and 320 pixels. Binary screenshot upload was rejected by the source-only gateway (`INPUT_REJECTED: Source file must contain UTF-8 text`); the images remain reproducible local output. These are local acceptance evidence, not a deployed service
 or evidence of worker activity. Full touch, keyboard and unassignment acceptance remains DOTS-027.
 
 No schema migration is introduced. Rollback consists of reverting this unit's source changes; existing

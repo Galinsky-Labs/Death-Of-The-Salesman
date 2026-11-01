@@ -310,7 +310,7 @@
 
 **Dependencies:** DOTS-019, DOTS-025, DOTS-023  
 **External prerequisites:** None  
-**Priority:** P0 · **GitHub PRs:** none created (planned only)
+**Priority:** P0 · **GitHub PRs:** #33 (open; review pending)
 
 ### DOTS-027 — Touch and keyboard assignment alternatives
 
@@ -353,7 +353,7 @@
 
 **Dependencies:** DOTS-007, DOTS-010  
 **External prerequisites:** None  
-**Priority:** P0 · **GitHub PRs:** none created (planned only)
+**Priority:** P0 · **GitHub PRs:** #34 (draft; CI migration gate blocked)
 
 ### DOTS-031 — Transactional outbox and idempotent event intake
 
@@ -373,7 +373,7 @@
 
 **Dependencies:** DOTS-007, DOTS-008  
 **External prerequisites:** None  
-**Priority:** P0 · **GitHub PRs:** none created (planned only)
+**Priority:** P0 · **GitHub PRs:** #35 (draft; ledger evidence work incomplete)
 
 ### DOTS-033 — Hierarchical $0 spending policies
 

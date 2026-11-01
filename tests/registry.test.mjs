@@ -12,7 +12,8 @@ test('canonical plan validates and planned unit count matches',()=>{
  const {document,items,pullRequests}=parsePrRegistry(raw,source.repository);
  assert.equal(document.plannedPrCount,items.length);
  assert.ok(items.length>100);
- assert.equal(pullRequests.length,4);
+ assert.ok(pullRequests.length >= 7, 'verified PR snapshot must include the newly created work units');
+ assert.deepEqual(pullRequests.map(p=>p.number),[...new Set(pullRequests.map(p=>p.number))].sort((a,b)=>a-b));
  assert.equal(items[0].sourceItemId,'DOTS-001');
  assert.equal(items[1].sourceItemId,'DOTS-002');
  assert.deepEqual(items[2].numbers,[4]);
@@ -37,7 +38,10 @@ test('canonical plan validates and planned unit count matches',()=>{
  assert.deepEqual(items[21].numbers,[27]);
  assert.deepEqual(items[22].numbers,[28]);
  assert.deepEqual(items[24].numbers,[29]);
- assert.ok(items.slice(25).every(x=>x.sourceItemId === 'DOTS-028' ? x.numbers[0] === 32 : x.numbers.length === 0));
+ const newlyObserved=new Map([['DOTS-026',33],['DOTS-028',32],['DOTS-030',34],['DOTS-032',35]]);
+ for(const item of items.slice(25))assert.deepEqual(item.numbers,
+   newlyObserved.has(item.sourceItemId)?[newlyObserved.get(item.sourceItemId)]:[],
+   'unexpected PR mapping for '+item.sourceItemId);
 });
 
 test('future PR titles use stable exact work IDs',()=>{
@@ -75,9 +79,19 @@ test('rejects cross-repo dependencies using this repository',()=>{
  assert.throws(()=>parse(d),/Invalid external prerequisites|Invalid local dependencies|Invalid cross-repository dependencies/);
 });
 
-test('only real created PR numbers are linked; future work does not claim completed PRs',()=>{
+test('registered PR mappings retain their verified identities and never imply completion',()=>{
  const refs=source.units.flatMap(u=>u.prs);
- assert.deepEqual(refs,[1,2,4,5,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,27,28,30,29,32]);
- assert.ok(source.pullRequests.find(p=>p.number===1)?.mergedAt);
- assert.ok(['open','closed'].includes(source.pullRequests.find(p=>p.number===2)?.state), 'dated snapshot may be open or closed');
+ assert.equal(refs.length,new Set(refs).size,'one work unit must own each mapped PR');
+ for(const number of [1,2,4,5,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,27,28,30,29,32]){
+   assert.ok(refs.includes(number),'existing verified PR mapping disappeared: '+number);
+ }
+ const snapshot=new Map(source.pullRequests.map(p=>[p.number,p]));
+ for(const [id,number] of [['DOTS-026',33],['DOTS-028',32],['DOTS-030',34],['DOTS-032',35]]){
+   assert.deepEqual(source.units.find(u=>u.id===id)?.prs,[number]);
+   assert.ok(snapshot.has(number),'newly mapped PR must have a real observed GitHub snapshot');
+   assert.equal(snapshot.get(number).url,`https://github.com/${source.repository}/pull/${number}`);
+ }
+ assert.equal(snapshot.get(32).mergedAt,'2026-11-01T17:58:02Z');
+ assert.ok(snapshot.get(1)?.mergedAt);
+ assert.ok(['open','closed'].includes(snapshot.get(2)?.state));
 });

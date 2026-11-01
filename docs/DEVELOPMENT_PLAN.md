@@ -330,7 +330,7 @@
 
 **Dependencies:** DOTS-017, DOTS-022, DOTS-012  
 **External prerequisites:** None  
-**Priority:** P0 · **GitHub PRs:** none created (planned only)
+**Priority:** P0 · **GitHub PRs:** #32 (read-only preview groundwork; live dashboard, date filters and production observation remain acceptance gates)
 
 ### DOTS-029 — Responsive screenshot and interaction regression suite
 

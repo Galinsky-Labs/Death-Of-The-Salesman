@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-10-26T10:16:12Z",
+  "observedAt": "2026-11-01T17:56:43Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -680,7 +680,9 @@
       "id": "DOTS-028",
       "title": "Visual overview and truthful KPI placeholders",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        32
+      ],
       "phase": "F2",
       "priority": "P0",
       "dependsOn": [
@@ -3869,25 +3871,37 @@
       "id": 4910926584,
       "number": 2,
       "title": "DOTS-002: Canonical end-to-end development roadmap and agent instructions",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/2",
       "createdAt": "2026-10-18T16:47:48Z",
-      "updatedAt": "2026-10-18T16:47:48Z",
-      "mergedAt": null,
-      "closedAt": null,
+      "updatedAt": "2026-10-18T16:57:56Z",
+      "mergedAt": "2026-10-18T16:57:56Z",
+      "closedAt": "2026-10-18T16:57:56Z",
       "draft": false
     },
     {
       "number": 30,
       "title": "DOTS-024: Add accessible verified agent detail preview",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/30",
       "createdAt": "2026-10-26T10:16:12Z",
-      "updatedAt": "2026-10-26T10:16:12Z",
+      "updatedAt": "2026-11-01T17:00:08Z",
+      "mergedAt": "2026-11-01T17:00:08Z",
+      "closedAt": "2026-11-01T17:00:08Z",
+      "draft": false,
+      "id": 5015730113
+    },
+    {
+      "id": 5110003862,
+      "number": 32,
+      "title": "DOTS-028: Evidence-grounded owner dashboard and truthful KPI cards",
+      "state": "open",
+      "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/32",
+      "createdAt": "2026-11-01T17:55:40Z",
+      "updatedAt": "2026-11-01T17:56:43Z",
       "mergedAt": null,
       "closedAt": null,
-      "draft": true,
-      "id": 5015730113
+      "draft": false
     }
   ]
 }

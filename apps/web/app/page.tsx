@@ -8,6 +8,8 @@ import {
 } from "./ui-primitives";
 import { AgentRoster, type RosterAgent } from "./agent-roster";
 import { WorkspaceNavigation } from "./workspace-navigation";
+import { OverviewCards } from "./overview-cards";
+import { deriveOverview } from "./overview-model";
 
 const rosterAgents: readonly RosterAgent[] = [
   {
@@ -70,6 +72,19 @@ const services = [
   { name: "Worker", status: "Disabled", state: "inactive" },
 ] as const;
 
+const overview = deriveOverview({
+  source: "synthetic",
+  observedAt: null,
+  agentIdentities: rosterAgents.length,
+  runningAgents: null,
+  activeCampaigns: null,
+  contacts: null,
+  verifiedDeals: null,
+  receivedRevenueCents: null,
+  paidSpendingCapCents: 0,
+  outboundEnabled: false,
+});
+
 export default function Home() {
   return (
     <WorkspaceNavigation>
@@ -85,6 +100,8 @@ export default function Home() {
         </div>
         <StatusChip state="inactive" label="Zero-cost mode" />
       </header>
+
+      <OverviewCards overview={overview} />
 
       <section className="primitive-section" aria-labelledby="agents-heading">
         <div className="section-heading">

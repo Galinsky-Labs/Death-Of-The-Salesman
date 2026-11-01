@@ -607,3 +607,70 @@ h2 { margin: 0; font-size: 1.125rem; line-height: 1.4; }
   .roster-details { grid-template-columns: minmax(0, 1fr); }
   .roster-pagination { justify-content: space-between; }
 }
+
+/* DOTS-028: observational KPI cards; unknown metrics are never displayed as zero. */
+.overview-panel {
+  margin-top: var(--space-8);
+}
+.overview-panel .section-heading {
+  align-items: end;
+}
+.overview-timestamp {
+  max-width: 270px;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: right;
+}
+.overview-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+}
+.overview-kpi {
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
+}
+.overview-kpi dt {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.overview-value {
+  margin: var(--space-3) 0;
+  font-size: clamp(1.4rem, 2.1vw, 1.85rem);
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+.overview-provenance {
+  display: inline-block;
+  margin: 0 0 var(--space-3);
+  padding: 4px 9px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-size: 0.725rem;
+  font-weight: 800;
+}
+.overview-explanation {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+@media (max-width: 1024px) {
+  .overview-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .overview-panel .section-heading { align-items: start; }
+  .overview-timestamp { max-width: none; text-align: left; }
+}
+@media (max-width: 480px) {
+  .overview-kpis { grid-template-columns: minmax(0, 1fr); }
+}

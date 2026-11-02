@@ -74,3 +74,28 @@ Resume this same branch/PR to implement invoice/reservation journal linkage, pre
 double-counting of supporting evidence, expose the resulting tenant-scoped read/reconciliation
 methods, expand negative and database tests, resolve protected CI integration, and inspect actual
 current-head checks. Keep the PR draft until these requirements are implemented.
+
+
+## November 1 reconciliation implementation (awaiting full verification)
+
+The draft now requires invoice and reservation facts to cite exact supporting journal
+postings. Each positive phase requires one positive posting in an account of the same
+phase/kind and currency. Zero invoice phases must have no evidence. The database
+checks these rules at transaction commit and uniquely consumes each supporting
+posting, preventing reuse across facts. Facts and links are immutable; corrections
+require new accounting records. Reservation settlement/state transitions remain the
+separate atomic protocol in DOTS-034; this foundation does not authorize spending.
+
+`financialRecords` reads a bounded single-statement page of invoices/reservations
+and supporting evidence, validates reconciliation, and returns exact per-currency
+**page totals**. Those totals do not claim to cover the whole portfolio. Missing,
+wrong-kind, wrong-currency, wrong-amount and reused evidence fail closed. Empty
+invoice facts remain visible. Owner/admin may read; only a current owner may write.
+
+Three portable reconciliation tests passed using Node's built-in TypeScript erasure.
+This is not a TypeScript typecheck, full suite or PostgreSQL test result. Locked
+dependency installs failed on package metadata (`ERR_PNPM_NO_OFFLINE_META` offline;
+`ERR_PNPM_META_FETCH_FAIL` on the normal registry fetch). No checks or dependency
+policy were weakened. Database and negative tests are committed for actual CI.
+The prior exact-head database job failed; current implementation remains draft
+until full checks and protected workflow integration are resolved.

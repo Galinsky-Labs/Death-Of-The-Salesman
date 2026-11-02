@@ -6,6 +6,9 @@ export type Posting = { accountId: string; amountMinor: string };
 export type Journal = { id: string; organizationId: string; currency: Currency; idempotencyKey: string; postings: readonly Posting[] };
 export type Reservation = { id: string; organizationId: string; accountId: string; currency: Currency; amountMinor: string; state: "open" | "settled" | "released" };
 export type InvoiceAmounts = { currency: Currency; allocatedMinor: string; incurredMinor: string; paidMinor: string };
+export type PostingEvidence = { journalId: string; accountId: string };
+export type InvoiceEvidence = { allocated?: PostingEvidence; incurred?: PostingEvidence; paid?: PostingEvidence };
+export type LedgerFact = { id: string; kind: "invoice" | "reservation"; currency: Currency; phase: "allocated" | "incurred" | "paid" | "reserved"; amountMinor: string; journalId: string; accountId: string };
 const MAX = 9223372036854775807n;
 const MIN = -9223372036854775808n;
 export function currency(value: string): Currency {
@@ -27,7 +30,7 @@ export function decimalToMinor(value: string, code: Currency): string {
 }
 export function validateJournal(journal: Journal, accounts: readonly BudgetAccount[]): void {
   currency(journal.currency);
-  if (!journal.idempotencyKey.trim() || journal.idempotencyKey.length > 120 || journal.postings.length < 2 || journal.postings.length > 200) throw new Error("Invalid journal shape");
+  if (!journal.idempotencyKey.trim() || journal.idempotencyKey !== journal.idempotencyKey.trim() || journal.idempotencyKey.length > 120 || journal.postings.length < 2 || journal.postings.length > 200) throw new Error("Invalid journal shape");
   const ids = new Set<string>(); let total = 0n;
   for (const posting of journal.postings) {
     const account = accounts.find(a => a.id === posting.accountId && a.organizationId === journal.organizationId);
@@ -60,4 +63,40 @@ export function validateInvoice(invoice: InvoiceAmounts): void {
 export function validateReservation(reservation: Reservation, account: BudgetAccount): void {
   if (reservation.organizationId !== account.organizationId || reservation.accountId !== account.id || reservation.currency !== account.currency) throw new Error("Reservation account tenant/currency mismatch");
   if (minor(reservation.amountMinor) === 0n || !["open", "settled", "released"].includes(reservation.state)) throw new Error("Invalid reservation");
+}
+
+
+export type FinancialRecord = {
+  id:string;kind:"invoice"|"reservation";currency:Currency;accountId?:string;
+  amounts:Partial<Record<"allocated"|"incurred"|"paid"|"reserved",string>>;
+  evidence:{phase:string;journalId:string;accountId:string;amountMinor:string;currency:string;accountKind:string}[];
+};
+/** Exact reconciliation of a bounded evidence page; no exchange rates or payment authority. */
+export function reconcileFinancialRecords(records:readonly FinancialRecord[]):Record<string,Record<string,string>> {
+  const seenFacts=new Set<string>(),seenPostings=new Set<string>();
+  const totals:Record<string,Record<string,bigint>>={};
+  for(const record of records){
+    currency(record.currency);
+    if(seenFacts.has(record.id))throw new Error("Duplicate financial fact");seenFacts.add(record.id);
+    const phases=record.kind==="invoice"?["allocated","incurred","paid"] as const:["reserved"] as const;
+    if(Object.keys(record.amounts).length!==phases.length||Object.keys(record.amounts).some(phase=>!phases.some(p=>p===phase)))throw new Error("Invalid financial phases");
+    if(record.kind==="invoice")validateInvoice({currency:record.currency,allocatedMinor:record.amounts.allocated!,incurredMinor:record.amounts.incurred!,paidMinor:record.amounts.paid!});
+    const remaining=new Set<string>();
+    for(const phase of phases){
+      const amount=minor(record.amounts[phase]);
+      if(record.kind==="reservation"&&amount===0n)throw new Error("Invalid reservation");
+      if(amount>0n)remaining.add(phase);
+      const total=totals[record.currency]??(totals[record.currency]={});
+      total[phase]=(total[phase]??0n)+amount;
+    }
+    for(const evidence of record.evidence){
+      const key=evidence.journalId+":"+evidence.accountId;
+      if(seenPostings.has(key)||!remaining.delete(evidence.phase)||evidence.currency!==record.currency||evidence.accountKind!==evidence.phase||
+        evidence.amountMinor!==record.amounts[evidence.phase as keyof typeof record.amounts]||
+        record.kind==="reservation"&&record.accountId!==evidence.accountId)throw new Error("Financial evidence does not reconcile");
+      minor(evidence.amountMinor);seenPostings.add(key);
+    }
+    if(remaining.size)throw new Error("Missing financial evidence");
+  }
+  return Object.fromEntries(Object.entries(totals).map(([code,phases])=>[code,Object.fromEntries(Object.entries(phases).map(([phase,amount])=>[phase,amount.toString()]))]));
 }

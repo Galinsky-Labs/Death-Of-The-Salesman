@@ -12,7 +12,7 @@ test("audit: real SQL captures high-risk writes atomically, preserves provenance
   try {
     const dir=new URL("../database/migrations/",import.meta.url);
     const names=(await readdir(dir)).filter(p=>p.endsWith(".up.sql")).sort();
-    for(const name of names.filter(p=>!p.startsWith("0010"))) await db.exec(await readFile(new URL(name,dir),"utf8"));
+    for(const name of names.filter(p=>p<"0010")) await db.exec(await readFile(new URL(name,dir),"utf8"));
     for(const [id,slug] of [[org,"first"],[other,"second"]]) await db.query("INSERT INTO app.organizations(id,slug,display_name) VALUES($1,$2,'Synthetic organization')",[id,slug]);
     for(const [id,organization,role] of [[owner,org,"owner"],[foreign,other,"owner"],[manager,org,"sales_manager"]]) {
       await db.query("INSERT INTO app.owner_users(id,identity_subject,display_name) VALUES($1,$2,'Synthetic actor')",[id,id]);
@@ -20,6 +20,7 @@ test("audit: real SQL captures high-risk writes atomically, preserves provenance
     }
     const up=await readFile(new URL("0010_append_only_audit.up.sql",dir),"utf8");
     await db.exec(up);
+    for(const name of names.filter(p=>p>"0010_append_only_audit.up.sql")) await db.exec(await readFile(new URL(name,dir),"utf8"));
     await db.exec("CREATE ROLE audit_runtime NOLOGIN NOBYPASSRLS; GRANT USAGE ON SCHEMA app TO audit_runtime; GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE ON ALL TABLES IN SCHEMA app TO audit_runtime; GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA app TO audit_runtime; SET ROLE audit_runtime;");
     const client={query:(sql,values)=>db.query(sql,values)};
     const repo=new AuditEventRepository(client), catalog=new ProjectCatalogRepository(client);
@@ -108,8 +109,10 @@ test("audit: real SQL captures high-risk writes atomically, preserves provenance
     await assert.rejects(withTransaction(client,async tx=>{await setAuditContext(tx,{...context,membershipId:foreign});await tx.query("UPDATE app.projects SET label='Not authorized' WHERE id=$1",[project.id]);}),/not authorized/);
     assert.equal((await catalog.get({kind:"project",organizationId:org,id:project.id})).label,"Changed again");
     await db.exec("RESET ROLE");
+    for(const name of names.filter(p=>p>"0010_append_only_audit.up.sql").reverse()) await db.exec(await readFile(new URL(name.replace(".up.sql",".down.sql"),dir),"utf8"));
     await db.exec(await readFile(new URL("0010_append_only_audit.down.sql",dir),"utf8"));
     assert.equal((await db.query("SELECT to_regclass('app.audit_events') AS name")).rows[0].name,null);
     await db.exec(up);assert.equal((await db.query("SELECT count(*)::int AS n FROM app.audit_events")).rows[0].n,0);
   } finally {await db.close();}
 });
+

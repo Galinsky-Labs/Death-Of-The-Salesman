@@ -23,7 +23,9 @@ zeroed after use; JavaScript/process memory and a trusted consuming adapter rema
 explicit trust boundaries, not a hardware memory-erasure guarantee.
 
 The key-provider port must use an approved secret manager in production. It returns
-an active nonsecret key ID/key pair and resolves retained key IDs. Keys must never
+an active nonsecret key ID/key pair and resolves retained key IDs. `rotateEncryptionKey`
+re-encrypts the current value under the active key in a versioned transaction without
+exporting plaintext; stale references and provider identity changes remain denied. Keys must never
 be stored in repository files, database rows, browser requests, logs or environment
 examples. Tests generate synthetic random bytes locally. No insecure default key
 or fallback exists. Key-provider and database errors become redacted generic errors.
@@ -49,7 +51,7 @@ records credential metadata changes, not ciphertext, key bytes or plaintext valu
 The metadata references a current encrypted version through a deferred constraint,
 so partial rotations roll back. Use a checked-out connection per transaction.
 
-Eleven portable tests pass for authenticated encryption, tamper/binding failures,
+Twelve portable tests pass for authenticated encryption, tamper/binding failures,
 key rotation, unauthorized key access, redacted failures, plaintext cleanup,
 revocation/stale-version predicates, MFA freshness and transaction behavior.
 They use native TypeScript erasure; no TypeScript or SQL pass is claimed from that.

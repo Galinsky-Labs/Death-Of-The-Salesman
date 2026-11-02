@@ -22,9 +22,10 @@ test('bad secret/key material and provider failures produce only redacted errors
  await assert.rejects(new CredentialCipher({active:async()=>{throw Error('never expose key detail');},get:async()=>randomBytes(32)}).seal(reference,Buffer.from('synthetic')),error=>!String(error).includes('never expose'));
  await assert.rejects(new CredentialCipher({active:async()=>({id:'test',bytes:Buffer.alloc(31)}),get:async()=>Buffer.alloc(31)}).seal(reference,Buffer.from('synthetic')),CredentialUnavailableError);
 });
-function db({authorized=true,record,revoked=false,fail=false}={}){const calls=[];return {calls,query:async(sql,args)=>{calls.push({sql,args});
+function db({authorized=true,record,revoked=false,fail=false,updated=false}={}){const calls=[];return {calls,query:async(sql,args)=>{calls.push({sql,args});
  if(sql.includes('SELECT id FROM app.memberships'))return {rows:authorized?[{id:owner}]:[]};
  if(sql.startsWith('SELECT v.key_id'))return {rows:record&&!revoked?[{key_id:record.keyId,nonce:record.nonce,auth_tag:record.tag,ciphertext:record.ciphertext}]:[]};
+ if(sql.startsWith('UPDATE app.integration_credentials')&&updated)return {rows:[{id}]};
  if(sql.startsWith('INSERT INTO app.credential_versions')&&fail)throw Error('driver error with private material');
  return {rows:[]};}};}
 test('unauthorized requests never retrieve an encryption key or store secret bytes',async()=>{
@@ -67,4 +68,13 @@ test('fresh server-verified MFA is required before database or key access',async
   await assert.rejects(repo.list({...context,verifiedMfaAt},'synthetic-provider'),CredentialUnavailableError);
  }
  assert.equal(database.calls.length,0);
+});
+
+test('key-manager rotation re-encrypts the same secret under a new reference without exporting it',async()=>{
+ const keys=keyring(),cipher=new CredentialCipher(keys),secret=randomBytes(32),record=await cipher.seal(reference,secret);keys.rotate();
+ const database=db({record,updated:true}),repo=new CredentialReferenceRepository(database,cipher),next=await repo.rotateEncryptionKey(context,reference);
+ assert.equal(next.version,2);const saved=database.calls.find(c=>c.sql.startsWith('INSERT INTO app.credential_versions')).args;
+ assert.equal(saved[5],'test-key-2');assert.deepEqual(await cipher.open(next,{keyId:saved[5],nonce:saved[6],tag:saved[7],ciphertext:saved[8]}),secret);
+ assert.equal(database.calls.at(-1).sql,'COMMIT');
+ assert.match(database.calls.find(c=>c.sql.startsWith('SELECT v.key_id')).sql,/FOR UPDATE OF c/);
 });

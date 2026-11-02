@@ -41,6 +41,23 @@ export class CredentialReferenceRepository{
    await this.insertVersion(tx,reference,secret);return reference;
   });
  }
+ /** Re-encrypt current secret with the key manager's active key, without exporting it. */
+ async rotateEncryptionKey(context:CredentialAccessContext,expected:CredentialReference):Promise<CredentialReference>{
+  validateCredentialReference(expected);
+  if(context.organizationId!==expected.organizationId||expected.version===2147483647)throw new CredentialUnavailableError();
+  let plaintext:Buffer|undefined;
+  try{return await this.transaction(context,async tx=>{
+   const found=rows(await tx.query(`SELECT v.key_id,v.nonce,v.auth_tag,v.ciphertext FROM app.integration_credentials c JOIN app.credential_versions v
+    ON v.organization_id=c.organization_id AND v.credential_id=c.id AND v.version=c.current_version AND v.provider=c.provider AND v.kind=c.kind
+    WHERE c.organization_id=$1 AND c.id=$2 AND c.provider=$3 AND c.kind=$4 AND c.current_version=$5 AND c.revoked_at IS NULL FOR UPDATE OF c`,[expected.organizationId,expected.id,expected.provider,expected.kind,expected.version]));
+   if(found.length!==1)throw new Error();const r=found[0]!;
+   plaintext=await this.#cipher.open(expected,{keyId:String(r.key_id),nonce:r.nonce as Uint8Array,tag:r.auth_tag as Uint8Array,ciphertext:r.ciphertext as Uint8Array});
+   const reference={...expected,version:expected.version+1};
+   const changed=rows(await tx.query(`UPDATE app.integration_credentials SET current_version=current_version+1,updated_by_membership_id=$6
+    WHERE organization_id=$1 AND id=$2 AND provider=$3 AND kind=$4 AND current_version=$5 AND revoked_at IS NULL RETURNING id`,[expected.organizationId,expected.id,expected.provider,expected.kind,expected.version,context.membershipId]));
+   if(changed.length!==1)throw new Error();await this.insertVersion(tx,reference,plaintext);return reference;
+  });}finally{plaintext?.fill(0);}
+ }
  async revoke(context:CredentialAccessContext,expected:CredentialReference):Promise<boolean>{
   validateCredentialReference(expected);if(context.organizationId!==expected.organizationId)throw new CredentialUnavailableError();
   return this.transaction(context,async tx=>rows(await tx.query(`UPDATE app.integration_credentials SET revoked_at=clock_timestamp(),updated_by_membership_id=$6

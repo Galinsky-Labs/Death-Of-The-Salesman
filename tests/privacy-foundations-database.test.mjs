@@ -20,6 +20,9 @@ test('privacy SQL: bounded retention, live holds, cleanup, tenant export and aud
   await assert.rejects(repo.exportProject({...context,organizationId:other,membershipId:foreign},project.id),/unavailable/);
   await assert.rejects(repo.exportProject({...context,membershipId:foreign},project.id),/not authorized/);
   const request=await repo.request(context,'correct','project',project.id,'OWNER_REQUEST');assert.ok(request);
+  await repo.correct(context,request,{label:'Corrected synthetic',content:{summary:'Corrected'}});
+  assert.equal((await catalog.get({kind:'project',organizationId:org,id:project.id})).version,2);
+  await assert.rejects(repo.correct(context,request,{label:'Replay',content:{}}),/unavailable/);
   await assert.rejects(repo.request({...context,organizationId:other,membershipId:foreign},'delete','project',project.id,'OWNER_REQUEST'),/unavailable/);
   const cached=await repo.putCache(context,{derived:'Synthetic summary'},1),hold=await repo.holdCache(context,cached,'REVIEW_HOLD',60);
   await new Promise(resolve=>setTimeout(resolve,1100));

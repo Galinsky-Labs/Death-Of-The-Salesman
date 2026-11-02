@@ -27,6 +27,8 @@ CREATE TABLE app.privacy_requests (
  kind text NOT NULL CHECK(kind IN ('delete','correct','export')),
  resource_type text NOT NULL CHECK(resource_type IN ('project','offer','derived_cache')),
  resource_id app.entity_id NOT NULL,
+ expected_version bigint,
+ CHECK((resource_type='derived_cache' AND expected_version IS NULL) OR (resource_type<>'derived_cache' AND expected_version IS NOT NULL AND expected_version>0)),
  state text NOT NULL DEFAULT 'pending' CHECK(state IN ('pending','held','completed','rejected')),
  reason_code text NOT NULL CHECK(reason_code ~ '^[A-Z][A-Z0-9_]{0,63}$'),
  created_at timestamptz NOT NULL DEFAULT clock_timestamp(),

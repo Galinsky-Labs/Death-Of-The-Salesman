@@ -58,3 +58,19 @@ test('privacy requests validate kind/resource and reject foreign targets before 
  await assert.rejects(repo.request(context,'delete','project',id,'REQUEST'),/resource unavailable/);
  assert.equal(db.calls.some(c=>c.sql.startsWith('INSERT INTO app.privacy_requests')),false);
 });
+
+test('correction applies the recorded version atomically and rolls back stale updates',async()=>{
+ const calls=[];const database={query:async(sql,args)=>{calls.push({sql,args});
+  if(sql.includes('SELECT id FROM app.memberships'))return {rows:[{id:member}]};
+  if(sql.startsWith('SELECT resource_type'))return {rows:[{resource_type:'project',resource_id:id,expected_version:'7'}]};
+  if(sql.startsWith('UPDATE app.projects'))return {rows:[]};
+  return {rows:[]};}};
+ await assert.rejects(new PrivacyFoundationRepository(database).correct(context,id,{label:'Corrected',content:{summary:'Synthetic correction'}}),/version conflict/);
+ const write=calls.find(c=>c.sql.startsWith('UPDATE app.projects'));assert.equal(write.args[5],'7');assert.match(write.sql,/version=\$6::bigint/);
+ assert.equal(calls.at(-1).sql,'ROLLBACK');assert.equal(calls.some(c=>c.sql.startsWith('UPDATE app.privacy_requests')),false);
+});
+
+test('database failures cannot leak source content through repository errors',async()=>{
+ const database={query:async sql=>{if(sql.includes('SELECT id FROM app.memberships'))return {rows:[{id:member}]};if(sql==='ROLLBACK'||sql==='BEGIN'||sql.startsWith('SELECT set_config'))return {rows:[]};throw Error('private source content in driver detail');}};
+ await assert.rejects(new PrivacyFoundationRepository(database).exportProject(context,id),error=>error.message==='Privacy operation unavailable'&&!String(error).includes('private source'));
+});

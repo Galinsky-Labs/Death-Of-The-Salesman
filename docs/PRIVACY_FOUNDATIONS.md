@@ -27,16 +27,20 @@ The caller must persist the snapshot through the encrypted artifact layer before
 any download. The pure builder independently rejects cross-tenant/parent rows,
 excess children and oversize documents. This is not yet an end-to-end export job.
 
-Six portable tests pass for finite TTL, tenant export, field selection, authorization,
-cleanup query bounds/holds and request validation. Source lint and secret scan pass.
+Eight portable tests pass for finite TTL, tenant export, field selection, authorization,
+cleanup query bounds/holds, request validation, stale corrections and error redaction. Source lint and secret scan pass.
 These use native TypeScript erasure, not full typecheck or PostgreSQL execution.
 An actual PGlite integration test is committed for migration, hold/expiry cleanup,
 tenant export, correction requests, indefinite-retention denial, RLS and rollback;
 no SQL pass is claimed. The local environment lacks installed locked PGlite/TypeScript
 dependencies; earlier locked installs in this run failed package metadata retrieval.
 
+Corrections record the target version at request creation, lock the pending request,
+and update project/offer content plus completion state atomically. Stale versions
+and repeated completed requests are rejected; audit captures metadata only.
+
 Remaining implementation: durable encrypted export execution and authorized expiring
-downloads; delete/correct request transitions and execution with expected versions;
+downloads; delete execution and remaining request state transitions;
 source/artifact retention annotations and hold integration; atomic export recovery;
 full SQL/typecheck/CI verification; scoped protected workflow migration/rollback
 integration. Keep this PR draft and resume this same unit. Migration0014 is a

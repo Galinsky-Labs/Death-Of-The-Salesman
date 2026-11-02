@@ -1,7 +1,7 @@
 # Encrypted credential references (DOTS-041)
 
 Server-only integration credentials are scoped to tenant, provider, credential kind,
-UUID and current version. Public method results and lists contain only this reference
+UUID and current version. Repository method results and lists contain only this reference
 and revocation state. There is no plaintext GET method or public credential HTTP route.
 This unit configures no live provider, KMS, production key, service or paid operation.
 
@@ -47,7 +47,8 @@ Those remain subject to their independent provider/policy/budget gates.
 Migration 0013 enforces tenant/provider identity, current-version
 foreign keys, append-only ciphertext versions, owner-bound writes and irreversible
 revocation. Forced RLS isolates metadata and ciphertext rows. Existing audit capture
-records credential metadata changes, not ciphertext, key bytes or plaintext values.
+records credential metadata changes and exact immutable version numbers, not
+ciphertext, key bytes or plaintext values.
 The metadata references a current encrypted version through a deferred constraint,
 so partial rotations roll back. Use a checked-out connection per transaction.
 

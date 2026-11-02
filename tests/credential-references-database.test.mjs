@@ -32,6 +32,7 @@ test('credential SQL: encrypted-only persistence, tenant/provider isolation, rot
   assert.deepEqual(stored.rows.map(r=>r.key_id),['key-1','key-2']);assert.equal(stored.rows.some(r=>Buffer.from(r.ciphertext).equals(secret)||Buffer.from(r.ciphertext).equals(replacement)),false);
   const audit=new AuditEventRepository(client),events=await audit.list({organizationId:org,membershipId:owner});
   assert.ok(events.some(e=>e.eventType==='integration_credentials.insert'));assert.ok(events.some(e=>e.eventType==='integration_credentials.update'));
+  assert.ok(events.some(e=>e.eventType==='credential_versions.insert'&&e.evidence.version===2));
   assert.equal(JSON.stringify(events).includes(secret.toString('base64')),false);assert.equal(JSON.stringify(events).includes('ciphertext'),false);
   active='key-1';const newest=await repo.rotateEncryptionKey(context,next);assert.equal(newest.version,3);
   await assert.rejects(repo.withCredential(context,next,async()=>assert.fail()),CredentialUnavailableError);

@@ -69,3 +69,15 @@ END $$;
 CREATE TRIGGER credential_version_guard BEFORE INSERT ON app.credential_versions FOR EACH ROW EXECUTE FUNCTION app.guard_credential_version();
 CREATE TRIGGER credential_versions_immutable BEFORE UPDATE OR DELETE ON app.credential_versions FOR EACH ROW EXECUTE FUNCTION app.deny_audit_mutation();
 CREATE TRIGGER credential_versions_no_truncate BEFORE TRUNCATE ON app.credential_versions FOR EACH STATEMENT EXECUTE FUNCTION app.deny_audit_mutation();
+CREATE FUNCTION app.audit_credential_version() RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE actor app.entity_id; correlation app.entity_id;
+BEGIN
+ actor:=NULLIF(current_setting('app.audit_actor_membership_id',true),'')::app.entity_id;
+ correlation:=NULLIF(current_setting('app.audit_correlation_id',true),'')::app.entity_id;
+ INSERT INTO app.audit_events(organization_id,actor_type,actor_membership_id,actor_user_id,actor_role,event_type,policy_version,correlation_id,evidence,entry_hash)
+ VALUES(NEW.organization_id,'human',actor,actor,'owner','credential_versions.insert',
+  current_setting('app.audit_policy_version',true),correlation,
+  jsonb_build_object('recordId',NEW.credential_id::text,'recordType','credential_version','operation','insert','version',NEW.version),'');
+ RETURN NEW;
+END $$;
+CREATE TRIGGER audit_credential_version AFTER INSERT ON app.credential_versions FOR EACH ROW EXECUTE FUNCTION app.audit_credential_version();

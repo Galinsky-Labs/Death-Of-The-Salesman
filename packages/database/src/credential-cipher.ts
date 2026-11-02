@@ -36,7 +36,7 @@ export class CredentialCipher{
   }catch{throw new CredentialUnavailableError();}finally{plaintext?.fill(0);key?.fill(0);}
  }
  async open(reference:CredentialReference,record:EncryptedCredential):Promise<Buffer>{
-  let key:Buffer|undefined,plaintext:Buffer|undefined;
+  let key:Buffer|undefined,plaintext:Buffer|undefined,firstChunk:Buffer|undefined,lastChunk:Buffer|undefined;
   try{
    validateCredentialReference(reference);
    if(!record||typeof record.keyId!=="string"||!/^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/.test(record.keyId)||
@@ -45,7 +45,8 @@ export class CredentialCipher{
    const bytes=await this.#keys.get(record.keyId);
    if(!(bytes instanceof Uint8Array)||bytes.byteLength!==32)throw new Error();key=Buffer.from(bytes);
    const decipher=createDecipheriv("aes-256-gcm",key,record.nonce,{authTagLength:16});decipher.setAAD(aad(reference,record.keyId));decipher.setAuthTag(record.tag);
-   plaintext=Buffer.concat([decipher.update(record.ciphertext),decipher.final()]);return plaintext;
-  }catch{plaintext?.fill(0);throw new CredentialUnavailableError();}finally{key?.fill(0);}
+   firstChunk=decipher.update(record.ciphertext);lastChunk=decipher.final();
+   plaintext=Buffer.concat([firstChunk,lastChunk]);return plaintext;
+  }catch{plaintext?.fill(0);throw new CredentialUnavailableError();}finally{key?.fill(0);firstChunk?.fill(0);lastChunk?.fill(0);}
  }
 }

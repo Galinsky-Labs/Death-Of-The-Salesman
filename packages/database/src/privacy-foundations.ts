@@ -80,7 +80,7 @@ export class PrivacyFoundationRepository{
    if(request.length!==1)throw new PrivacyOperationError("Export request unavailable");
    const created=rows(await tx.query("INSERT INTO app.privacy_export_jobs(organization_id,request_id,expires_at,updated_by_membership_id) VALUES($1,$2,clock_timestamp()+interval '7 days',$3) ON CONFLICT(organization_id,request_id) DO NOTHING RETURNING id",[context.organizationId,requestId,context.membershipId]));
    if(created.length===1)return String(created[0]!.id);
-   const prior=rows(await tx.query("SELECT id FROM app.privacy_export_jobs WHERE organization_id=$1 AND request_id=$2",[context.organizationId,requestId]));
+   const prior=rows(await tx.query("SELECT id FROM app.privacy_export_jobs WHERE organization_id=$1 AND request_id=$2 AND expires_at>clock_timestamp() AND state<>'expired'",[context.organizationId,requestId]));
    if(prior.length!==1)throw new PrivacyOperationError("Export scheduling unconfirmed");return String(prior[0]!.id);
   });
  }

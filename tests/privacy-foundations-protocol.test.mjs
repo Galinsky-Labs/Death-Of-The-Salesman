@@ -74,3 +74,12 @@ test('database failures cannot leak source content through repository errors',as
  const database={query:async sql=>{if(sql.includes('SELECT id FROM app.memberships'))return {rows:[{id:member}]};if(sql==='ROLLBACK'||sql==='BEGIN'||sql.startsWith('SELECT set_config'))return {rows:[]};throw Error('private source content in driver detail');}};
  await assert.rejects(new PrivacyFoundationRepository(database).exportProject(context,id),error=>error.message==='Privacy operation unavailable'&&!String(error).includes('private source'));
 });
+
+test('export requests enqueue one durable job without claiming a completed artifact',async()=>{
+ const calls=[];const database={query:async(sql,args)=>{calls.push({sql,args});
+  if(sql.includes('SELECT id FROM app.memberships')||sql.startsWith('SELECT id FROM app.privacy_requests'))return {rows:[{id}]};
+  if(sql.startsWith('SELECT id FROM app.privacy_export_jobs'))return {rows:[{id:member}]};return {rows:[]};}};
+ assert.equal(await new PrivacyFoundationRepository(database).enqueueExport(context,id),member);
+ const insert=calls.find(c=>c.sql.startsWith('INSERT INTO app.privacy_export_jobs'));assert.deepEqual(insert.args,[org,id,member]);assert.match(insert.sql,/ON CONFLICT\(organization_id,request_id\) DO NOTHING/);
+ assert.equal(calls.at(-1).sql,'COMMIT');assert.equal(insert.sql.includes("'ready'"),false);
+});

@@ -18,7 +18,9 @@ Privacy deletion/correction/export requests store only same-tenant resource refe
 state and bounded reason codes. Request creation verifies target ownership from a
 fixed allowlist; arbitrary table names, foreign targets and non-owners are rejected.
 Export-job schema stores encrypted artifact references rather than plaintext and
-requires finite expiry within seven days. No executor or download route is enabled.
+requires finite expiry within seven days. Export requests enqueue a unique durable pending job per request, with idempotent
+retry and finite expiry; pending never claims that an artifact exists. No executor
+or download route is enabled.
 
 The internal `exportProject` method reads one statement snapshot, explicit tenant
 predicates, a maximum of 100 offers and a bounded content budget. It selects only
@@ -27,7 +29,7 @@ The caller must persist the snapshot through the encrypted artifact layer before
 any download. The pure builder independently rejects cross-tenant/parent rows,
 excess children and oversize documents. This is not yet an end-to-end export job.
 
-Eight portable tests pass for finite TTL, tenant export, field selection, authorization,
+Nine portable tests pass for finite TTL, tenant export, field selection, authorization,
 cleanup query bounds/holds, request validation, stale corrections and error redaction. Source lint and secret scan pass.
 These use native TypeScript erasure, not full typecheck or PostgreSQL execution.
 An actual PGlite integration test is committed for migration, hold/expiry cleanup,

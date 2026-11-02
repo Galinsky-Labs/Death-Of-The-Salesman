@@ -24,6 +24,8 @@ test('privacy SQL: bounded retention, live holds, cleanup, tenant export and aud
   assert.equal((await catalog.get({kind:'project',organizationId:org,id:project.id})).version,2);
   await assert.rejects(repo.correct(context,request,{label:'Replay',content:{}}),/unavailable/);
   await assert.rejects(repo.request({...context,organizationId:other,membershipId:foreign},'delete','project',project.id,'OWNER_REQUEST'),/unavailable/);
+  const exportRequest=await repo.request(context,'export','project',project.id,'OWNER_EXPORT');
+  const job=await repo.enqueueExport(context,exportRequest);assert.equal(await repo.enqueueExport(context,exportRequest),job);
   const cached=await repo.putCache(context,{derived:'Synthetic summary'},1),hold=await repo.holdCache(context,cached,'REVIEW_HOLD',60);
   await new Promise(resolve=>setTimeout(resolve,1100));
   assert.deepEqual(await repo.expireCaches(context),[]);

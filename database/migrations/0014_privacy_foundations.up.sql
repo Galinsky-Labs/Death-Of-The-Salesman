@@ -40,6 +40,7 @@ CREATE TABLE app.privacy_export_jobs (
  id app.entity_id PRIMARY KEY DEFAULT app.new_id(),
  organization_id app.entity_id NOT NULL,
  request_id app.entity_id NOT NULL,
+ UNIQUE(organization_id,request_id),
  state text NOT NULL DEFAULT 'pending' CHECK(state IN ('pending','ready','failed','expired')),
  artifact_id app.entity_id,
  artifact_version integer CHECK(artifact_version>0),

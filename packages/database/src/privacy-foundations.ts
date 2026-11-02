@@ -73,6 +73,17 @@ export class PrivacyFoundationRepository{
    await tx.query("UPDATE app.privacy_requests SET state='completed',updated_by_membership_id=$3 WHERE organization_id=$1 AND id=$2",[context.organizationId,requestId,context.membershipId]);
   });
  }
+ enqueueExport(context:AuditContext,requestId:string):Promise<string>{
+  if(!uuid.test(requestId))throw new PrivacyOperationError("Invalid export request");
+  return this.transaction(context,async tx=>{
+   const request=rows(await tx.query("SELECT id FROM app.privacy_requests WHERE organization_id=$1 AND id=$2 AND kind='export' AND state='pending' FOR UPDATE",[context.organizationId,requestId]));
+   if(request.length!==1)throw new PrivacyOperationError("Export request unavailable");
+   const created=rows(await tx.query("INSERT INTO app.privacy_export_jobs(organization_id,request_id,expires_at,updated_by_membership_id) VALUES($1,$2,clock_timestamp()+interval '7 days',$3) ON CONFLICT(organization_id,request_id) DO NOTHING RETURNING id",[context.organizationId,requestId,context.membershipId]));
+   if(created.length===1)return String(created[0]!.id);
+   const prior=rows(await tx.query("SELECT id FROM app.privacy_export_jobs WHERE organization_id=$1 AND request_id=$2",[context.organizationId,requestId]));
+   if(prior.length!==1)throw new PrivacyOperationError("Export scheduling unconfirmed");return String(prior[0]!.id);
+  });
+ }
  /** Internal plaintext snapshot: encrypt in the artifact layer before any download. */
  exportProject(context:AuditContext,id:string):Promise<Record<string,unknown>>{
   if(!uuid.test(id))throw new PrivacyOperationError("Invalid project export");

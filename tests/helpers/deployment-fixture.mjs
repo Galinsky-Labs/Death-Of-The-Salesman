@@ -15,6 +15,7 @@ export async function deploymentFixture() {
     await db.query("INSERT INTO app.owner_users(id,identity_subject,display_name) VALUES ($1,'synthetic-oidc','Synthetic owner')", [ids.user]);
     await db.query("INSERT INTO app.memberships(id,organization_id,user_id,role) VALUES ($1,$2,$3,'owner')", [ids.owner, ids.org, ids.user]);
     for (const file of migrations.filter(x => x >= "0010_append_only_audit.up.sql")) await db.exec(await readFile(new URL(file, dir), "utf8"));
+    await db.query("SELECT set_config('app.organization_id',$1,false)", [ids.org]);
     for (const p of [ids.project, ids.second]) await db.query("INSERT INTO app.projects(id,organization_id,label,content,updated_by_membership_id) VALUES ($1,$2,'Synthetic project','{}',$3)", [p, ids.org, ids.owner]);
     await db.query("INSERT INTO app.agent_identities(id,organization_id,approved_name_id,display_name,status,updated_by_membership_id) VALUES ($1,$2,1,'Synthetic agent','active',$3)", [ids.agent, ids.org, ids.owner]);
     for (const [b, p] of [[ids.bucket, ids.project], [ids.secondBucket, ids.second]]) await db.query("INSERT INTO app.project_buckets(id,organization_id,project_id,label,default_position,updated_by_membership_id) VALUES ($1,$2,$3,'Synthetic bucket',0,$4)", [b, ids.org, p, ids.owner]);

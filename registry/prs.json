@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-04T23:05:00Z",
+  "observedAt": "2026-11-04T23:09:00Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -3905,6 +3905,18 @@
       "updatedAt": "2026-11-01T17:58:03Z",
       "mergedAt": "2026-11-01T17:58:02Z",
       "closedAt": "2026-11-01T17:58:02Z",
+      "draft": false
+    },
+    {
+      "id": 5110157069,
+      "number": 33,
+      "title": "DOTS-026: Desktop visual drag-and-drop deployment board",
+      "state": "open",
+      "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/33",
+      "createdAt": "2026-11-01T18:14:57Z",
+      "updatedAt": "2026-11-04T23:07:13Z",
+      "mergedAt": null,
+      "closedAt": null,
       "draft": false
     },
     {

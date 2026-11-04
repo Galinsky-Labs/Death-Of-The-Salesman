@@ -353,7 +353,7 @@
 
 **Dependencies:** DOTS-007, DOTS-010  
 **External prerequisites:** None  
-**Priority:** P0 · **GitHub PRs:** none created (planned only)
+**Priority:** P0 · **GitHub PRs:** #34 (merged; native audit migration tests and CI verified)
 
 ### DOTS-031 — Transactional outbox and idempotent event intake
 

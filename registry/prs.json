@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-01T17:56:43Z",
+  "observedAt": "2026-11-01T20:11:59Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -730,7 +730,9 @@
       "id": "DOTS-030",
       "title": "Append-only audit and actor provenance",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        34
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -3895,12 +3897,24 @@
       "id": 5110003862,
       "number": 32,
       "title": "DOTS-028: Evidence-grounded owner dashboard and truthful KPI cards",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/32",
       "createdAt": "2026-11-01T17:55:40Z",
-      "updatedAt": "2026-11-01T17:56:43Z",
-      "mergedAt": null,
-      "closedAt": null,
+      "updatedAt": "2026-11-01T17:58:03Z",
+      "mergedAt": "2026-11-01T17:58:02Z",
+      "closedAt": "2026-11-01T17:58:02Z",
+      "draft": false
+    },
+    {
+      "id": 5110402852,
+      "number": 34,
+      "title": "DOTS-030: Append-only audit and actor provenance",
+      "state": "closed",
+      "url": "https://github.com/neophilism/Death-Of-The-Salesman/pull/34",
+      "createdAt": "2026-11-01T18:42:21Z",
+      "updatedAt": "2026-11-01T20:11:59Z",
+      "mergedAt": "2026-11-01T20:11:59Z",
+      "closedAt": "2026-11-01T20:11:59Z",
       "draft": false
     }
   ]

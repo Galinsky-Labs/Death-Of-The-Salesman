@@ -107,10 +107,10 @@ export class ProjectCatalogRepository {
         `INSERT INTO app.${table} (
           id, organization_id, project_id, offer_id, label, content, updated_by_membership_id
         )
-        SELECT $1, $2, $3, $4, $5, $6::jsonb, memberships.id
+        SELECT $1, $2::app.entity_id, $3, $4, $5, $6::jsonb, memberships.id
         FROM app.memberships
         WHERE memberships.id = $7
-          AND memberships.organization_id = $2
+          AND memberships.organization_id = $2::app.entity_id
           AND memberships.role = 'owner'
           AND memberships.status = 'active'
         RETURNING ${returningColumns}`,
@@ -197,3 +197,4 @@ export class ProjectCatalogRepository {
     });
   }
 }
+

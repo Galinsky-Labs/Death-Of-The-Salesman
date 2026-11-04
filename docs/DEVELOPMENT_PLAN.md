@@ -310,7 +310,7 @@
 
 **Dependencies:** DOTS-019, DOTS-025, DOTS-023  
 **External prerequisites:** None  
-**Priority:** P0 · **GitHub PRs:** none created (planned only)
+**Priority:** P0 · **GitHub PRs:** #33
 
 ### DOTS-027 — Touch and keyboard assignment alternatives
 

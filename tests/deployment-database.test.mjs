@@ -29,7 +29,7 @@ test("real PostgreSQL engine: owner session, durable refresh, stale moves, hidde
     assert.equal((await handleDeployment(req({ ...preference, expectedVersion: 1 }, "/preferences"), deps)).status, 409);
     assert.equal((await handleDeployment(req(), deploymentDependencies(pool, ids.second))).status, 401);
     assert.equal((await handleDeployment(req(undefined, "", "unknown-session"), deps)).status, 401);
-    await db.query("BEGIN"); await db.query("SELECT set_config('app.organization_id',$1,true)", [ids.org]); await db.query("UPDATE app.memberships SET status='inactive' WHERE id=$1", [ids.owner]); await db.query("COMMIT");
+    await db.query("BEGIN"); await db.query("SELECT set_config('app.organization_id',$1,true)", [ids.org]); await db.query("SELECT set_config('app.audit_actor_membership_id',$1,true)", [ids.owner]); await db.query("UPDATE app.memberships SET status='inactive' WHERE id=$1", [ids.owner]); await db.query("COMMIT");
     assert.equal((await handleDeployment(req(), deps)).status, 401);
   } finally { await db.close(); }
 });

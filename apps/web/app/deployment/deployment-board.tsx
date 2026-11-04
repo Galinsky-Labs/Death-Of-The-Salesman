@@ -22,9 +22,9 @@ export function DeploymentBoard() {
   const dialog = useRef<HTMLDialogElement>(null);
   const requestRefresh = async () => {
     if (busy.current) return;
-    busy.current = true; setPending(true);
+    busy.current = true; setPending(true); setMessage("Loading server assignments…");
     try { setBoard(await loadBoard()); setLoaded(true); setError(""); setMessage("Assignments loaded from server."); }
-    catch (e) { setLoaded(false); setError((e as Error).message); }
+    catch (e) { setLoaded(false); setError((e as Error).message); setMessage("Server assignments could not be loaded."); }
     finally { busy.current = false; setPending(false); }
   };
   useEffect(() => { void requestRefresh(); }, []);
@@ -75,8 +75,11 @@ export function DeploymentBoard() {
       const r = await fetch("/api/deployment/preferences", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json", "x-csrf-token": csrf() }, body: JSON.stringify({ bucketId, visible, position: bucket.position, expectedVersion: bucket.preferenceVersion }) });
       if (!r.ok) throw new Error("Bucket visibility was not confirmed; reload before retrying.");
       setBoard(await loadBoard()); setMessage("Bucket preference saved. Assignments are preserved.");
-    } catch (e) { setLoaded(false); setError((e as Error).message); setBoard(board); }
-    finally { busy.current = false; setPending(false); }
+    } catch (e) {
+      setBoard(board); setMessage("Bucket preference was not confirmed. Checking server state…");
+      try { setBoard(await loadBoard()); setLoaded(true); setError(`${(e as Error).message} Server state reloaded; inspect it before retrying.`); setMessage("Bucket preference result reloaded from server."); }
+      catch { setLoaded(false); setError(`${(e as Error).message} Current server state is unknown. Reload before making another change.`); setMessage("Server state is unknown; editing is disabled."); }
+    } finally { busy.current = false; setPending(false); }
   };
   return <section className="deployment" aria-labelledby="deployment-title" aria-busy={pending}>
     <header className="deployment-header"><div><p className="eyebrow">Deployment</p><h1 id="deployment-title">Agent deployment board</h1><p>Choose visible buckets, then drag an agent to allocate work. This does not start workers or enable spending.</p></div><button disabled={pending || !!intent} onClick={() => void requestRefresh()}>Reload server state</button></header>

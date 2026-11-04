@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-01T20:11:59Z",
+  "observedAt": "2026-11-04T23:05:00Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -633,7 +633,9 @@
       "id": "DOTS-026",
       "title": "Desktop visual drag-and-drop deployment board",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        33
+      ],
       "phase": "F2",
       "priority": "P0",
       "dependsOn": [

@@ -20,3 +20,7 @@ The standalone API can be built with the root build and started with `pnpm start
 only to `127.0.0.1:3001` by default and exposes `/health`. `pnpm start:worker` confirms the
 separate worker boundary while remaining disabled. Runtime configuration is defined in `packages/config`; see `docs/CONFIGURATION.md`. Later plan units own database,
 authentication, domain contracts, queues, and production deployment.
+
+The owner-backed `/deployment` board has separate storage, session and public-origin requirements.
+See [Deployment board](DEPLOYMENT_BOARD.md) for configuration and isolated browser acceptance.
+

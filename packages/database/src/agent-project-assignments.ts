@@ -58,7 +58,7 @@ const assignmentOf = (value: unknown): AgentProjectAssignment => {
     quotaLimit: Number(row.quota_limit),
     concurrencyCap: Number(row.concurrency_cap),
     version: Number(row.version),
-    updatedAt: new Date(String(row.updated_at)).toISOString(),
+    updatedAt: (row.updated_at instanceof Date ? row.updated_at : new Date(String(row.updated_at))).toISOString(),
   };
 };
 
@@ -90,6 +90,7 @@ export class AgentProjectAssignmentRepository {
     agentIdentityId: string;
     projectId: string;
     campaignId?: string | null;
+    bucketId?: string;
     priority: number;
     allocationBasisPoints: number;
     quotaLimit: number;
@@ -128,6 +129,20 @@ export class AgentProjectAssignmentRepository {
         [input.organizationId, input.ownerMembershipId, input.agentIdentityId, input.projectId],
       ));
       if (!authority.rows?.[0]) throw new AssignmentWriteError("NOT_FOUND_OR_STALE");
+      if (input.bucketId) {
+        const checked = resultOf(await tx.query(
+          `SELECT buckets.id FROM app.project_buckets buckets
+           LEFT JOIN app.project_bucket_preferences preference
+             ON preference.organization_id=buckets.organization_id
+             AND preference.bucket_id=buckets.id AND preference.owner_membership_id=$2
+           WHERE buckets.organization_id=$1 AND buckets.id=$3
+             AND buckets.project_id=$4 AND buckets.campaign_id IS NOT DISTINCT FROM $5::uuid
+             AND COALESCE(preference.visible,true)
+           FOR SHARE OF buckets`,
+          [input.organizationId, input.ownerMembershipId, input.bucketId, input.projectId, input.campaignId ?? null],
+        ));
+        if (!checked.rows?.[0]) throw new AssignmentWriteError("NOT_FOUND_OR_STALE");
+      }
 
       const allocated = resultOf(await tx.query(
         `SELECT COALESCE(SUM(allocation_basis_points), 0) AS allocated
@@ -203,3 +218,4 @@ export class AgentProjectAssignmentRepository {
     });
   }
 }
+

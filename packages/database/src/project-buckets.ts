@@ -146,6 +146,8 @@ export class ProjectBucketRepository {
       throw new Error("expectedVersion must be null or a positive safe integer");
     }
     return this.inTenant(input.organizationId, async (tx) => {
+      // Serialize bucket visibility with deployment writes that hold a shared bucket lock.
+      await tx.query("SELECT id FROM app.project_buckets WHERE organization_id=$1 AND id=$2 FOR UPDATE", [input.organizationId, input.bucketId]);
       const result = resultOf(await tx.query(
         `INSERT INTO app.project_bucket_preferences AS preference (
           organization_id, owner_membership_id, bucket_id, visible, display_position, version
@@ -158,7 +160,11 @@ export class ProjectBucketRepository {
           AND memberships.organization_id = $1
           AND memberships.role = 'owner'
           AND memberships.status = 'active'
-          AND $6::bigint IS NULL
+          AND ($6::bigint IS NULL OR EXISTS (
+            SELECT 1 FROM app.project_bucket_preferences existing
+            WHERE existing.organization_id=$1 AND existing.owner_membership_id=$2
+              AND existing.bucket_id=$3 AND existing.version=$6
+          ))
         ON CONFLICT (organization_id, owner_membership_id, bucket_id) DO UPDATE
         SET visible = EXCLUDED.visible,
             display_position = EXCLUDED.display_position,
@@ -187,3 +193,4 @@ export class ProjectBucketRepository {
     });
   }
 }
+

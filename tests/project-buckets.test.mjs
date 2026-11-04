@@ -52,7 +52,7 @@ test("lists owner preferences with visible defaults and deterministic order", as
 
 test("visibility updates only the preference row and preserves bucket-backed work", async () => {
   const statements = [];
-  const responses = [{}, {}, { rows: [{ bucket_id: bucketId }] }, { rows: [row({ visible: false, position: 4, preference_version: 2 })] }, {}];
+  const responses = [{}, {}, {}, { rows: [{ bucket_id: bucketId }] }, { rows: [row({ visible: false, position: 4, preference_version: 2 })] }, {}];
   const repository = new ProjectBucketRepository({ query: async (statement) => {
     statements.push(statement);
     return responses.shift() ?? {};
@@ -71,7 +71,7 @@ test("visibility updates only the preference row and preserves bucket-backed wor
 test("an unsaved default preference uses a null version for its first write", async () => {
   const responses = [
     {}, {}, { rows: [row()] }, {},
-    {}, {}, { rows: [{ bucket_id: bucketId }] }, { rows: [row({ visible: false, preference_version: 1 })] }, {},
+    {}, {}, {}, { rows: [{ bucket_id: bucketId }] }, { rows: [row({ visible: false, preference_version: 1 })] }, {},
   ];
   const repository = new ProjectBucketRepository({ query: async () => responses.shift() ?? {} });
   const [bucket] = await repository.listForOwner({ organizationId, ownerMembershipId });
@@ -93,3 +93,4 @@ test("stale, missing, cross-tenant, and non-owner preference writes fail closed"
     (error) => error instanceof ProjectBucketWriteError && error.code === "NOT_FOUND_OR_STALE",
   );
 });
+

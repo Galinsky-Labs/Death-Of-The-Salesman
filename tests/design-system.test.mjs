@@ -88,7 +88,7 @@ test("workspace navigation exposes keyboard and screen-reader contracts", async 
   assert.match(navigation, /aria-controls="primary-navigation"/);
   assert.match(navigation, /role="search"/);
   assert.match(navigation, /htmlFor="project-search"/);
-  assert.match(navigation, /aria-label="Notifications, 2 unread"/);
+  assert.match(navigation, /aria-label=\{preview \? "Notifications, 2 unread" : "Notifications not loaded"\}/);
   assert.match(navigation, /<details className="user-controls">/);
   assert.match(navigation, /aria-label="Mobile workspace tabs"/);
 });
@@ -102,3 +102,4 @@ test("workspace navigation covers every required responsive width without hover 
   assert.match(css, /\.mobile-tabs \{[\s\S]*display: none;/);
   assert.match(css, /\.mobile-tabs[\s\S]*position: fixed/);
 });
+

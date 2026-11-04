@@ -15,13 +15,21 @@ const base = process.env.DEPLOYMENT_BROWSER_URL ?? "https://127.0.0.1:3003";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost):\d+$/.test(base)) throw new Error("Browser tests require a local web server");
 const fixture = await deploymentFixture();
 const save = fixture.deps.store.save;
+const preference = fixture.deps.store.preference;
 let fault = "";
+let preferenceFault = "";
 let unblock;
 fixture.deps.store.save = async (...args) => {
   if (fault === "conflict") { fault = ""; throw new AssignmentWriteError("NOT_FOUND_OR_STALE"); }
   if (fault === "delay") { fault = ""; await new Promise(resolve => { unblock = resolve; }); }
   const result = await save(...args);
   if (fault === "ambiguous") { fault = ""; throw new Error("Simulated lost confirmation after commit"); }
+  return result;
+};
+fixture.deps.store.preference = async (...args) => {
+  if (preferenceFault === "conflict") { preferenceFault = ""; throw new Error("Simulated preference conflict"); }
+  const result = await preference(...args);
+  if (preferenceFault === "ambiguous") { preferenceFault = ""; throw new Error("Simulated lost preference confirmation"); }
   return result;
 };
 const api = createApiServer(fixture.deps);
@@ -94,12 +102,27 @@ try {
   assert.equal(await buckets.nth(1).locator("li").count(), 1);
   assert.equal(await page.locator(".deployment-bucket li").count(), 1);
   const checks = page.locator(".bucket-selection input");
+  preferenceFault = "conflict";
   await checks.nth(1).uncheck();
-  await page.getByRole("status").filter({ hasText: "Bucket preference saved" }).waitFor();
+  await page.getByRole("alert").filter({ hasText: "Server state reloaded" }).waitFor();
+  await page.getByRole("status").filter({ hasText: "Bucket preference result reloaded" }).waitFor();
+  assert.equal(await checks.nth(1).isChecked(), true);
+  preferenceFault = "ambiguous";
+  await checks.nth(1).uncheck();
+  await page.getByRole("alert").filter({ hasText: "Server state reloaded" }).waitFor();
+  assert.equal(await checks.nth(1).isChecked(), false);
   assert.equal(await buckets.count(), 1);
   await checks.nth(1).check();
   await page.getByRole("status").filter({ hasText: "Bucket preference saved" }).waitFor();
   assert.equal(await page.locator(".deployment-bucket li").count(), 1);
+  let failReload = true;
+  await page.route("**/api/deployment", async route => {
+    if (failReload && route.request().method() === "GET") { failReload = false; await route.abort(); }
+    else await route.continue();
+  });
+  await page.getByRole("button", { name: "Reload server state" }).click();
+  await page.getByRole("status").filter({ hasText: "Server assignments could not be loaded." }).waitFor();
+  await page.unroute("**/api/deployment");
   await page.reload();
   await page.getByRole("status").filter({ hasText: "Assignments loaded from server." }).waitFor();
   await mkdir("docs/evidence/DOTS-026", { recursive: true });
@@ -109,7 +132,7 @@ try {
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `horizontal page overflow at ${width}px`);
   }
   assert.deepEqual(errors, []);
-  console.log("PASS: native drag/drop, pending state, confirmed refresh, conflicting rollback, ambiguous-commit reconciliation, hide/show preservation; screenshots at 1440/1024/768/390/320px.");
+  console.log("PASS: drag/drop, optimistic rollback, assignment and preference reconciliation, truthful reload failures, hide/show preservation; screenshots at 1440/1024/768/390/320px.");
 } finally {
   unblock?.(); await browser?.close(); await new Promise(resolve => api.close(resolve)); await fixture.db.close();
   if (web) { web.closeAllConnections(); await new Promise(resolve => web.close(resolve)); }

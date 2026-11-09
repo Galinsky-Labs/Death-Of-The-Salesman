@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-09T23:11:50Z",
+  "observedAt": "2026-11-09T23:14:32Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -648,7 +648,9 @@
       "verification": [
         "Persisted assignments match server after refresh; conflicting drop and unsaved state are surfaced."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        40
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -671,7 +673,9 @@
       "verification": [
         "Full assign/reassign/unassign flows work on mobile, screen reader and keyboard."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        40
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3617,7 +3621,9 @@
       "verification": [
         "CI validates config with no paid provisioning; resource deployment requires explicit cost approval."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        40
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": [
@@ -4323,6 +4329,18 @@
       "updatedAt": "2026-10-18T16:45:33Z",
       "mergedAt": "2026-10-18T16:45:33Z",
       "closedAt": "2026-10-18T16:45:33Z",
+      "draft": false
+    },
+    {
+      "id": 5232765977,
+      "number": 40,
+      "title": "DOTS-026/027: Deploy persistent owner workspace on Render with Neon",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/40",
+      "createdAt": "2026-11-09T23:13:57Z",
+      "updatedAt": "2026-11-09T23:13:57Z",
+      "mergedAt": null,
+      "closedAt": null,
       "draft": false
     }
   ]

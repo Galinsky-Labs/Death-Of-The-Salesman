@@ -1,8 +1,8 @@
 # Death Of The Salesman
 
 An API-native, multi-model, **visual-first sales and fundraising command center**. This repository
-contains an early zero-cost application foundation; real-world integrations have **not yet been
-deployed or verified**.
+contains an owner planning workspace deployed on Render with Neon persistence. Autonomous
+execution and the broader sales/fundraising integrations remain under development.
 
 ## Start here
 
@@ -35,6 +35,8 @@ live-provider checks remain separate plan gates.
 Vision Agents are outside this application's scope. This product is architecturally independent from Boardroom, although both can later exchange scoped portfolio and verified operational summaries.
 
 ## Render + Neon owner workspace
+
+Open [the deployed workspace](https://death-of-the-salesman.onrender.com).
 
 The owner workspace release adds a persistent project board, drag/tap/keyboard agent
 assignments, verified-email owner login, and a recent audit timeline. See the

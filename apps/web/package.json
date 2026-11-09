@@ -8,6 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@dots/database": "workspace:*",
+    "@neon/auth": "^0.8.2",
+    "@neondatabase/serverless": "^1.2.0",
     "next": "16.4.2",
     "react": "19.3.1",
     "react-dom": "19.3.1"

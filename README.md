@@ -33,3 +33,11 @@ live-provider checks remain separate plan gates.
 **No paid model, GPU, data-service, or outbound campaign spending is enabled by default.** Live email and model calls require owner-provided credentials, explicit budgets, campaign policies and consent/anti-spam controls. Downloadable open-weight checkpoint files belong in separately approved inference storage, not Git history.
 
 Vision Agents are outside this application's scope. This product is architecturally independent from Boardroom, although both can later exchange scoped portfolio and verified operational summaries.
+
+## Render + Neon owner workspace
+
+The owner workspace release adds a persistent project board, drag/tap/keyboard agent
+assignments, verified-email owner login, and a recent audit timeline. See the
+[deployment runbook](docs/RENDER_NEON_RUNBOOK.md) and [synthetic review evidence](docs/evidence/).
+Live acceptance is recorded separately from the unfinished roadmap. Models, outbound
+campaigns, payments and paid execution remain disabled.

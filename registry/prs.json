@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-09T23:14:32Z",
+  "observedAt": "2026-11-09T23:19:09Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -4335,12 +4335,12 @@
       "id": 5232765977,
       "number": 40,
       "title": "DOTS-026/027: Deploy persistent owner workspace on Render with Neon",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/40",
       "createdAt": "2026-11-09T23:13:57Z",
-      "updatedAt": "2026-11-09T23:13:57Z",
-      "mergedAt": null,
-      "closedAt": null,
+      "updatedAt": "2026-11-09T23:15:47Z",
+      "mergedAt": "2026-11-09T23:15:47Z",
+      "closedAt": "2026-11-09T23:15:47Z",
       "draft": false
     }
   ]

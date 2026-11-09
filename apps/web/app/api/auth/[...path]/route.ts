@@ -1,4 +1,5 @@
 import { getAuth } from "../../../../lib/auth";
+import { hasTrustedOrigin } from "../../../../lib/request-origin";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,7 @@ async function handle(request: Request, context: Context) {
   const allowed = new Set(["email-otp/send-verification-otp", "sign-in/email-otp", "get-session", "sign-out"]);
   if (!allowed.has(path)) return Response.json({ error: "Unavailable" }, { status: 404 });
   if (request.method === "POST") {
-    if (request.headers.get("origin") !== new URL(request.url).origin) {
+    if (!hasTrustedOrigin(request)) {
       return Response.json({ error: "Invalid origin" }, { status: 403 });
     }
     if (path !== "sign-out") {

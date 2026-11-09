@@ -12,8 +12,8 @@ One Next.js web service serves the UI and authenticated application Route Handle
 The existing independent API health stub and disabled worker are not deployed as
 extra services. No idle workers or paid resources are needed for this release.
 
-- Render: free web compute, Ohio; build `pnpm install --frozen-lockfile && pnpm build`.
-- Start: `pnpm --filter @dots/web exec next start --hostname 0.0.0.0 --port $PORT`.
+- Render: free web compute, Ohio; build `npx --yes pnpm@11.25.0 install --frozen-lockfile --prod=false && npx --yes pnpm@11.25.0 build`.
+- Start: `node apps/web/node_modules/next/dist/bin/next start apps/web --hostname 0.0.0.0 --port $PORT`.
 - Neon: Galinsky Labs free plan, AWS Ohio, Postgres 17, 0.25 CU, normal idle suspension.
 - Neon project: `muddy-mountain-84355519`; branch: `br-orange-recipe-bdgmz9qg`.
 - Liveness: `/api/health`. Readiness: `/api/readiness`, including an actual tenant-scoped database query.
@@ -28,6 +28,7 @@ Names only; configure values through Render's secret environment settings:
 - `NEON_AUTH_BASE_URL`: the production branch Managed Auth URL.
 - `NEON_AUTH_COOKIE_SECRET`: random value of at least 32 characters.
 - `OWNER_EMAIL`: the owner's confirmed, verified login email; no default is permitted.
+- `APP_ORIGIN`: the exact public HTTPS origin; required for production mutation checks behind Render's TLS proxy.
 - `OWNER_ORGANIZATION_ID`, `OWNER_MEMBERSHIP_ID`: provisioned owner tenant and membership.
 - `APP_ENV=production`, `PAID_SPEND_LIMIT_CENTS=0`, `MODEL_API_ENABLED=false`, `EMAIL_DELIVERY_ENABLED=false`.
 - `NODE_VERSION=24.19.0`.

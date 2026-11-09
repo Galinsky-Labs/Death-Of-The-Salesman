@@ -1,6 +1,7 @@
 import { ownerSession } from "../../../lib/auth";
 import { loadWorkspace, createProject, archiveProject, assignAgent, removeAssignment } from "../../../lib/workspace";
 import { InputError, text, integer, entityId } from "../../../lib/workspace-input";
+import { hasTrustedOrigin } from "../../../lib/request-origin";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    if (request.headers.get("origin") !== new URL(request.url).origin) {
+    if (!hasTrustedOrigin(request)) {
       return Response.json({error:"Invalid origin"},{status:403});
     }
     if (!await ownerSession()) return Response.json({error:"Sign in as the workspace owner"},{status:401});

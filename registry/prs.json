@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-09T23:20:07Z",
+  "observedAt": "2026-11-09T23:24:55Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -4348,12 +4348,12 @@
       "id": 5232827440,
       "number": 41,
       "title": "DOTS-026: Fix owner POST requests behind Render TLS proxy",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/41",
       "createdAt": "2026-11-09T23:19:38Z",
-      "updatedAt": "2026-11-09T23:19:38Z",
-      "mergedAt": null,
-      "closedAt": null,
+      "updatedAt": "2026-11-09T23:22:05Z",
+      "mergedAt": "2026-11-09T23:22:05Z",
+      "closedAt": "2026-11-09T23:22:05Z",
       "draft": false
     }
   ]

@@ -1,0 +1,65 @@
+{
+  "url": "https://death-of-the-salesman.onrender.com",
+  "observedAt": "2026-11-09T23:24:05.455Z",
+  "deployId": "dep-dbp5bd6c6qcc73adpplg",
+  "sourceSha": "423776e559a58840d06c1104240cbc9b32e9e35f",
+  "checks": [
+    {
+      "path": "/",
+      "status": 307
+    },
+    {
+      "path": "/dashboard",
+      "status": 307
+    },
+    {
+      "path": "/api/workspace",
+      "status": 401
+    },
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/readiness",
+      "status": 200,
+      "result": {
+        "service": "web",
+        "status": "ok",
+        "database": "connected",
+        "execution": "disabled",
+        "revision": "423776e559a58840d06c1104240cbc9b32e9e35f"
+      }
+    },
+    {
+      "path": "/auth/sign-in",
+      "status": 200
+    },
+    {
+      "path": "/review-synthetic",
+      "status": 404
+    },
+    {
+      "path": "/api/workspace",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/api/workspace",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/sign-up/email",
+      "method": "POST",
+      "status": 404
+    },
+    {
+      "path": "/api/auth/email-otp/send-verification-otp",
+      "status": 403,
+      "check": "nonowner rejected without sending email"
+    }
+  ],
+  "result": "passed",
+  "ownerOtpDelivery": "awaiting owner acceptance"
+}

@@ -41,5 +41,6 @@ Open [the deployed workspace](https://death-of-the-salesman.onrender.com).
 The owner workspace release adds a persistent project board, drag/tap/keyboard agent
 assignments, verified-email owner login, and a recent audit timeline. See the
 [deployment runbook](docs/RENDER_NEON_RUNBOOK.md) and [synthetic review evidence](docs/evidence/).
+[Verified deployment evidence](docs/LIVE_RELEASE_STATUS.md) records the live revision and checks.
 Live acceptance is recorded separately from the unfinished roadmap. Models, outbound
 campaigns, payments and paid execution remain disabled.

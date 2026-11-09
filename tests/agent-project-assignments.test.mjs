@@ -36,7 +36,7 @@ const repositoryWith = (responses, statements = []) => new AgentProjectAssignmen
 test("creates an owner-authorized tenant assignment under a locked agent budget", async () => {
   const statements = [];
   const repository = repositoryWith([
-    {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "0" }] },
+    {}, {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "0" }] },
     { rows: [row()] }, {},
   ], statements);
   const assignment = await repository.save({
@@ -46,7 +46,8 @@ test("creates an owner-authorized tenant assignment under a locked agent budget"
   });
   assert.equal(assignment.allocationBasisPoints, 4_000);
   assert.equal(assignment.version, 1);
-  const lock = statements.find((statement) => statement.includes("FOR UPDATE OF identities"));
+  const lock = statements.find((statement) => statement.includes("FOR UPDATE OF projects"));
+  assert.ok(statements.some(statement=>statement.includes("pg_advisory_xact_lock")));
   assert.match(lock ?? "", /identities\.status = 'active'/);
   assert.match(lock ?? "", /memberships\.role = 'owner'/);
   assert.ok(statements.some((statement) => statement.includes("ON CONFLICT DO NOTHING")));
@@ -71,7 +72,7 @@ test("one agent can serve multiple projects with deterministic priority order", 
 
 test("allocation above one hundred percent fails atomically", async () => {
   const repository = repositoryWith([
-    {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "7000" }] }, {},
+    {}, {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "7000" }] }, {},
   ]);
   await assert.rejects(
     repository.save({
@@ -87,7 +88,7 @@ test("allocation above one hundred percent fails atomically", async () => {
 
 test("exact versions update allocation and stale conflicts are explicitly retryable", async () => {
   const repository = repositoryWith([
-    {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "2000" }] },
+    {}, {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "2000" }] },
     { rows: [row({ allocation_basis_points: 5_000, version: 2 })] }, {},
   ]);
   const updated = await repository.save({
@@ -99,7 +100,7 @@ test("exact versions update allocation and stale conflicts are explicitly retrya
   assert.equal(updated.allocationBasisPoints, 5_000);
 
   const stale = repositoryWith([
-    {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "2000" }] },
+    {}, {}, {}, { rows: [{ id: agentIdentityId }] }, { rows: [{ allocated: "2000" }] },
     { rows: [] }, {},
   ]);
   await assert.rejects(

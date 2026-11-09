@@ -10,6 +10,9 @@ import { AgentRoster, type RosterAgent } from "./agent-roster";
 import { WorkspaceNavigation } from "./workspace-navigation";
 import { OverviewCards } from "./overview-cards";
 import { deriveOverview } from "./overview-model";
+import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 const rosterAgents: readonly RosterAgent[] = [
   {
@@ -86,6 +89,7 @@ const overview = deriveOverview({
 });
 
 export default function Home() {
+  if (process.env.DATABASE_URL) redirect("/dashboard");
   return (
     <WorkspaceNavigation>
       <main className="shell">

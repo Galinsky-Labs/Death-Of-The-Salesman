@@ -1,0 +1,15 @@
+{
+  "branch": "staging-acceptance-20261109",
+  "checks": [
+    "restricted-login-no-schema-write",
+    "no-tenant-no-rows",
+    "runtime-cannot-assume-owner",
+    "project-create-and-reload",
+    "assignment-save-and-reload",
+    "allocation-hard-cap",
+    "concurrent-allocation-serialization",
+    "stale-write-rejected",
+    "audit-record-created"
+  ],
+  "result": "passed"
+}

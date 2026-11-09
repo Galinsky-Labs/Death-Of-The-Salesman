@@ -109,6 +109,9 @@ export class AgentProjectAssignmentRepository {
     }
 
     return this.inTenant(input.organizationId, async (tx) => {
+      await tx.query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))", [
+        `dots-assignment:${input.organizationId}:${input.agentIdentityId}`,
+      ]);
       const authority = resultOf(await tx.query(
         `SELECT identities.id
          FROM app.memberships
@@ -124,7 +127,7 @@ export class AgentProjectAssignmentRepository {
            AND memberships.id = $2
            AND memberships.role = 'owner'
            AND memberships.status = 'active'
-         FOR UPDATE OF identities`,
+         FOR UPDATE OF projects`,
         [input.organizationId, input.ownerMembershipId, input.agentIdentityId, input.projectId],
       ));
       if (!authority.rows?.[0]) throw new AssignmentWriteError("NOT_FOUND_OR_STALE");

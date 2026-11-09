@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-09T23:20:07Z",
+  "observedAt": "2026-11-09T23:25:49Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -650,7 +650,8 @@
       ],
       "contributingPrs": [
         40,
-        41
+        41,
+        42
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -4348,10 +4349,22 @@
       "id": 5232827440,
       "number": 41,
       "title": "DOTS-026: Fix owner POST requests behind Render TLS proxy",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/41",
       "createdAt": "2026-11-09T23:19:38Z",
-      "updatedAt": "2026-11-09T23:19:38Z",
+      "updatedAt": "2026-11-09T23:22:05Z",
+      "mergedAt": "2026-11-09T23:22:05Z",
+      "closedAt": "2026-11-09T23:22:05Z",
+      "draft": false
+    },
+    {
+      "id": 5232893376,
+      "number": 42,
+      "title": "DOTS-026: Record live Render deployment and Neon acceptance evidence",
+      "state": "open",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/42",
+      "createdAt": "2026-11-09T23:25:35Z",
+      "updatedAt": "2026-11-09T23:25:35Z",
       "mergedAt": null,
       "closedAt": null,
       "draft": false

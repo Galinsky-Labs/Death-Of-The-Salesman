@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-10T01:12:33Z",
+  "observedAt": "2026-11-10T01:44:37Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -853,7 +853,8 @@
         "Concurrent requests never overrun shared hard cap; failures and timeouts release/reconcile correctly."
       ],
       "contributingPrs": [
-        43
+        43,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -903,7 +904,8 @@
         "Agent prompt cannot bypass rule; each decision persists stable rule identifiers and reasons."
       ],
       "contributingPrs": [
-        43
+        43,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -1402,7 +1404,8 @@
         "Conformance fixtures cover schema failures, empty responses, streamed/nonstreamed output and cancellations."
       ],
       "contributingPrs": [
-        43
+        43,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -1652,7 +1655,8 @@
         "Dashboard spend reconciles with ledger and flags missing/estimated usage separately."
       ],
       "contributingPrs": [
-        43
+        43,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -1678,7 +1682,8 @@
         "UI discloses absent keys, cost status, privacy category and disabled models truthfully."
       ],
       "contributingPrs": [
-        43
+        43,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -2501,7 +2506,8 @@
         "No send unless all current approval, suppression, domain, budget and identity conditions hold."
       ],
       "contributingPrs": [
-        43
+        43,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -3393,7 +3399,8 @@
         "No live charges until owner connects separate account and approves plan; sandbox receipts work."
       ],
       "contributingPrs": [
-        43
+        43,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -3590,7 +3597,9 @@
       "verification": [
         "No unapproved charge or spending; proof of settlement and refund flow captured before full rollout."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        45
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": [
@@ -4005,7 +4014,8 @@
       ],
       "contributingPrs": [
         43,
-        44
+        44,
+        45
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],

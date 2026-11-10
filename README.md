@@ -16,6 +16,7 @@ Paid providers and real outreach require separately configured owner credentials
 - [Outage and rollback runbook](docs/OUTAGE_ROLLBACK_RUNBOOK.md) — fail-closed stabilization, rollback decisions and recovery verification.
 - [Architecture decision records](docs/adr/) — accepted contract-evolution and endpoint-ownership decisions.
 - [Approved salesman names](registry/approved-salesman-names.json) — 264 owner-approved character names, starting with **Fast Eddie Felson** and **Harry Wormwood**.
+- [Free model, email and Stripe setup](docs/FREE_AND_PAID_INTEGRATIONS.md) — account creation, secure API keys and later paid activation.
 - [Six model candidates](registry/model-catalog.json) — OpenAI, Claude, Grok, MiMo, GLM, Kimi; disabled until credentials and funding are provided.
 
 ## Development validation

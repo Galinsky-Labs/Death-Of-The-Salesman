@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-11-10T01:42:48.301Z",
+  "result": "passed",
+  "environment": "Production Next build using actual isolated Neon staging session and restricted runtime role",
+  "checks": [
+    "Free integration status cards render with honest credential-required states",
+    "Live approved free catalog discovery works through authenticated API",
+    "Desktop and mobile have no global horizontal overflow",
+    "Catalog dialog closes with Escape",
+    "No browser page errors"
+  ],
+  "realInferenceRequests": 0,
+  "realEmailSends": 0,
+  "realPayments": 0
+}

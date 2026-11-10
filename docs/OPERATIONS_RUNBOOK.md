@@ -51,6 +51,10 @@ exports contain owner data; preserve them outside the public repository.
 
 ## Connect providers
 
+Start with [free integrations and account setup](FREE_AND_PAID_INTEGRATIONS.md).
+The free-only OpenRouter path and a confirmed Resend free account can operate within
+the zero-dollar cap; paid paths retain the funded-authorization requirement.
+
 All paid and outbound execution remains disabled at deployment, with a zero hard cap.
 The owner must supply credentials, explicit funded caps and applicable business authority
 before activation. Configure secrets through Render, never through a public document.

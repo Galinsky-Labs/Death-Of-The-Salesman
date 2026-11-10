@@ -3,6 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "start": "node dist/index.js" },
-  "dependencies": { "@dots/domain": "workspace:*" }
+  "scripts": {
+    "start": "node dist/index.js",
+    "run": "node dist/runner.js"
+  },
+  "dependencies": {
+    "@dots/domain": "workspace:*",
+    "@dots/operations": "workspace:*",
+    "@neondatabase/serverless": "^1.2.0"
+  }
 }

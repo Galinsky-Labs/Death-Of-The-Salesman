@@ -2,16 +2,16 @@ import { AgentProjectAssignmentRepository, ProjectCatalogRepository, type Transa
 import { database, inWorkspace, tenant } from "./database";
 
 export type Project = { id: string; label: string; content: { description?: string; category?: string }; version: number };
-export type Agent = { id: string; display_name: string; status: string };
-export type Assignment = { id: string; agent_identity_id: string; project_id: string; allocation_basis_points: number; version: number };
+export type Agent = { id: string; display_name: string; status: string; version?: number };
+export type Assignment = { id: string; agent_identity_id: string; project_id: string; allocation_basis_points: number; version: number; priority?: number; quota_limit?: number; concurrency_cap?: number };
 export type Activity = { id: string; event_type: string; occurred_at: string };
 export type WorkspaceData = { projects: Project[]; agents: Agent[]; assignments: Assignment[]; activity: Activity[]; observedAt: string };
 
 export async function loadWorkspace(): Promise<WorkspaceData> {
   return inWorkspace(async client => {
     const projects = await client.query("SELECT id,label,content,version::int FROM app.projects WHERE status='active' ORDER BY created_at DESC LIMIT 200");
-    const agents = await client.query("SELECT id,display_name,status FROM app.agent_identities WHERE status <> 'archived' ORDER BY approved_name_id DESC LIMIT 264");
-    const assignments = await client.query("SELECT id,agent_identity_id,project_id,allocation_basis_points,version::int FROM app.agent_project_assignments ORDER BY created_at LIMIT 2000");
+    const agents = await client.query("SELECT id,display_name,status,version::int FROM app.agent_identities WHERE status <> 'archived' ORDER BY approved_name_id DESC LIMIT 264");
+    const assignments = await client.query("SELECT id,agent_identity_id,project_id,allocation_basis_points,version::int,priority,quota_limit::int,concurrency_cap FROM app.agent_project_assignments ORDER BY created_at LIMIT 2000");
     const activity = await client.query("SELECT id,event_type,occurred_at FROM app.audit_events ORDER BY occurred_at DESC,id DESC LIMIT 12");
     return { projects: projects.rows, agents: agents.rows, assignments: assignments.rows,
       activity: activity.rows.map(row=>({...row,occurred_at:new Date(row.occurred_at).toISOString()})), observedAt: new Date().toISOString() };

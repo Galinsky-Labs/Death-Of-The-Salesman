@@ -1,82 +1,60 @@
-# Live release status — 2026-11-09
+# Live release status — 2026-11-10
 
-The owner planning workspace is running at:
+The existing Render service is available at
+https://death-of-the-salesman.onrender.com in Galinsky Labs. Its previously verified
+runtime is the owner planning release, commit `423776e559a58840d06c1104240cbc9b32e9e35f`,
+deploy `dep-dbp5bd6c6qcc73adpplg`. Auto-deploy is disabled. Do not describe the
+operations release as live until its actual deployment and HTTPS checks are recorded.
 
-https://death-of-the-salesman.onrender.com
+## Operations release prepared
 
-This is a real Render web service connected to its dedicated Neon database. It is
-not acceptance of the full autonomous-sales and fundraising product.
+The new operations console implements persistent CRM, consent/suppression and erasure,
+deals, campaign rehearsal and revision approvals, conversations and message approvals,
+strategies and experiments, distinct grant/investment workflows, invoices, signed provider
+receipts, encrypted documents, budgets, durable queued agent tasks and activity history.
+There are distinct configured adapters for the six model candidates and an optional Neon
+endpoint. Public grant discovery queries Grants.gov. Real provider execution requires
+owner credentials and funded authority; deployment defaults remain zero spend and no
+outbound messages or live payments. See [operations runbook](OPERATIONS_RUNBOOK.md).
 
-## Verified deployment
+Actual isolated Neon staging acceptance completed at `2026-11-10T00:41:47.095Z` using a
+provider-signed session for a synthetic identity and the restricted application role.
+It exercised project/agent setup, CRM imports and dedupe, pipeline, offers/facts, campaign
+rehearsal/approvals, conversation drafts, invoice issue/print, encrypted documents, grant
+checklists, the actual child worker and durable results, suppression/erasure and exports.
+No production user was impersonated; no email, real payment or paid inference occurred.
+The owner's real mailbox OTP round trip remains unverified.
 
-- Render workspace: Galinsky Labs.
-- Service: `srv-dbp58hm1egvs73b3inug` (free web service, Ohio).
-- Deploy: `dep-dbp5bd6c6qcc73adpplg`, observed `live`.
-- Runtime source SHA: `423776e559a58840d06c1104240cbc9b32e9e35f` (merged PR #41).
-- Render finished deployment at `2026-11-09T23:23:53.576491Z` (6:23 p.m. Eastern).
-- Live HTTPS acceptance passed at `2026-11-09T23:24:05.455Z`.
-- Neon project: `muddy-mountain-84355519`; production branch `br-orange-recipe-bdgmz9qg`.
-- Independent staging acceptance: `staging-acceptance-20261109` / `br-blue-union-bdjoyszi`.
-- Later documentation-only commits do not change this runtime revision; auto-deploy is disabled.
+- [Machine-readable workflow evidence](evidence/operations-staging-acceptance.json).
+- [Desktop screenshot](evidence/operations-desktop.png).
+- [Mobile screenshot](evidence/operations-mobile.png).
+- All 14 console views passed authenticated desktop/mobile browser rendering and overflow checks.
+- Local `pnpm check`: 117 passing tests, typecheck, secret scan and production build.
+- Dependency audit: no known vulnerabilities. Failure-contract test passed.
+- New migrations 0011–0013 have been applied to staging and production; these are additive.
 
-[Machine-readable HTTPS evidence](evidence/render-live-acceptance.json) records
-actual statuses, database connectivity and matching runtime SHA. Root and dashboard
-redirect signed-out users to login; protected reads and same-origin writes return
-401 while signed out; foreign-origin writes return 403. Unexposed signup endpoints
-and the removed synthetic review route return 404. Non-owner code requests are
-rejected before email delivery. No sign-in email was sent during automated acceptance.
+## Production activation blocked
 
-Startup logs show the server listening on `0.0.0.0:10000` and Render reporting the
-service live. Next emits a standalone-output/start-command warning; the tested HTTP
-routes work. A future packaging cleanup can align those settings without changing
-application behavior.
+Automatic approval review rejected applying the new production runtime grants because
+it considers the persistent permission expansion across operational and financial tables
+to require explicit owner approval of that scope. Removing the broad function-execution
+grant and supplying exact restricted-role tests and successful staging workflow evidence
+did not satisfy that requirement. No workaround was used. Existing production runtime
+credentials and permissions are unchanged, and the old compatible service stays live.
 
-## Working release scope
+The concrete permission request is [database/runtime-grants.sql](../database/runtime-grants.sql):
+SELECT and INSERT on the named operations tables, column-specific UPDATE for workflow
+state, catalog and agent settings, and DELETE only for campaign audience selection rows.
+It grants no schema management, auth access, role management, RLS bypass, primary-key
+updates, financial/audit deletion or receipt-evidence mutation. Financial writes are ledger
+records, not authority to charge, send, call paid models or spend. Tests prove these
+restrictions in a disposable database. Explicit approval is needed before applying that
+script to the production `dots_runtime` role and deploying the operations release.
 
-- Owner sign-in screen using Managed Neon Auth's email-code flow.
-- Server-side verified-email owner restriction and active membership checks.
-- Real project creation, category/brief persistence and versioned archive.
-- Persistent drag-and-drop or keyboard/touch agent assignments and removal.
-- Atomic 100% per-agent allocation cap with concurrent-operation serialization.
-- Archive protection against outstanding or concurrently created assignments.
-- Recent append-only, database-triggered audit activity.
-- Real tenant-scoped Neon readiness, distinct from web liveness.
-- No fabricated revenue, contacts, active model runs or green worker status.
+## Remaining external prerequisites
 
-## Validation
-
-- PR #40: Foundation Shell verify + PostgreSQL migration job and Canonical Plan Checks passed at head `7837b6e503b306669a0e03024a8b65ca63797e93`.
-- PR #41: the same checks passed at head `6b0c07cbb21b63a2dfd484e567615e2ccae9a30a`.
-- [Foundation CI for #41](https://github.com/Galinsky-Labs/Death-Of-The-Salesman/actions/runs/42719624803).
-- [Canonical Plan CI for #41](https://github.com/Galinsky-Labs/Death-Of-The-Salesman/actions/runs/42719625259).
-- Local `pnpm check`: 102 tests, lint, strict types, secret scan and production build passed.
-- Dependency audit: no known vulnerabilities.
-- Chromium review on synthetic fixtures: desktop/mobile layout, search/empty state,
-  mutation-error state, accessible assignment form and login rendering passed with no overflow.
-- A live Chromium screenshot attempt was blocked by the cloud proxy CA not being
-  trusted by Chromium (`ERR_CERT_AUTHORITY_INVALID`). TLS validation was not disabled.
-  The live HTTPS checks use the environment's configured CA trust and passed.
-- [Separate Neon staging evidence](evidence/neon-staging-acceptance.json): project
-  and assignment persistence, allocation cap, concurrent serialization, stale writes,
-  audit creation, tenant isolation and least-privilege checks passed.
-
-## Owner acceptance and unfinished work
-
-Sign in using the configured owner email (the Render workspace account email unless
-the owner specifies another), request a code, then create a project and assign an
-agent. Confirm sign-out, sign-in and session restoration after reload. That mailbox
-round trip is **not yet verified**. Shared Neon authentication SMTP is an initial
-acceptance dependency; custom SMTP remains required for production auth rollout.
-
-The paid execution cap is $0. Models, outbound mail, real campaigns and cash handling
-remain disabled. The runtime has no migration-admin credential. No new billable
-resources or paid provider calls were created by this release.
-
-The full roadmap remains incomplete: durable agent execution, provider adapters,
-CRM, campaigns, conversations, funding workflows, payments and remaining hardening
-are not claimed as delivered. Further release prerequisites include provider
-credentials with explicit hard budgets, reviewed sender/consent policy for outreach,
-and separately authorized account/merchant/legal gates where applicable. This work
-is recorded as contributions to DOTS-026/027/151, not completion of DOTS-151–160.
-
-See [the deployment runbook](RENDER_NEON_RUNBOOK.md) for configuration and rollback.
+The free Render service sleeps; work runs while it is awake. Continuous execution requires
+an independently funded configuration. Paid model calls, real email and payment collection
+require the owner's provider keys, caps, verified sender/merchant and applicable authority.
+The full 160-unit roadmap retains its own acceptance gates; this release is not evidence
+that all planned units or real provider acceptance have completed.

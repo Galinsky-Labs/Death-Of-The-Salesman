@@ -99,7 +99,7 @@ export class AgentIdentityRepository {
         `INSERT INTO app.agent_identities (
           id, organization_id, approved_name_id, display_name, updated_by_membership_id
         )
-        SELECT $1, $2, names.id, $5, memberships.id
+        SELECT $1::app.entity_id, $2::app.entity_id, names.id, $5, memberships.id
         FROM app.approved_agent_names AS names
         JOIN app.memberships ON memberships.id = $6
           AND memberships.organization_id = $2

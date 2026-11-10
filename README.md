@@ -1,8 +1,9 @@
 # Death Of The Salesman
 
 An API-native, multi-model, **visual-first sales and fundraising command center**. This repository
-contains an owner planning workspace deployed on Render with Neon persistence. Autonomous
-execution and the broader sales/fundraising integrations remain under development.
+contains a persistent owner operations console deployed on Render with Neon: durable agent
+work, CRM, campaigns, conversations, funding, invoices, encrypted documents and approvals.
+Paid providers and real outreach require separately configured owner credentials and caps.
 
 ## Start here
 
@@ -38,8 +39,10 @@ Vision Agents are outside this application's scope. This product is architectura
 
 Open [the deployed workspace](https://death-of-the-salesman.onrender.com).
 
-The owner workspace release adds a persistent project board, drag/tap/keyboard agent
-assignments, verified-email owner login, and a recent audit timeline. See the
+The operations release includes a project board, agent assignments and durable work queue,
+CRM and pipeline, campaign rehearsals, conversations, strategy experiments, funding,
+invoices, encrypted documents, budgets and exact-content approvals. See the
+[operations runbook](docs/OPERATIONS_RUNBOOK.md), the
 [deployment runbook](docs/RENDER_NEON_RUNBOOK.md) and [synthetic review evidence](docs/evidence/).
 [Verified deployment evidence](docs/LIVE_RELEASE_STATUS.md) records the live revision and checks.
 Live acceptance is recorded separately from the unfinished roadmap. Models, outbound

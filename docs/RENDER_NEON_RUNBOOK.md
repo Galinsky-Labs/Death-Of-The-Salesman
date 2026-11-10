@@ -85,12 +85,14 @@ atomically to 100% per agent using a tenant/agent transaction advisory lock; pro
 row locking serializes archive against assignment creation. No UPDATE grant on
 agent identity IDs is needed. Errors preserve existing data and can be retried.
 
-Model APIs, CRM, campaign dispatch, mailbox delivery, payments, grants submission,
-funding analytics and durable agent execution are still roadmap work, not live features.
+The operations release adds durable queued tasks, CRM, campaign rehearsal and gated
+dispatch, conversations and inbound receipts, invoices and signed payment reconciliation,
+funding checklists, strategy experiments and encrypted documents. See the operations
+runbook for activation prerequisites. Paid and outbound execution remains disabled.
+Automatic grant submission and the full roadmap acceptance remain outstanding.
 Do not represent this deployment as the completion of DOTS-151–160 or enable any
 provider/channel merely because it has a credential. Keep the $0 cap and outbound off.
 
 Rollback the Render app to a known compatible source revision. Do not roll back
-production audit migrations or delete owner data to roll back this release. No schema
-changes need reverting. A first-release failure can be addressed by reverting the PR
+production audit migrations or delete owner data to roll back this release. Retain the additive operations schema. A first-release failure can be addressed by reverting the PR
 and leaving the Neon database intact. Staging and production must remain separate.

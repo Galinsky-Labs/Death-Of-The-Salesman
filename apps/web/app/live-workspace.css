@@ -9,7 +9,7 @@
 .live-brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:17px;font-weight:800;letter-spacing:-1px;color:#d8c9ff!important}
 .live-brand>span{font-size:12px;letter-spacing:2.5px;color:var(--live-text)}
 .sidebar-caption{font-size:10px;font-weight:700;color:#8a92a1;letter-spacing:1.6px;margin:49px 12px 16px}
-.live-sidebar nav{display:grid;gap:7px}
+.live-sidebar nav{display:grid;gap:7px;overflow-y:auto;min-height:0;flex:1}.live-sidebar .live-brand,.live-sidebar .sidebar-caption,.sidebar-bottom{flex-shrink:0}
 .live-sidebar nav button{background:none;color:#a4acba;border:0;border-radius:7px;text-align:left;padding:13px;display:flex;align-items:center;gap:13px;font-size:13px}
 .live-sidebar nav button span{font-size:19px;width:22px}
 .live-sidebar nav button small{margin-left:auto;padding:2px 6px;background:#30303e;border-radius:4px}

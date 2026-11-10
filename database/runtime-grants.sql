@@ -1,0 +1,30 @@
+-- Apply with the migration administrator after migrations. The application login
+-- inherits dots_runtime; it receives no schema, role-management or RLS-bypass rights.
+GRANT SELECT ON app.operation_events,app.event_outbox,app.policy_controls,app.spending_policies,app.budget_reservations,app.reservation_policy_links,app.money_entries,app.action_approvals,app.task_queue,app.agent_runs,app.run_checkpoints,app.crm_accounts,app.crm_contacts,app.contact_suppressions,app.contact_events,app.deals,app.strategies,app.campaigns,app.campaign_revisions,app.campaign_audience,app.mailboxes,app.conversations,app.messages,app.experiments,app.experiment_enrollments,app.funding_opportunities,app.funding_checklist,app.invoices,app.provider_receipts,app.document_library,app.agent_configuration,app.offers,app.pricing_summaries,app.vetted_product_facts,app.approved_agent_names TO dots_runtime;
+GRANT INSERT ON app.operation_events,app.event_outbox,app.policy_controls,app.spending_policies,app.budget_reservations,app.reservation_policy_links,app.money_entries,app.action_approvals,app.task_queue,app.agent_runs,app.run_checkpoints,app.crm_accounts,app.crm_contacts,app.contact_suppressions,app.contact_events,app.deals,app.strategies,app.campaigns,app.campaign_revisions,app.campaign_audience,app.mailboxes,app.conversations,app.messages,app.experiments,app.experiment_enrollments,app.funding_opportunities,app.funding_checklist,app.invoices,app.provider_receipts,app.document_library,app.agent_configuration,app.offers,app.pricing_summaries,app.vetted_product_facts,app.agent_identities TO dots_runtime;
+GRANT UPDATE(status,attempts,available_at,published_at) ON app.event_outbox TO dots_runtime;
+GRANT UPDATE(paused,model_enabled,outbound_enabled,version,updated_by_membership_id,updated_at) ON app.policy_controls TO dots_runtime;
+GRANT UPDATE(limit_cents,reserved_cents,spent_cents,authorization_ref,version,updated_by_membership_id,updated_at) ON app.spending_policies TO dots_runtime;
+GRANT UPDATE(status,actual_cents,settled_at) ON app.budget_reservations TO dots_runtime;
+GRANT UPDATE(status,decided_by_membership_id,decided_at) ON app.action_approvals TO dots_runtime;
+GRANT UPDATE(state,attempts,fencing_token,lease_owner,lease_expires_at,heartbeat_at,available_at,last_reason,updated_at) ON app.task_queue TO dots_runtime;
+GRANT UPDATE(state,result,reason_code,ended_at) ON app.agent_runs TO dots_runtime;
+GRANT UPDATE(name,website,sector) ON app.crm_accounts TO dots_runtime;
+GRANT UPDATE(display_name,email,role_title,status,consent,lawful_source,jurisdiction,consent_evidence,owner_agent_id,version,updated_at) ON app.crm_contacts TO dots_runtime;
+GRANT UPDATE(content) ON app.contact_events TO dots_runtime;
+GRANT UPDATE(stage,version,updated_at) ON app.deals TO dots_runtime;
+GRANT UPDATE(status) ON app.strategies TO dots_runtime;
+GRANT UPDATE(label,goal,strategy_id,state,revision,budget_cents,daily_limit,cadence_days,approved_revision,approved_hash,version,updated_at) ON app.campaigns TO dots_runtime;
+GRANT UPDATE(verified,status) ON app.mailboxes TO dots_runtime;
+GRANT UPDATE(subject,state,human_takeover,updated_at) ON app.conversations TO dots_runtime;
+GRANT UPDATE(subject,body,state,provider_message_id,approval_id,content_hash,fact_snapshot_hash,approved_campaign_revision,version,sent_at) ON app.messages TO dots_runtime;
+GRANT UPDATE(state) ON app.experiments TO dots_runtime;
+GRANT UPDATE(exposed_at,converted_at,source) ON app.experiment_enrollments TO dots_runtime;
+GRANT UPDATE(stage,owner_authority_ref,application_draft,committed_cents,version,updated_at) ON app.funding_opportunities TO dots_runtime;
+GRANT UPDATE(completed) ON app.funding_checklist TO dots_runtime;
+GRANT UPDATE(state,provider_payment_id,test_mode,version) ON app.invoices TO dots_runtime;
+GRANT UPDATE(processed_at) ON app.provider_receipts TO dots_runtime;
+GRANT UPDATE(role_label,provider_id,strategy_id,daily_task_limit,version,updated_at) ON app.agent_configuration TO dots_runtime;
+GRANT UPDATE(label,content,status,version,updated_by_membership_id,updated_at) ON app.offers,app.pricing_summaries,app.vetted_product_facts TO dots_runtime;
+GRANT UPDATE(display_name,status,version,updated_by_membership_id,updated_at) ON app.agent_identities TO dots_runtime;
+GRANT DELETE ON app.campaign_audience TO dots_runtime;

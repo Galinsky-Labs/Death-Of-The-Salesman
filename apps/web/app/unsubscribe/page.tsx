@@ -1,0 +1,3 @@
+import {verifyOptOut} from '@dots/operations';
+import '../live-workspace.css';
+export default async function Unsubscribe({searchParams}:{searchParams:Promise<{token?:string}>}){const {token}=await searchParams;const valid=verifyOptOut(token??'',process.env.UNSUBSCRIBE_SIGNING_KEY);return <main className="login-shell"><section className="login-panel"><h1>Unsubscribe</h1>{valid?<><p className="muted">Confirm that you no longer want to receive campaign messages.</p><form action="/api/unsubscribe" method="post"><input type="hidden" name="token" value={token}/><button className="live-primary" type="submit">Unsubscribe from all campaigns</button></form></>:<p className="muted">This unsubscribe link is invalid. Contact the sender to request removal.</p>}</section></main>;}

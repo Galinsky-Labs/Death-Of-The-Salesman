@@ -1,0 +1,20 @@
+{
+  "observedAt": "2026-11-10T00:45:20.841Z",
+  "status": "previous runtime healthy; new runtime withheld pending production grants approval",
+  "observations": [
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/readiness",
+      "status": 200,
+      "revision": "423776e559a58840d06c1104240cbc9b32e9e35f",
+      "database": "connected"
+    },
+    {
+      "path": "/api/workspace",
+      "status": 401
+    }
+  ]
+}

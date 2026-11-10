@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-09T23:25:49Z",
+  "observedAt": "2026-11-10T00:43:19Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -761,7 +761,9 @@
       "id": "DOTS-031",
       "title": "Transactional outbox and idempotent event intake",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        43
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -798,7 +800,9 @@
       "verification": [
         "No floating-point monetary amounts; double-entry invariants and reconciliation tests pass."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -821,7 +825,9 @@
       "verification": [
         "Every paid operation is blocked at default $0 even if the browser and agent ask to proceed."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -844,7 +850,9 @@
       "verification": [
         "Concurrent requests never overrun shared hard cap; failures and timeouts release/reconcile correctly."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -892,7 +900,9 @@
       "verification": [
         "Agent prompt cannot bypass rule; each decision persists stable rule identifiers and reasons."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -915,7 +925,9 @@
       "verification": [
         "Changed content revokes approval; stale approvals cannot be replayed for different recipients."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -938,7 +950,9 @@
       "verification": [
         "Pause blocks external dispatch immediately even if prior approval exists; owner can resume safely."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -961,7 +975,9 @@
       "verification": [
         "Worker restarts preserve pending tasks; repeated deliveries never duplicate business effects."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -984,7 +1000,9 @@
       "verification": [
         "Two workers cannot concurrently own the same work item; expired worker cannot commit protected output."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1056,7 +1074,9 @@
       "verification": [
         "Deletion/retention policy prevents unnecessary long-term storage; test export remains tenant-scoped."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1127,7 +1147,9 @@
       "verification": [
         "Agent cannot execute a task outside its approved campaign or skill scope."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1151,7 +1173,9 @@
       "verification": [
         "Retrieved email/website text treated as untrusted and cannot redefine tool privileges."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1198,7 +1222,9 @@
       "verification": [
         "All runs exit and checkpoint; failures yield evidence without phantom activity."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1221,7 +1247,9 @@
       "verification": [
         "New process resumes safely without relying on ChatGPT conversation memory."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1246,7 +1274,9 @@
       "verification": [
         "Unapproved, paused, suppressed or unfunded action cannot be dispatched, including on retry."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1270,7 +1300,9 @@
       "verification": [
         "A crash mid-send triggers reconciliation instead of blind duplicate sending."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1294,7 +1326,9 @@
       "verification": [
         "Agent card can explain every green/yellow/red state using persisted evidence links."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1365,7 +1399,9 @@
       "verification": [
         "Conformance fixtures cover schema failures, empty responses, streamed/nonstreamed output and cancellations."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1388,7 +1424,9 @@
       "verification": [
         "Mocked traces match canonical model results; no consumer ChatGPT subscription assumed to be API credit."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1411,7 +1449,9 @@
       "verification": [
         "Mocked tool-use turns, refusal and token accounting pass without external calls."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1434,7 +1474,9 @@
       "verification": [
         "Mocks verify request/response mapping; unavailable account model fails closed."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1457,7 +1499,9 @@
       "verification": [
         "Manifest and mock health tests pass; repository contains no checkpoint weights."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1480,7 +1524,9 @@
       "verification": [
         "Manifest, license gate and mock inference pass; no GPU provisioned by test."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1503,7 +1549,9 @@
       "verification": [
         "Manifest, license gate and mock inference pass; no GPU download or rental by default."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1601,7 +1649,9 @@
       "verification": [
         "Dashboard spend reconciles with ledger and flags missing/estimated usage separately."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1625,7 +1675,9 @@
       "verification": [
         "UI discloses absent keys, cost status, privacy category and disabled models truthfully."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1702,7 +1754,9 @@
       "verification": [
         "Contact data remains tenant-isolated and cannot silently merge unrelated organizations."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1725,7 +1779,9 @@
       "verification": [
         "Invalid or unlawfully sourced records are quarantined; no automatic contact is sent."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1747,7 +1803,9 @@
       "verification": [
         "Duplicates do not trigger double outreach or lose historical conversation identity."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1770,7 +1828,9 @@
       "verification": [
         "Suppressed contact cannot be queued or sent from any agent/campaign; overrides require lawful audit."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1840,7 +1900,9 @@
       "verification": [
         "Every visible contact event has timestamp, actor and source; unverified model statements aren't facts."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1863,7 +1925,9 @@
       "verification": [
         "Stage movement requires evidence rules and never makes up a conversion."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1887,7 +1951,9 @@
       "verification": [
         "Forecasted value differs from invoiced and cash received, with verified references."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1934,7 +2000,9 @@
       "verification": [
         "Owner operates CRM without dense mandatory tables, on desktop and touch screen."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -1983,7 +2051,9 @@
       "verification": [
         "Only permitted state transitions apply; edits to approved copy create new reviewable version."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2054,7 +2124,9 @@
       "verification": [
         "Unsupported numerical claims are flagged and cannot pass automated outbound approval."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2101,7 +2173,9 @@
       "verification": [
         "Forbidden campaign combinations fail validation with plain-language reasons."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2149,7 +2223,9 @@
       "verification": [
         "No real people contacted and no billable inference; owner sees each blocking reason."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2172,7 +2248,9 @@
       "verification": [
         "Any material audience/copy/budget change revokes stale approvals and requires re-review."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2265,7 +2343,9 @@
       "verification": [
         "Mail integration remains disabled until the owner grants account consent; no global shared sender."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2288,7 +2368,9 @@
       "verification": [
         "Out-of-order, duplicate and forged events are handled without adding fake replies."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2312,7 +2394,9 @@
       "verification": [
         "Replies attach to correct contact/campaign; duplicate imports idempotent."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2335,7 +2419,9 @@
       "verification": [
         "Agent/owner can find and inspect a thread with accurate sender/time/delivery labels."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2359,7 +2445,9 @@
       "verification": [
         "Owner can edit content; AI-generated text not mislabeled as verified fact."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2382,7 +2470,9 @@
       "verification": [
         "Content edits invalidate previously approved sends; focus and paste are safe on mobile."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2408,7 +2498,9 @@
       "verification": [
         "No send unless all current approval, suppression, domain, budget and identity conditions hold."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2431,7 +2523,9 @@
       "verification": [
         "Transport timeout does not create a second email; unmatched responses need owner reconciliation."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2454,7 +2548,9 @@
       "verification": [
         "Opt-out immediately blocks pending sequences and is auditable; no sender launch if required profile missing."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2477,7 +2573,9 @@
       "verification": [
         "High-complaint campaigns pause; known invalid addresses are suppressed."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2549,7 +2647,9 @@
       "verification": [
         "Agent cannot send while owner owns the conversation unless explicitly delegated."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2648,7 +2748,9 @@
       "verification": [
         "Owner can modify a proposed new revision without mutating historical experiments."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2694,7 +2796,9 @@
       "verification": [
         "Repeated workers/runs use same arm and seed; no cross-experiment duplicate exposures."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2718,7 +2822,9 @@
       "verification": [
         "Stats cannot count imagined 'closed' or model claims as receipts."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2764,7 +2870,9 @@
       "verification": [
         "Small or imbalanced samples warn; unstable uplift never auto-promotes."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2812,7 +2920,9 @@
       "verification": [
         "Clear evidence required; every promotion can be rolled back and audited."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2930,7 +3040,9 @@
       "verification": [
         "Unavailable APIs yield explicit waiting state; no fabricated program/call for proposals."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2976,7 +3088,9 @@
       "verification": [
         "A funding lead, pending award, commitment and received payment are visually distinct."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -2999,7 +3113,9 @@
       "verification": [
         "No application becomes 'submitted' without provider receipt or owner-verified evidence."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3023,7 +3139,9 @@
       "verification": [
         "Unsupported organizational claims are blocked; required documents remain private."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3070,7 +3188,9 @@
       "verification": [
         "Autonomous agent cannot sign/certify or submit regulated representations without owner approval."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3093,7 +3213,9 @@
       "verification": [
         "Grant award is not recorded as cash received until verified receipt; restricted funds separated."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3117,7 +3239,9 @@
       "verification": [
         "General solicitation/regulated offer requests are blocked or owner/legal reviewed as required."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3141,7 +3265,9 @@
       "verification": [
         "Fictitious traction/revenue claims fail; all outbound pitch revisions link to approved facts."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3165,7 +3291,9 @@
       "verification": [
         "Dashboard never labels verbal interest as raised money; proof/source requirements enforced."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3262,7 +3390,9 @@
       "verification": [
         "No live charges until owner connects separate account and approves plan; sandbox receipts work."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3286,7 +3416,9 @@
       "verification": [
         "Actual net realized revenue is computed from verified processor events, not claimed in an email."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3356,7 +3488,9 @@
       "verification": [
         "Stable external IDs and conflict ownership prevent duplication and cross-tenant leakage."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3404,7 +3538,9 @@
       "verification": [
         "Customer-facing routes expose only intended tenant/account data; no internal model transcripts."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3503,7 +3639,9 @@
       "verification": [
         "GDPR/CASL or other enabled jurisdictions have reviewed policies; unsupported regions disabled."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3653,7 +3791,9 @@
       "verification": [
         "One-click scripted smoke proof and rollback succeeds; source SHA and live revision recorded."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3676,7 +3816,9 @@
       "verification": [
         "Only approved infrastructure/credentials permit deployment; no spend from unapproved CI."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": [
@@ -3858,7 +4000,9 @@
       "verification": [
         "Evidence differentiates deployed from demo, planned from merged, interest from cash; no false completion."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        43
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []

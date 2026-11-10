@@ -1,0 +1,12 @@
+DROP TABLE app.run_checkpoints;
+DROP TABLE app.agent_runs;
+DROP TABLE app.task_queue;
+DROP TABLE app.action_approvals;
+DROP TABLE app.money_entries;
+DROP TABLE app.reservation_policy_links;
+DROP TABLE app.budget_reservations;
+DROP TABLE app.spending_policies;
+DROP TABLE app.policy_controls;
+DROP TABLE app.event_outbox;
+DROP TABLE app.operation_events;
+DROP FUNCTION app.deny_operation_evidence_mutation();

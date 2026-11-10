@@ -1,0 +1,23 @@
+{
+  "environment": "isolated Neon staging",
+  "startedAt": "2026-11-10T00:40:12.656Z",
+  "checks": [
+    "project persistence",
+    "approved identity, activation, role and assignment",
+    "CRM account/contact, consent, note, atomic import and dedupe",
+    "versioned pipeline movement",
+    "offer and expiring verified fact",
+    "campaign audience, rehearsal, immutable approval, default-off activation",
+    "conversation, draft, exact content review, takeover, no unauthorized delivery",
+    "invoice issue/print, unconfigured payment blocked",
+    "encrypted document persistence, integrity, read/download",
+    "funding separation, checklist, submission authority and saved draft",
+    "actual child worker, durable claim/fence/checkpoints/result and zero spend",
+    "universal suppression and erasure boundary",
+    "complete private exports"
+  ],
+  "completedAt": "2026-11-10T00:41:47.095Z",
+  "result": "passed",
+  "projectId": "35cd7a6f-59d4-4a24-a300-7be84cce4a10",
+  "taskId": "2b17819c-89c9-4d2f-ad8b-c38ef6d158e9"
+}

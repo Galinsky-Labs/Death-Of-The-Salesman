@@ -1,0 +1,7 @@
+import {verifyWebhook,verifySvix,OperationError} from '@dots/operations';
+import {withOperations,repositories} from '../../../../lib/operations';
+export const dynamic='force-dynamic';
+export async function POST(request:Request,context:{params:Promise<{provider:string}>}){const {provider}=await context.params;const raw=await request.text();if(raw.length>262144)return Response.json({error:'Too large'},{status:413});try{
+ const valid=provider==='stripe'?verifyWebhook(raw,request.headers.get('stripe-signature'),process.env.STRIPE_WEBHOOK_SECRET):provider==='resend'?verifySvix(raw,{id:request.headers.get('svix-id'),timestamp:request.headers.get('svix-timestamp'),signature:request.headers.get('svix-signature')},process.env.EMAIL_WEBHOOK_SECRET):false;
+ if(!valid)return Response.json({error:'Invalid signature'},{status:401});const payload=JSON.parse(raw);const eventId=provider==='stripe'?payload.id:request.headers.get('svix-id');if(typeof eventId!=='string'||eventId.length>240)return Response.json({error:'Invalid event'},{status:400});const result=await withOperations((client,ctx)=>provider==='stripe'?repositories(client,ctx).payments.ingestStripe(eventId,payload):repositories(client,ctx).delivery.ingestEmail(eventId,payload));return Response.json(result);
+ }catch(error){return Response.json({error:error instanceof OperationError?error.code:'Webhook rejected'},{status:error instanceof OperationError?error.status:400});}}

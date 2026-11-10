@@ -83,7 +83,7 @@ jobs:
           set -euo pipefail
           node scripts/migrate.mjs up
           node scripts/migrate.mjs up
-          test "$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM app_meta.schema_migrations")" = "10"
+          test "$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM app_meta.schema_migrations")" = "$(find database/migrations -name '*.up.sql' | wc -l | tr -d ' ')"
           test "$(psql "$DATABASE_URL" -Atc "SELECT count(DISTINCT app.new_id()) FROM generate_series(1,100)")" = "100"
           test "$(psql "$DATABASE_URL" -Atc "SELECT pg_typeof(app.utc_now())::text")" = "timestamp with time zone"
           psql "$DATABASE_URL" --set ON_ERROR_STOP=1 <<'SQL'
@@ -322,6 +322,9 @@ jobs:
           ")" = ""
           # This rollback is CI-only on a disposable database; production
           # audit evidence requires explicit export/retention approval first.
+          while [ "$(psql "$DATABASE_URL" -Atc "SELECT count(*) FROM app_meta.schema_migrations")" -gt 10 ]; do
+            node scripts/migrate.mjs down
+          done
           test "$(psql "$DATABASE_URL" -Atc "SELECT to_regclass('app.audit_events') IS NOT NULL")" = "t"
           node scripts/migrate.mjs down
           test "$(psql "$DATABASE_URL" -Atc "SELECT to_regclass('app.audit_events') IS NULL")" = "t"

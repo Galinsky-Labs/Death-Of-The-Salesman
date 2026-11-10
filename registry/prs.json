@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-10T00:43:19Z",
+  "observedAt": "2026-11-10T01:12:33Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -777,7 +777,9 @@
       "verification": [
         "Crash between commit and delivery does not lose state or create duplicate applied effects."
       ],
-      "contributingPrs": [],
+      "contributingPrs": [
+        44
+      ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
       "externalPrerequisites": []
@@ -3817,7 +3819,8 @@
         "Only approved infrastructure/credentials permit deployment; no spend from unapproved CI."
       ],
       "contributingPrs": [
-        43
+        43,
+        44
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],
@@ -4001,7 +4004,8 @@
         "Evidence differentiates deployed from demo, planned from merged, interest from cash; no false completion."
       ],
       "contributingPrs": [
-        43
+        43,
+        44
       ],
       "priorEvidencePrs": [],
       "externalDependencies": [],

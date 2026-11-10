@@ -3,12 +3,12 @@
 The operations release is live at https://death-of-the-salesman.onrender.com in the
 Galinsky Labs Render workspace, connected to the production Neon database.
 
-- Runtime source: `4f6aa485b8d932fe854445e5fb5011b80648e46e` (merged PR #43).
-- Current deploy: `dep-dbp6tm7ctcqc73al85rg`, live at
-  `2026-11-10T01:11:47.068447Z` (8:11 p.m. Eastern on November 9).
+- Runtime source: `f88c804fa430dab4e828c745aa251ea4423cec79` (merged PR #45).
+- Current deploy: `dep-dbp7ep3rjlhs73f33r4g`, live at
+  `2026-11-10T01:47:23.012208Z` (8:47 p.m. Eastern on November 9).
 - Service: `srv-dbp58hm1egvs73b3inug`, free web service in Ohio. Auto-deploy is off.
 - Neon project: `muddy-mountain-84355519`; branch: `br-orange-recipe-bdgmz9qg`.
-- [Live HTTPS acceptance](evidence/operations-render-live-acceptance.json) verifies the
+- [Current live HTTPS acceptance](evidence/free-integrations-live-acceptance.json) verifies the
   exact runtime SHA, database readiness, durable-queue configuration, owner access
   boundaries, cross-origin protection and signed-webhook requirements.
 - [Production database acceptance](evidence/operations-production-database-acceptance.json)
@@ -42,7 +42,7 @@ The owner's real mailbox OTP round trip remains unverified.
   keyboard dialog dismissal passed.
 - [Historical production hold check](evidence/operations-production-hold.json) records
   the previous runtime before the owner approved the production permissions.
-- Local `pnpm check`: 117 passing tests, typecheck, secret scan and production build.
+- Local `pnpm check`: 123 passing tests, typecheck, secret scan and production build.
 - Dependency audit: no known vulnerabilities. Failure-contract test passed.
 - New migrations 0011–0013 have been applied to staging and production; these are additive.
 
@@ -58,6 +58,26 @@ receipt-evidence mutation. The administrative migration credential is absent fro
 Durable queue execution is enabled. Paid model execution, email delivery/receiving and
 payments remain disabled, with a zero-dollar spending cap. The document encryption key
 and unsubscribe signing key are configured; key values are never included in evidence.
+
+## Free integrations
+
+PR #45 adds pinned Qwen3.8 27B on a confirmed Groq Free account, optional Gemma 4 31B
+through OpenRouter with zero maximum prices and a pinned host, and Resend Free dispatch
+with organization ceilings of 100/day and 3,000/month. Free paths preserve the $0 funded
+cap. Paid fallback is disabled; exhaustion stops work instead of upgrading it. Free model
+inputs require public/non-personal confirmation and exclude private workspace context.
+
+Settings now includes connection checks without inference, honest key-required statuses,
+account signup links and approved free-model discovery. Stripe sandbox accepts restricted
+test keys and rejects invalid payment limits. No migrations or new runtime grants were
+needed. All 123 tests and source CI passed. Authenticated staging browser acceptance and
+current public catalog evidence are under `docs/evidence/free-integrations*` and
+`docs/evidence/free-model-catalog-2026-11-09.json`.
+
+Deployment enables the free connector paths, not external account credentials. Groq and
+Resend require confirmation that the owner's account is actually on the Free plan. Provider
+keys and authenticated inference/email/payment canaries remain external prerequisites.
+See [exact signup/key/webhook instructions](FREE_AND_PAID_INTEGRATIONS.md).
 
 ## Remaining external prerequisites
 

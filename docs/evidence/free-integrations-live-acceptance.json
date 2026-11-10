@@ -1,0 +1,99 @@
+{
+  "url": "https://death-of-the-salesman.onrender.com",
+  "observedAt": "2026-11-10T01:48:01.674Z",
+  "deployId": "dep-dbp7ep3rjlhs73f33r4g",
+  "sourceSha": "f88c804fa430dab4e828c745aa251ea4423cec79",
+  "checks": [
+    {
+      "path": "/",
+      "status": 307
+    },
+    {
+      "path": "/dashboard",
+      "status": 307
+    },
+    {
+      "path": "/api/workspace",
+      "status": 401
+    },
+    {
+      "path": "/api/operations",
+      "status": 401
+    },
+    {
+      "path": "/api/export?resource=workspace",
+      "status": 401
+    },
+    {
+      "path": "/api/documents?id=11111111-1111-4111-8111-111111111111",
+      "status": 401
+    },
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/readiness",
+      "status": 200,
+      "result": {
+        "service": "web",
+        "status": "ok",
+        "database": "connected",
+        "execution": "durable_queue",
+        "paidExecution": false,
+        "revision": "f88c804fa430dab4e828c745aa251ea4423cec79"
+      }
+    },
+    {
+      "path": "/auth/sign-in",
+      "status": 200
+    },
+    {
+      "path": "/review-synthetic",
+      "status": 404
+    },
+    {
+      "path": "/api/workspace",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/api/operations",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/api/operations",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/api/workspace",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/sign-up/email",
+      "method": "POST",
+      "status": 404
+    },
+    {
+      "path": "/api/webhooks/stripe",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/api/webhooks/resend",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/email-otp/send-verification-otp",
+      "status": 403,
+      "check": "nonowner rejected before email delivery"
+    }
+  ],
+  "result": "passed",
+  "ownerOtpDelivery": "owner mailbox round trip not performed",
+  "paidExecutionEnabled": false
+}

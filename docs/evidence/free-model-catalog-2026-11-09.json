@@ -1,0 +1,19 @@
+{
+  "source": "OpenRouter",
+  "observedAt": "2026-11-10T01:42:22.426Z",
+  "models": [
+    {
+      "id": "google/gemma-4-31b-it:free",
+      "name": "Google: Gemma 4 31B (free)",
+      "contextLength": 262144,
+      "costCents": 0,
+      "weightsUrl": "https://huggingface.co/google/gemma-4-31B-it"
+    }
+  ],
+  "note": "An account API key is required. Availability and free quotas can change; there is no paid fallback.",
+  "pinnedOpenRouterModel": "google/gemma-4-31b-it:free",
+  "recommendedGroqModel": "qwen/qwen3.8-27b",
+  "groqSource": "https://console.groq.com/docs/model/qwen/qwen3.8-27b",
+  "inferencePerformed": false,
+  "authenticatedProviderChecks": "awaiting owner API keys"
+}

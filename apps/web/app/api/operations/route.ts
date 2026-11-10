@@ -3,7 +3,7 @@ import {hasTrustedOrigin} from '../../../lib/request-origin';
 import {withOperations,repositories,loadOperations} from '../../../lib/operations';
 import {inWorkspace,tenant as workspaceTenant} from '../../../lib/database';
 import {wakeWorker} from '../../../lib/worker-launcher';
-import {OperationError,identifier,text,selection,cents,providerIds,digest,rows,tenant,event,discoverGrants} from '@dots/operations';
+import {OperationError,identifier,text,selection,cents,providerIds,digest,rows,tenant,event,discoverGrants,discoverFreeModels,checkFreeModelConnection,providerConfiguration} from '@dots/operations';
 import {AgentIdentityRepository,ProjectCatalogRepository,AgentProjectAssignmentRepository} from '@dots/database';
 import approvedNames from '../../../../../registry/approved-salesman-names.json';
 export const dynamic='force-dynamic';
@@ -49,6 +49,8 @@ export async function POST(request:Request){try{
  case 'messageApproval':outcome=await sales.messageApproval(identifier(body.id));break;
  case 'sendMessage':outcome=await delivery.send(identifier(body.id));break;
  case 'takeover':await sales.takeover(identifier(body.id),body.enabled===true);break;
+ case 'checkFreeModelConnection':outcome=await checkFreeModelConnection(process.env,fetch,body.provider==='groq'?'groq':'openrouter');break;
+ case 'discoverFreeModels':outcome=await discoverFreeModels();break;
  case 'discoverGrants':outcome=await discoverGrants(text(body.keyword,'keyword',120));break;
  case 'verifyMailbox':outcome=await delivery.verifyMailbox(identifier(body.id));break;
  case 'createFunding':outcome=await sales.createFunding({projectId:identifier(body.projectId),kind:body.kind,label:body.label,funder:body.funder,sourceUrl:body.sourceUrl,eligibility:body.eligibility,deadline:body.deadline,requestedCents:cents(body.requestedCents??0),restrictions:body.restrictions});break;
@@ -63,7 +65,7 @@ export async function POST(request:Request){try{
  case 'readDocument':outcome=await documents.read(identifier(body.id));break;
  case 'enqueueTask':{
   const mode=selection(body.mode??'simulation',['simulation','live'],'mode');const provider=body.provider?selection(body.provider,providerIds,'provider'):undefined;
-  outcome=await control.enqueue(identifier(body.projectId),identifier(body.agentId),selection(body.kind,['research','draft','simulate_campaign','follow_up','grant_draft'],'task_kind'),{mode,provider,brief:text(body.brief,'brief',6000)},text(body.idempotencyKey,'idempotency_key',200));break;
+  outcome=await control.enqueue(identifier(body.projectId),identifier(body.agentId),selection(body.kind,['research','draft','simulate_campaign','follow_up','grant_draft'],'task_kind'),{mode,provider,publicDataOnly:body.publicDataOnly===true,brief:text(body.brief,'brief',6000)},text(body.idempotencyKey,'idempotency_key',200));break;
  }
  case 'cancelTask':await queue.cancel(identifier(body.id));break;
  case 'retryTask':await tenant(client,ctx,async tx=>{const saved=rows(await tx.query("UPDATE app.task_queue SET state='queued',last_reason=NULL,available_at=app.utc_now(),attempts=0 WHERE organization_id=$1 AND id=$2 AND state IN ('failed','waiting') RETURNING id",[ctx.organizationId,identifier(body.id)]));if(!saved.length)throw new OperationError('TASK_REQUIRES_RECONCILIATION');await event(tx,ctx,'task.requeued',body.id);});break;
@@ -75,7 +77,7 @@ export async function POST(request:Request){try{
  case 'addFact':{const verifiedAt=new Date().toISOString();const expiresAt=new Date(body.expiresAt);if(!Number.isFinite(expiresAt.getTime())||expiresAt.getTime()<=Date.now())throw new OperationError('FUTURE_EXPIRY_REQUIRED',400);const source=text(body.sourceUrl,'source',2048);if(!source.startsWith('https://'))throw new OperationError('HTTPS_SOURCE_REQUIRED',400);outcome=await new ProjectCatalogRepository(client).create({kind:'productFact',organizationId:ctx.organizationId,ownerMembershipId:ctx.membershipId,projectId:identifier(body.projectId),offerId:identifier(body.offerId),label:text(body.label,'fact',240),content:{body:text(body.body,'fact_body',2000),sourceUrl:source,verifiedAt,expiresAt:expiresAt.toISOString()}});break;}
  case 'configureExecution':{
   const model=body.modelEnabled===true,outbound=body.outboundEnabled===true;
-  if(model&&(process.env.MODEL_API_ENABLED!=='true'||!process.env.OWNER_SPEND_AUTHORIZATION_ID||Number(process.env.PAID_SPEND_LIMIT_CENTS??0)<=0))throw new OperationError('MODEL_EXECUTION_NOT_AUTHORIZED',403);
+  if(model&&!(process.env.FREE_MODEL_API_ENABLED==='true'&&(providerConfiguration('openrouter')||providerConfiguration('groq')))&&(process.env.MODEL_API_ENABLED!=='true'||!process.env.OWNER_SPEND_AUTHORIZATION_ID||Number(process.env.PAID_SPEND_LIMIT_CENTS??0)<=0))throw new OperationError('MODEL_EXECUTION_NOT_AUTHORIZED',403);
   if(outbound&&(process.env.EMAIL_DELIVERY_ENABLED!=='true'||!process.env.OUTREACH_POLICY_AUTHORIZATION_ID||!process.env.SENDER_VERIFICATION_REFERENCE))throw new OperationError('OUTREACH_POLICY_NOT_AUTHORIZED',403);
   await tenant(client,ctx,async tx=>{await tx.query('UPDATE app.policy_controls SET model_enabled=$2,outbound_enabled=$3,version=version+1,updated_at=app.utc_now() WHERE organization_id=$1',[ctx.organizationId,model,outbound]);await event(tx,ctx,'execution.configuration_changed',null,{modelEnabled:model,outboundEnabled:outbound});});break;
  }

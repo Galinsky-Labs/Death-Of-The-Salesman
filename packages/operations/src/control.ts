@@ -34,7 +34,7 @@ export class ControlPlane {
       return reservation;
     });
   }
-  async settle(id: string, actual: number, evidence: string, release=false) {
+  async settle(id: string, actual: number, evidence: string, release=false,source?:"provider"|"simulation") {
     cents(actual);text(evidence,"evidence",240);
     return tenant(this.client,this.ctx,async tx=>{
       await tx.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",[`budget:${this.ctx.organizationId}`]);
@@ -44,7 +44,7 @@ export class ControlPlane {
       if(actual>Number(reservation.estimate_cents))return fail("USAGE_EXCEEDS_RESERVATION");
       await tx.query("UPDATE app.spending_policies SET reserved_cents=reserved_cents-$2,spent_cents=spent_cents+$3 WHERE id IN(SELECT policy_id FROM app.reservation_policy_links WHERE organization_id=$1 AND reservation_id=$4)",[this.ctx.organizationId,Number(reservation.estimate_cents),release?0:actual,id]);
       const result=rows(await tx.query("UPDATE app.budget_reservations SET status=$3,actual_cents=$4,settled_at=app.utc_now() WHERE organization_id=$1 AND id=$2 RETURNING *",[this.ctx.organizationId,id,release?"released":"settled",actual]))[0];
-      if(!release)await tx.query("INSERT INTO app.money_entries(organization_id,reservation_id,idempotency_key,kind,amount_cents,source,evidence_ref) VALUES($1,$2,$3,'expense',$4,$5,$6)",[this.ctx.organizationId,id,`settle:${id}`,actual,actual===0?"simulation":"provider",evidence]);
+      if(!release)await tx.query("INSERT INTO app.money_entries(organization_id,reservation_id,idempotency_key,kind,amount_cents,source,evidence_ref) VALUES($1,$2,$3,'expense',$4,$5,$6)",[this.ctx.organizationId,id,`settle:${id}`,actual,source??(actual===0?"simulation":"provider"),evidence]);
       await event(tx,this.ctx,release?"budget.released":"budget.settled",id,{actualCents:actual});return result;
     });
   }

@@ -34,6 +34,9 @@ Migration rollback drops the added features and their data; export and retention
 are required before considering rollback on a real workspace. Prefer rolling back code
 while retaining the additive schema.
 
+Environment updates can initiate a Render deployment even when Git auto-deploy is off.
+Check the deploy list after updating variables before triggering another deployment.
+
 Set `JOB_WORKER_ENABLED=true`. The process starts a bounded child worker at startup,
 on queue wakeups, and once per minute while the service is running. Render's free web
 service can sleep: scheduled work is delayed while asleep. An always-on worker requires

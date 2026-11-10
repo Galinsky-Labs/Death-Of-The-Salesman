@@ -1,0 +1,38 @@
+{
+  "observedAt": "2026-11-10T01:11:03.199Z",
+  "result": "passed",
+  "environment": "production Neon restricted application credential",
+  "checks": [
+    "Owner membership remains active",
+    "All 17 operation domains readable under tenant RLS",
+    "Invoice primary key update denied",
+    "Financial deletion denied",
+    "Schema creation denied"
+  ],
+  "tablesChecked": [
+    "task_queue",
+    "agent_runs",
+    "run_checkpoints",
+    "crm_contacts",
+    "crm_accounts",
+    "campaigns",
+    "conversations",
+    "messages",
+    "action_approvals",
+    "spending_policies",
+    "budget_reservations",
+    "money_entries",
+    "document_library",
+    "invoices",
+    "funding_opportunities",
+    "provider_receipts",
+    "experiments"
+  ],
+  "safety": {
+    "role": "dots_runtime",
+    "can_update_invoice_id": false,
+    "can_delete_money": false,
+    "can_create": false
+  },
+  "productionWritesDuringCheck": 0
+}

@@ -1,5 +1,5 @@
 import {database,inWorkspace,tenant as workspaceTenant} from './database';
-import {ControlPlane,SalesWorkspace,GrowthWorkspace,DocumentLibrary,DeliveryGateway,PaymentGateway,DurableQueue,providerConfiguration,providerIds,type Client,type Context} from '@dots/operations';
+import {identifier,ControlPlane,SalesWorkspace,GrowthWorkspace,DocumentLibrary,DeliveryGateway,PaymentGateway,DurableQueue,providerConfiguration,providerIds,type Client,type Context} from '@dots/operations';
 export type DataRow=Record<string,any>;
 export type OperationsSnapshot={records:Record<string,DataRow[]>;totals:Record<string,number>;summary:DataRow;providers:DataRow[];capabilities:DataRow;observedAt:string};
 export function context():Context{const owner=workspaceTenant();return {organizationId:owner.organizationId,membershipId:owner.ownerMembershipId};}
@@ -9,7 +9,7 @@ const sources:Record<string,{table:string;columns?:string;order?:string}>={
 };
 export async function loadOperations(options:{section?:string;page?:number;query?:string;conversation?:string}={}):Promise<OperationsSnapshot>{return inWorkspace(async client=>{
  const page=Number.isSafeInteger(options.page)&&Number(options.page)>=0?Math.min(100000,Number(options.page)):0;
- const values=[workspaceTenant().organizationId,options.query?`%${options.query.slice(0,100)}%`:null,options.conversation??null];
+ const values=[workspaceTenant().organizationId,options.query?`%${options.query.slice(0,100)}%`:null,options.conversation?identifier(options.conversation):null];
  const recordParts:string[]=[],countParts:string[]=[];
  for(const [name,source] of Object.entries(sources)){
   const conditions=['organization_id=$1'];

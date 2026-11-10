@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-11-10T00:47:18.626980+00:00",
+  "environment": "Local production Next build using isolated Neon staging and restricted runtime role",
+  "identity": "Synthetic staging user with actual provider-signed session; no deployed auth bypass",
+  "result": "passed",
+  "checks": [
+    "All 14 operations module views render without page errors",
+    "Desktop and 390px mobile have no global horizontal overflow",
+    "Contact dialog saves through authenticated operations API",
+    "Saved contact persists after full browser reload",
+    "Escape dismisses the import dialog"
+  ],
+  "spendCents": 0,
+  "realMessagesSent": 0
+}

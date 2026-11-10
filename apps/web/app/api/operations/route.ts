@@ -82,5 +82,5 @@ export async function POST(request:Request){try{
  case 'addMailbox':await tenant(client,ctx,async tx=>{const email=text(body.email,'email',254);if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new OperationError('INVALID_EMAIL',400);await tx.query("INSERT INTO app.mailboxes(organization_id,label,sender_email,sender_name,business_address,provider,verified,status) VALUES($1,$2,$3,$4,$5,'resend',false,'disabled')",[ctx.organizationId,text(body.label,'mailbox',120),email,text(body.name,'sender_name',120),text(body.address,'business_address',500)]);await event(tx,ctx,'mailbox.created',null);});break;
  default:throw new OperationError('UNKNOWN_ACTION',400);
  }});
- if(['enqueueTask','retryTask','pauseAll'].includes(body.action))wakeWorker();const data=await loadOperations({conversation:typeof body.conversationId==='string'?body.conversationId:undefined});return Response.json({data,outcome},{headers});
+ if(['enqueueTask','retryTask','pauseAll'].includes(body.action))wakeWorker();const data=await loadOperations({conversation:typeof body.conversationId==='string'&&body.conversationId?identifier(body.conversationId):undefined});return Response.json({data,outcome},{headers});
  }catch(error){if(error instanceof SyntaxError)return Response.json({error:'INVALID_JSON'},{status:400,headers});return errorResponse(error);}}

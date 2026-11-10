@@ -28,7 +28,11 @@ The owner's real mailbox OTP round trip remains unverified.
 - [Machine-readable workflow evidence](evidence/operations-staging-acceptance.json).
 - [Desktop screenshot](evidence/operations-desktop.png).
 - [Mobile screenshot](evidence/operations-mobile.png).
-- All 14 console views passed authenticated desktop/mobile browser rendering and overflow checks.
+- [Browser acceptance](evidence/operations-browser-acceptance.json): all 14 views passed
+  desktop/mobile rendering and overflow checks; form saves persisted after reload and
+  keyboard dialog dismissal passed.
+- [Production hold check](evidence/operations-production-hold.json): the previous runtime
+  remains healthy and owner-protected while activation is blocked.
 - Local `pnpm check`: 117 passing tests, typecheck, secret scan and production build.
 - Dependency audit: no known vulnerabilities. Failure-contract test passed.
 - New migrations 0011–0013 have been applied to staging and production; these are additive.

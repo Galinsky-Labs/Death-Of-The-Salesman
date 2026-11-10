@@ -65,7 +65,7 @@ before activation. Configure secrets through Render, never through a public docu
   business address. Enable the workspace policy, approve the campaign revision, approve
   exact message content and verified facts, then explicitly dispatch each message.
   Suppression, consent, cadence, business hours, sender, limits and budgets are rechecked.
-  `RESEND_WEBHOOK_SECRET` verifies delivery/bounce/complaint receipts at
+  `EMAIL_WEBHOOK_SECRET` verifies delivery/bounce/complaint receipts at
   `/api/webhooks/resend`. `EMAIL_RECEIVING_ENABLED=true` enables verified inbound retrieval
   using that same provider account; receiving a message never grants marketing consent.
 - Payments: `PAYMENTS_ENABLED`, `STRIPE_SECRET_KEY`, `OWNER_MERCHANT_AUTHORIZATION_ID`,

@@ -60,6 +60,13 @@ export function LiveWorkspace({ initial, initialOperations }: { initial: Workspa
   function avatar(agent: Agent, small = false) {
     return <span className={`live-avatar ${small ? "small" : ""}`} aria-hidden="true">{agent.display_name.split(" ").map(w=>w[0]).slice(0,2).join("")}</span>;
   }
+  function agentState(agent:Agent) {
+    if(agent.status!=="active")return {label:"Inactive",className:"inactive",reason:"Activate this identity in Settings."};
+    const job=operations?.records.jobs?.find(job=>job.agent_identity_id===agent.id&&job.lease_is_live&&Date.parse(job.lease_expires_at)>evidenceNow);
+    if(job)return {label:"Running",className:"running",reason:"Live worker lease and heartbeat verified."};
+    const waiting=operations?.records.jobs?.find(job=>job.agent_identity_id===agent.id&&["queued","waiting"].includes(job.state));
+    return {label:"Waiting",className:"waiting",reason:waiting?.last_reason?.replaceAll("_"," ")??(operations?.records.controls?.[0]?.paused?"Queue paused by owner.":"Ready for queued work.")};
+  }
   function projectCard(project: Project, index: number) {
     const assigned = data.assignments.filter(a=>a.project_id===project.id);
     return <article key={project.id} className={`project-card accent-${index%3} ${dragging ? "drop-ready" : ""}`}
@@ -116,13 +123,13 @@ export function LiveWorkspace({ initial, initialOperations }: { initial: Workspa
             <label>Project<select aria-label="Project" required value={selectedProject} onChange={e=>setSelectedProject(e.target.value)}><option value="">Choose project</option>{data.projects.map(p=><option key={p.id} value={p.id}>{p.label}</option>)}</select></label>
             <label>Allocation %<input type="number" min={1} max={100} step={1} required value={allocation} onChange={e=>setAllocation(Number(e.target.value))} /></label><button disabled={busy} className="live-primary">Assign</button></form>}
         </section>}
-        {(view==="Overview" || view==="Agents") && <section aria-labelledby="roster-title"><div className="live-section-heading"><div><h2 id="roster-title">Meet your agents <span>{data.agents.length}</span></h2><p className="muted">Ready for direction. Waiting for execution setup.</p></div>
+        {(view==="Overview" || view==="Agents") && <section aria-labelledby="roster-title"><div className="live-section-heading"><div><h2 id="roster-title">Meet your agents <span>{data.agents.length}</span></h2><p className="muted">Assign projects, configure roles, and follow durable work.</p></div>
           {view==="Agents" && <input className="live-search" type="search" aria-label="Search agents" placeholder="Find an agent…" value={query} onChange={e=>setQuery(e.target.value)} />}</div>
           <div className="live-agent-grid">{(view==="Agents" ? agents : data.agents).map(agent=><article key={agent.id} className="live-agent-card" draggable={!busy && agent.status==="active"}
             onDragStart={e=>{e.dataTransfer.setData("text/plain",agent.id);e.dataTransfer.effectAllowed="copy";setDragging(agent.id);}}
-            onDragEnd={()=>setDragging(null)}><div className="agent-portrait">{avatar(agent)}<span className="waiting-label"><i /> {operations?.records.jobs?.some(job=>job.agent_identity_id===agent.id&&job.lease_is_live&&Date.parse(job.lease_expires_at)>evidenceNow)?"Running":operations?.records.jobs?.some(job=>job.agent_identity_id===agent.id&&['queued','waiting'].includes(job.state))?"Waiting":"Inactive"}</span></div><h3>{agent.display_name}</h3><p className="muted">{operations?.records.agentConfig?.find(config=>config.agent_identity_id===agent.id)?.role_label??(agent.display_name.includes("Eddie") ? "Sales strategy" : "Fundraising research")}</p>
+            onDragEnd={()=>setDragging(null)}><div className="agent-portrait">{avatar(agent)}<span className={`waiting-label ${agentState(agent).className}`} title={agentState(agent).reason}><i /> {agentState(agent).label}</span></div><h3>{agent.display_name}</h3><p className="muted">{operations?.records.agentConfig?.find(config=>config.agent_identity_id===agent.id)?.role_label??(agent.display_name.includes("Eddie") ? "Sales strategy" : "Fundraising research")}</p>
             <div className="agent-detail-line"><span>Model</span><strong>{operations?.records.agentConfig?.find(config=>config.agent_identity_id===agent.id)?.provider_id??"Not configured"}</strong></div><div className="agent-detail-line"><span>Allocation</span><strong>{data.assignments.filter(a=>a.agent_identity_id===agent.id).reduce((sum,a)=>sum+a.allocation_basis_points,0)/100}%</strong></div>
-            <p className="agent-foot">No provider or campaign connected</p><button className="live-secondary" onClick={()=>{setSelectedAgent(agent.id);setView("Projects");}}>Assign to project ↗</button></article>)}</div>
+            <p className="agent-foot">{agentState(agent).reason}</p><button className="live-secondary" onClick={()=>{setSelectedAgent(agent.id);setView("Projects");}}>Assign to project ↗</button></article>)}</div>
         </section>}
         {view==="Overview" && <section className="activity-section"><div className="live-section-heading"><div><h2>Recent activity</h2><p className="muted">Changes are recorded automatically.</p></div><span className="category-tag">AUDIT LOG</span></div>
           {data.activity.length ? <ol className="activity-list">{data.activity.map(item=><li key={item.id}><span className="activity-dot" aria-hidden="true" /><div><strong>{item.event_type.replaceAll("_"," ").replace("."," · ")}</strong><small>Owner workspace</small></div><time dateTime={item.occurred_at}>{new Date(item.occurred_at).toLocaleString("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})} ET</time></li>)}</ol> : <p className="muted">Your first workspace change will appear here.</p>}</section>}

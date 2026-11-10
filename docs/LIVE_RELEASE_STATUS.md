@@ -1,12 +1,21 @@
-# Live release status — 2026-11-10
+# Live release status — 2026-11-09 (Eastern)
 
-The existing Render service is available at
-https://death-of-the-salesman.onrender.com in Galinsky Labs. Its previously verified
-runtime is the owner planning release, commit `423776e559a58840d06c1104240cbc9b32e9e35f`,
-deploy `dep-dbp5bd6c6qcc73adpplg`. Auto-deploy is disabled. Do not describe the
-operations release as live until its actual deployment and HTTPS checks are recorded.
+The operations release is live at https://death-of-the-salesman.onrender.com in the
+Galinsky Labs Render workspace, connected to the production Neon database.
 
-## Operations release prepared
+- Runtime source: `4f6aa485b8d932fe854445e5fb5011b80648e46e` (merged PR #43).
+- Current deploy: `dep-dbp6tm7ctcqc73al85rg`, live at
+  `2026-11-10T01:11:47.068447Z` (8:11 p.m. Eastern on November 9).
+- Service: `srv-dbp58hm1egvs73b3inug`, free web service in Ohio. Auto-deploy is off.
+- Neon project: `muddy-mountain-84355519`; branch: `br-orange-recipe-bdgmz9qg`.
+- [Live HTTPS acceptance](evidence/operations-render-live-acceptance.json) verifies the
+  exact runtime SHA, database readiness, durable-queue configuration, owner access
+  boundaries, cross-origin protection and signed-webhook requirements.
+- [Production database acceptance](evidence/operations-production-database-acceptance.json)
+  verifies 17 operational domains using the restricted application credential and
+  confirms no invoice primary-key updates, financial deletion or schema creation.
+
+## Operations release scope
 
 The new operations console implements persistent CRM, consent/suppression and erasure,
 deals, campaign rehearsal and revision approvals, conversations and message approvals,
@@ -31,29 +40,24 @@ The owner's real mailbox OTP round trip remains unverified.
 - [Browser acceptance](evidence/operations-browser-acceptance.json): all 14 views passed
   desktop/mobile rendering and overflow checks; form saves persisted after reload and
   keyboard dialog dismissal passed.
-- [Production hold check](evidence/operations-production-hold.json): the previous runtime
-  remains healthy and owner-protected while activation is blocked.
+- [Historical production hold check](evidence/operations-production-hold.json) records
+  the previous runtime before the owner approved the production permissions.
 - Local `pnpm check`: 117 passing tests, typecheck, secret scan and production build.
 - Dependency audit: no known vulnerabilities. Failure-contract test passed.
 - New migrations 0011–0013 have been applied to staging and production; these are additive.
 
-## Production activation blocked
+## Production activation
 
-Automatic approval review rejected applying the new production runtime grants because
-it considers the persistent permission expansion across operational and financial tables
-to require explicit owner approval of that scope. Removing the broad function-execution
-grant and supplying exact restricted-role tests and successful staging workflow evidence
-did not satisfy that requirement. No workaround was used. Existing production runtime
-credentials and permissions are unchanged, and the old compatible service stays live.
+The owner explicitly approved the exact linked `database/runtime-grants.sql` permission
+scope on November 9. That script was applied to production, and deployment secrets were
+configured privately in Render. The application retains its restricted runtime role,
+tenant RLS and column-specific update grants. It has no schema management, auth-schema
+access, role management, RLS bypass, primary-key updates, financial/audit deletion or
+receipt-evidence mutation. The administrative migration credential is absent from Render.
 
-The concrete permission request is [database/runtime-grants.sql](../database/runtime-grants.sql):
-SELECT and INSERT on the named operations tables, column-specific UPDATE for workflow
-state, catalog and agent settings, and DELETE only for campaign audience selection rows.
-It grants no schema management, auth access, role management, RLS bypass, primary-key
-updates, financial/audit deletion or receipt-evidence mutation. Financial writes are ledger
-records, not authority to charge, send, call paid models or spend. Tests prove these
-restrictions in a disposable database. Explicit approval is needed before applying that
-script to the production `dots_runtime` role and deploying the operations release.
+Durable queue execution is enabled. Paid model execution, email delivery/receiving and
+payments remain disabled, with a zero-dollar spending cap. The document encryption key
+and unsubscribe signing key are configured; key values are never included in evidence.
 
 ## Remaining external prerequisites
 

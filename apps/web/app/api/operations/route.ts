@@ -49,7 +49,7 @@ export async function POST(request:Request){try{
  case 'messageApproval':outcome=await sales.messageApproval(identifier(body.id));break;
  case 'sendMessage':outcome=await delivery.send(identifier(body.id));break;
  case 'takeover':await sales.takeover(identifier(body.id),body.enabled===true);break;
- case 'checkFreeModelConnection':outcome=await checkFreeModelConnection(process.env,fetch,body.provider==='groq'?'groq':'openrouter');break;
+ case 'checkFreeModelConnection':outcome=await checkFreeModelConnection(process.env,fetch);break;
  case 'discoverFreeModels':outcome=await discoverFreeModels();break;
  case 'discoverGrants':outcome=await discoverGrants(text(body.keyword,'keyword',120));break;
  case 'verifyMailbox':outcome=await delivery.verifyMailbox(identifier(body.id));break;
@@ -77,7 +77,7 @@ export async function POST(request:Request){try{
  case 'addFact':{const verifiedAt=new Date().toISOString();const expiresAt=new Date(body.expiresAt);if(!Number.isFinite(expiresAt.getTime())||expiresAt.getTime()<=Date.now())throw new OperationError('FUTURE_EXPIRY_REQUIRED',400);const source=text(body.sourceUrl,'source',2048);if(!source.startsWith('https://'))throw new OperationError('HTTPS_SOURCE_REQUIRED',400);outcome=await new ProjectCatalogRepository(client).create({kind:'productFact',organizationId:ctx.organizationId,ownerMembershipId:ctx.membershipId,projectId:identifier(body.projectId),offerId:identifier(body.offerId),label:text(body.label,'fact',240),content:{body:text(body.body,'fact_body',2000),sourceUrl:source,verifiedAt,expiresAt:expiresAt.toISOString()}});break;}
  case 'configureExecution':{
   const model=body.modelEnabled===true,outbound=body.outboundEnabled===true;
-  if(model&&!(process.env.FREE_MODEL_API_ENABLED==='true'&&(providerConfiguration('openrouter')||providerConfiguration('groq')))&&(process.env.MODEL_API_ENABLED!=='true'||!process.env.OWNER_SPEND_AUTHORIZATION_ID||Number(process.env.PAID_SPEND_LIMIT_CENTS??0)<=0))throw new OperationError('MODEL_EXECUTION_NOT_AUTHORIZED',403);
+  if(model&&!(process.env.FREE_MODEL_API_ENABLED==='true'&&providerConfiguration('openrouter'))&&(process.env.MODEL_API_ENABLED!=='true'||!process.env.OWNER_SPEND_AUTHORIZATION_ID||Number(process.env.PAID_SPEND_LIMIT_CENTS??0)<=0))throw new OperationError('MODEL_EXECUTION_NOT_AUTHORIZED',403);
   if(outbound&&(process.env.EMAIL_DELIVERY_ENABLED!=='true'||!process.env.OUTREACH_POLICY_AUTHORIZATION_ID||!process.env.SENDER_VERIFICATION_REFERENCE))throw new OperationError('OUTREACH_POLICY_NOT_AUTHORIZED',403);
   await tenant(client,ctx,async tx=>{await tx.query('UPDATE app.policy_controls SET model_enabled=$2,outbound_enabled=$3,version=version+1,updated_at=app.utc_now() WHERE organization_id=$1',[ctx.organizationId,model,outbound]);await event(tx,ctx,'execution.configuration_changed',null,{modelEnabled:model,outboundEnabled:outbound});});break;
  }

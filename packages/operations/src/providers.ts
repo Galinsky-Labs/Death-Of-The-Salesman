@@ -29,9 +29,9 @@ export function usageCost(config:ProviderConfig,input:number,output:number):numb
   return Math.ceil((input*config.inputCentsPerMillion+output*config.outputCentsPerMillion)/1_000_000);
 }
 export async function complete(config:ProviderConfig,system:string,prompt:string,signal?:AbortSignal,transport:typeof fetch=fetch):Promise<Completion> {
+  if(!providerIds.includes(config.id))return fail('PROVIDER_NOT_ALLOWED',403);
   if(config.id==='openrouter'&&(!freeModelId(config.model)||config.endpoint!==defaults.openrouter||config.inputCentsPerMillion!==0||config.outputCentsPerMillion!==0||config.billingMode!=='free'))return fail('FREE_PROVIDER_CONFIGURATION_INVALID',503);
   if(config.id!=='openrouter'&&(config.endpoint!==defaults[config.id]||/(?:deepseek|qwen|moonshot|kimi|mimo|chatglm|glm[-_.0-9]|zai|baichuan|minimax|doubao|hunyuan|internlm|stepfun|longcat)/i.test(config.model)))return fail('PROVIDER_MODEL_NOT_ALLOWED',403);
-  if(!providerIds.includes(config.id))return fail('PROVIDER_NOT_ALLOWED',403);
   if(config.id==='openrouter'&&!(await discoverFreeModels(transport)).models.some(model=>model.id===config.model))return fail('FREE_MODEL_NOT_AVAILABLE',503);
   const headers:Record<string,string>={"content-type":"application/json"};let payload:Record<string,unknown>;
   if(config.id==="claude") {headers["x-api-key"]=config.apiKey;headers["anthropic-version"]="2023-06-01";payload={model:config.model,max_tokens:config.maxOutputTokens,system,messages:[{role:"user",content:prompt}]};}

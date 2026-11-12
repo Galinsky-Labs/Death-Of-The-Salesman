@@ -17,7 +17,7 @@ Paid providers and real outreach require separately configured owner credentials
 - [Architecture decision records](docs/adr/) — accepted contract-evolution and endpoint-ownership decisions.
 - [Approved salesman names](registry/approved-salesman-names.json) — 264 owner-approved character names, starting with **Fast Eddie Felson** and **Harry Wormwood**.
 - [Free model, email and Stripe setup](docs/FREE_AND_PAID_INTEGRATIONS.md) — account creation, secure API keys and later paid activation.
-- [Six model candidates](registry/model-catalog.json) — OpenAI, Claude, Grok, MiMo, GLM, Kimi; disabled until credentials and funding are provided.
+- [Approved model candidates](registry/model-catalog.json) — OpenAI, Claude and Grok; disabled until credentials and funding are provided. The only approved free path is pinned Google Gemma through OpenRouter.
 
 ## Development validation
 

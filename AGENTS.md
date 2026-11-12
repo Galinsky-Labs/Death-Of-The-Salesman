@@ -25,7 +25,7 @@
 - No credentials, PII, tokens, investor contacts, customer messages, actor stills, large model weights or private operational data in the public repo, logs or test fixtures.
 - Do not claim genuine 'green working' state without live lease/heartbeat evidence. Yellow indicates waiting and why; red is inactive. Prefer visible, auditable truth to simulated productivity.
 - Never put the random decorative salesman quote on any page. Reference UI is dark, visual, responsive and keyboard/touch accessible.
-- All six initial model candidate configs remain optional/disabled until provisioned; no checkpoints in Git. Provider-specific adapters must not assume equivalent tool semantics or guaranteed prices.
+- Approved model candidate configs remain optional/disabled until provisioned; no checkpoints in Git. Chinese-developed code-capable models and arbitrary provider endpoints are prohibited for application inference. Mureka audio generation in other applications is unaffected. Provider-specific adapters must not assume equivalent tool semantics or guaranteed prices.
 - Investor, grant and product revenue processes must remain distinct; investment solicitation and grant submission have reviewed owner/legal authority gates.
 - Vision Agents are explicitly **not** part of this roadmap.
 

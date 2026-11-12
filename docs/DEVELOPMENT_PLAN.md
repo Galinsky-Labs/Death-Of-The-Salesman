@@ -9,7 +9,7 @@
 - Standalone **API-native** commercial sales and lawful fundraising suite; no hybrid ChatGPT scheduled-task integration. Models run as bounded API/inference jobs, not permanent minds.
 - The owner's first two names are **Fast Eddie Felson** and **Harry Wormwood**; all 264 provided names remain reserved in `registry/approved-salesman-names.json`. Commercial tenants start empty. Original/rights-cleared avatars only.
 - Desktop should match the approved dark, avatar-rich bucket board closely, but adapt to tablets and phones. **No random salesman quote in any screen.**
-- Configurable champion vs experimental strategy ratio (proposed 50/50) and independent six-model routing, with real evidence and separate tests of model and strategy effects.
+- Configurable champion vs experimental strategy ratio (proposed 50/50) and independent approved-model routing, with real evidence and separate tests of model and strategy effects.
 - **All paid model, GPU, data, email and infrastructure spending is disabled at $0 by default.** Real sends, grants, regulated investor representations, contractual commitments and cash movements require explicit owner authorization and policy gates.
 - Security/privacy by default; deterministic checks after model output, per-lead ownership, universal opt-out, evidence-based statistics, no claims of verified outcomes from unverified model narratives.
 - Treat the architecture as a specification. It is not proof the application is working. Unit acceptance is not the same as production operational acceptance.

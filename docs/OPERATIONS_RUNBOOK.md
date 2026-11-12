@@ -61,9 +61,7 @@ before activation. Configure secrets through Render, never through a public docu
 
 - Models: `MODEL_API_ENABLED`, `OWNER_SPEND_AUTHORIZATION_ID`, `PAID_SPEND_LIMIT_CENTS`,
   plus the selected adapter's token/model/input/output pricing configuration. See
-  `packages/operations/src/providers.ts` for exact names. OpenAI, Claude and Grok have
-  fixed HTTPS adapters; MiMo, GLM and Kimi require an explicit HTTPS endpoint and model.
-  Confirm current provider pricing and enforce account-side limits before activation.
+  `packages/operations/src/providers.ts` for exact names. OpenAI, Claude and Grok have fixed HTTPS adapters; code-capable Chinese-developed models and arbitrary endpoint overrides are excluded. Confirm model provenance, provider pricing, and enforce account-side limits before activation.
   Set both the workspace model toggle and its global/project budgets within the hard cap.
 - Email: `EMAIL_DELIVERY_ENABLED`, `EMAIL_DELIVERY_TOKEN` (Resend),
   `OUTREACH_POLICY_AUTHORIZATION_ID`, `SENDER_VERIFICATION_REFERENCE`,

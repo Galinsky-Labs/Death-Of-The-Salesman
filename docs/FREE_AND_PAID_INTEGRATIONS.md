@@ -5,35 +5,7 @@ are implemented, but external accounts must supply their own API credentials. Ad
 credential does not by itself authorize outbound solicitation or real charges. Never paste
 keys in chat, GitHub issues, documents, screenshots or the public repository.
 
-## 1. Recommended: Qwen3.8 27B through Groq Free
-
-Create an account at https://console.groq.com/ and keep the organization on its Free plan.
-Do not enable paid billing or upgrade to Developer. Open https://console.groq.com/keys,
-create a dedicated app key, and put it in Render as `GROQ_API_KEY`.
-
-The app pins `qwen/qwen3.8-27b`, listed in Groq's current Free-plan model limits, and
-verifies model access through Groq's authenticated model catalog before inference.
-The deployment has `GROQ_ENABLED=true`; after confirming the account is actually Free,
-set `GROQ_FREE_PLAN_CONFIRMED=true`. This confirmation is necessary because the API key
-check verifies authentication/model access, not the account's billing plan. Do not leave
-that flag true if you later upgrade the organization. Free-plan exhaustion returns a
-rate-limit error; there is no app fallback to a paid provider. The app starts with a
-shared free-model limit of 20 requests/day (`FREE_MODEL_DAILY_REQUEST_LIMIT`).
-
-Qwen3.8 27B is an Apache 2.0 open-weight model and the recommended starting choice for
-this low-volume zero-dollar setup. No claim of universal best performance is made without
-an application-specific benchmark. This is hosted inference, not running weights on the
-free Render machine; serving a capable model locally requires suitable hardware.
-
-After saving the key and Free-plan confirmation, use Settings → Groq → Check connection,
-allow model calls, select Groq on a live task, and keep the funded spending cap at $0.
-Free tasks require public, non-personal inputs and exclude private project context.
-
-Sources: [Groq model documentation](https://console.groq.com/docs/model/qwen/qwen3.8-27b),
-[Free-plan limits](https://console.groq.com/docs/rate-limits),
-[published weights/license](https://huggingface.co/Qwen/Qwen3.8-27B).
-
-## 2. Optional alternative: Gemma 4 31B through OpenRouter
+## 1. Approved free option: Gemma 4 31B through OpenRouter
 
 Create an account at https://openrouter.ai/ and open https://openrouter.ai/settings/keys.
 Create a dedicated key for Death Of The Salesman. Do not buy credits or enable automatic
@@ -41,7 +13,7 @@ credit purchases for the free setup. Set a zero credit limit for the key if offe
 free-model eligibility and quotas still depend on the account's current rules.
 
 In [Render Environment](https://dashboard.render.com/web/srv-dbp58hm1egvs73b3inug/env),
-add `OPENROUTER_API_KEY` with the secret key. The deployment is preconfigured with:
+add `OPENROUTER_API_KEY` with the secret key. The deployment is documented with these settings:
 
 ```text
 OPENROUTER_ENABLED=true
@@ -53,7 +25,7 @@ MODEL_API_ENABLED=false
 PAID_SPEND_LIMIT_CENTS=0
 ```
 
-The pinned Google Gemma 4 31B endpoint was verified in the live public catalog
+The Google Gemma 4 31B endpoint was reported verified in the live public catalog
 on November 9, 2026. Its current published reasoning and agent capabilities make it a
 strong zero-dollar starting point. This is a recommendation, not a claim that it is the
 best model for every workload. We have not benchmarked it against this business's tasks

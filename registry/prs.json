@@ -23,9 +23,7 @@
       "phase": "F0",
       "priority": "P0",
       "dependsOn": [],
-      "scope": [
-        "Preserve approved system boundaries, visual specification, character roster and six-model catalog already merged in PR #1."
-      ],
+      "scope": "Preserve approved system boundaries, visual specification, character roster and the original architecture baseline merged in PR #1.",
       "acceptanceCriteria": "The baseline files exist on main and PR #1 is verifiably merged.",
       "verification": [
         "The baseline files exist on main and PR #1 is verifiably merged."
@@ -1373,9 +1371,7 @@
         "DOTS-006",
         "DOTS-041"
       ],
-      "scope": [
-        "Extend six-model catalog into validated snapshots, revisions, limits, privacy and routing configuration."
-      ],
+      "scope": "Maintain reviewed model provenance, immutable model revisions, capability snapshots, privacy restrictions, approved origin/provider routing, and deny-by-default controls.",
       "acceptanceCriteria": "Each provider/model is displayed but disabled when missing credentials; upgrades do not rewrite history.",
       "verification": [
         "Each provider/model is displayed but disabled when missing credentials; upgrades do not rewrite history."
@@ -1489,7 +1485,7 @@
     },
     {
       "id": "DOTS-060",
-      "title": "MiMo open-weight serving adapter",
+      "title": "Approved model provenance enforcement",
       "origin": "original",
       "prs": [],
       "phase": "F5",
@@ -1498,10 +1494,8 @@
         "DOTS-056",
         "DOTS-055"
       ],
-      "scope": [
-        "Support pinned MiMo-V2.6-Pro-RL endpoint and immutable deployment metadata with self/hosted serving configs."
-      ],
-      "acceptanceCriteria": "Manifest and mock health tests pass; repository contains no checkpoint weights.",
+      "scope": "Enforce allowlisted provider and model identity across direct API and broker-hosted inference; reject unreviewed or disallowed models before sending any customer data.",
+      "acceptanceCriteria": "Negative tests prove a disallowed model fails closed even when offered by an otherwise approved host.",
       "verification": [
         "Manifest and mock health tests pass; repository contains no checkpoint weights."
       ],
@@ -1514,7 +1508,7 @@
     },
     {
       "id": "DOTS-061",
-      "title": "GLM open-weight serving adapter",
+      "title": "Trusted inference endpoint and fallback policy",
       "origin": "original",
       "prs": [],
       "phase": "F5",
@@ -1523,10 +1517,8 @@
         "DOTS-056",
         "DOTS-055"
       ],
-      "scope": [
-        "Support pinned GLM-5.3 endpoint, provider-qualified schema and serving profiles."
-      ],
-      "acceptanceCriteria": "Manifest, license gate and mock inference pass; no GPU provisioned by test.",
+      "scope": "Require explicit endpoint and model binding for all approved providers; block arbitrary inference hosts, silent model substitution and third-party fallback.",
+      "acceptanceCriteria": "Endpoint override, unknown model, paid fallback, and mismatched host-model fixtures cannot dispatch.",
       "verification": [
         "Manifest, license gate and mock inference pass; no GPU provisioned by test."
       ],
@@ -1539,7 +1531,7 @@
     },
     {
       "id": "DOTS-062",
-      "title": "Kimi open-weight serving adapter",
+      "title": "Customer output isolation and security checks",
       "origin": "original",
       "prs": [],
       "phase": "F5",
@@ -1548,10 +1540,8 @@
         "DOTS-056",
         "DOTS-055"
       ],
-      "scope": [
-        "Support pinned Kimi-K3 endpoint, context and reasoning parser config."
-      ],
-      "acceptanceCriteria": "Manifest, license gate and mock inference pass; no GPU download or rental by default.",
+      "scope": "Constrain generated artifacts by content type and trust; require isolated execution and security validation before generated code, scripts, or uploads affect customer systems.",
+      "acceptanceCriteria": "Dangerous or unexpected executable output cannot run or publish without explicit authorization and security checks.",
       "verification": [
         "Manifest, license gate and mock inference pass; no GPU download or rental by default."
       ],
@@ -1574,9 +1564,7 @@
         "DOTS-061",
         "DOTS-062"
       ],
-      "scope": [
-        "Provide revision-pin/hash check, license confirmation, storage path, isolated inference setup and supply-chain controls."
-      ],
+      "scope": "Provide verified revisions, license checks, isolated inference setup, cost safeguards and supply-chain controls for approved checkpoints only.",
       "acceptanceCriteria": "Dry-run reports weight volume and costs; real download is impossible without approved funding/storage.",
       "verification": [
         "Dry-run reports weight volume and costs; real download is impossible without approved funding/storage."
@@ -1602,9 +1590,7 @@
         "DOTS-062",
         "DOTS-033"
       ],
-      "scope": [
-        "Select from six configurations by enabled capabilities, task class, owner weights and funded budget."
-      ],
+      "scope": "Select only approved provider-model pairs by enabled capabilities, task class, privacy, owner choices and available budget; fail closed when none qualifies.",
       "acceptanceCriteria": "Private-data rules prevent unauthorized fallback; zero-budget provider skipped without network.",
       "verification": [
         "Private-data rules prevent unauthorized fallback; zero-budget provider skipped without network."
@@ -1692,7 +1678,7 @@
     },
     {
       "id": "DOTS-068",
-      "title": "Deterministic six-model adapter benchmark harness",
+      "title": "Deterministic approved-model adapter benchmark harness",
       "origin": "original",
       "prs": [],
       "phase": "F5",
@@ -1706,10 +1692,8 @@
         "DOTS-062",
         "DOTS-054"
       ],
-      "scope": [
-        "Run fixture-based draft, tool, compliance, quality and latency tests with stub provider responses."
-      ],
-      "acceptanceCriteria": "Six candidates compared without fabricated live performance or API charges.",
+      "scope": "Run fixture-based quality, safety, tool, compliance and latency tests against approved adapter configurations with stub responses.",
+      "acceptanceCriteria": "Approved candidates are compared without fabricated live performance or real API charges.",
       "verification": [
         "Six candidates compared without fabricated live performance or API charges."
       ],

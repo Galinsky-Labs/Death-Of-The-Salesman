@@ -23,8 +23,8 @@ for(const name of ['"Fast Eddie" Felson', 'Harry Wormwood']){
  assert.ok(roster.initialAgents.includes(name), 'missing initial agent designation ' + name);
 }
 const models = JSON.parse(await read('registry/model-catalog.json'));
-assert.equal(models.candidates.length, 6, 'initial benchmark has three paid API and three open-weight providers');
-assert.equal(models.candidates.filter(x=>x.type==='open-weight').length,3);
+assert.deepEqual(models.candidates.map(x=>x.id).sort(), ['openai','claude','grok'].sort(), 'only reviewed direct API providers are present in candidate registry');
+assert.equal(models.candidates.filter(x=>x.type==='open-weight').length,0);
 assert.equal(models.candidates.filter(x=>x.type==='proprietary-api').length,3);
 for(const model of models.candidates){
  assert.equal(model.enabled, false, 'model ' + model.id + ' must be disabled by default');

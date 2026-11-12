@@ -132,27 +132,22 @@ Lead/account exclusivity differs from Boardroom repository exclusivity: many age
 
 Agent context and memory: durable, provenance-linked facts, user-approved preferences and thread summaries stored per tenant, source and retention. Maintain a factual contact timeline; do not persist unverified self-asserted 'I closed deal' as proof. Explicitly allow deletion/correction, tenant export and replay from event ledger. Summaries are derived caches, not authoritative originals.
 
-## 5. Six model sources and inference isolation
+## 5. Approved model sources and inference isolation
 
-Exactly six initial model candidates, grouped into three proprietary APIs and three open-weight **model lineages**. This is six competing execution configurations, not six always-on workers.
+Model availability is a security decision, not simply a pricing or capability decision. The application supports only approved provider/model routes. The candidate catalog lists direct OpenAI, Anthropic and xAI APIs, each disabled until provisioned. A separate zero-cost path is pinned to Google's Gemma via OpenRouter with Google AI Studio as the only permitted host and fallback disabled.
 
-| Candidate | Registered reference | Interface | Initial handling |
-|---|---|---|---|
-| OpenAI | supported current GPT model, pinned snapshot | OpenAI Responses API | disabled until owner API key and funded cap |
-| Anthropic | supported current Claude model, pinned snapshot | Claude Messages API | disabled until owner API key and funded cap |
-| xAI | supported current Grok model, pinned snapshot | xAI Responses or verified supported chat endpoint | disabled until key and funded cap |
-| Xiaomi MiMo | XiaomiMiMo/MiMo-V2.6-Pro-RL | self/third-party hosted OpenAI-compatible gateway | register weights and licensing; no GPU purchase/download by default |
-| Z.ai GLM | zai-org/GLM-5.3 | self/third-party hosted OpenAI-compatible gateway | register weights and licensing; no GPU purchase/download by default |
-| Moonshot Kimi | moonshotai/Kimi-K3 | self/third-party hosted OpenAI-compatible gateway | register weights and licensing; no GPU purchase/download by default |
+| Candidate | Trust boundary | Initial handling |
+|---|---|---|
+| OpenAI | Fixed official OpenAI API endpoint; explicitly approved model identity | disabled until key and funded cap |
+| Anthropic | Fixed official Anthropic API endpoint; explicitly approved model identity | disabled until key and funded cap |
+| xAI | Fixed official xAI API endpoint; explicitly approved model identity | disabled until key and funded cap |
+| Google Gemma via OpenRouter | Exact free Gemma model, zero-price rules, no provider fallbacks | optional; public non-personal input only |
 
-Selection reflects publicly available high-scoring open-weight candidates as of 2026-10-18; there is no universally correct top three for *this* sales workload. Newly released Meta Muse Spark Open is an additional candidate for future evaluation, not assumed superior without matched tests. The six default registrations are editable, replaceable and version-pinned in registry/model-catalog.json. Do not confuse the ChatGPT consumer product/subscription with OpenAI developer API billing; the API requires its own key/entitlements. Do not assume exact proprietary model identifiers until account capability discovery.
+Do not integrate Chinese-developed code-capable models, including Qwen, DeepSeek, MiMo, GLM and Kimi, into any customer-facing inference route. This restriction applies to model lineage even when inference is hosted by a US company or broker. Unknown or substitute models, arbitrary inference endpoints, and newly added providers must fail closed until reviewed; no fallback may silently change the approved model.
 
-Open weight is not zero-cost inference. These checkpoints require large model-resident memory and optimized accelerator/host infrastructure. Git should contain **only manifests, checksums, exact upstream revisions, notices, retrieval instructions and tested serving profiles**. NEVER commit gigabytes/terabytes of checkpoints, model-license gated blobs, model cache, or credentials. Optional installation workflow:
-- Owner selects local/private provider, accepts verified license and chooses deployment region/cost cap.
-- Installer resolves approved exact immutable revision and official file checksums from model hub, downloads to separate volume/object store only, verifies hashes, records provenance, locks executable remote code and scanner versions.
-- Operations provide isolated vLLM/SGLang inference service over authenticated private networking, using supported version-specific parsers, health/readiness checks and bounded context length. Never enable blindly downloaded 'trust_remote_code' in production before audit/sandbox.
-- Alternative zero-infrastructure startup uses an approved third-party model-inference endpoint with separate credentials, data-handling controls and measured prices.
-- No downloads, hosted inference, or GPU provisioning occur until funds/resources are explicitly available and approved; only model catalog registration and mocks work at $0.
+Generated text or files are untrusted data. In particular, never execute generated code, shell commands, documents with active content, or downloaded model artifacts without isolated validation and explicit authority. Customer tools, secrets and output publication must be independently authorized. Media-only generation providers such as Mureka are a different category and are not removed by this restriction; audio still requires standard decoder, metadata, privacy and credential safeguards.
+
+The versioned model registry and evidence should capture approved provider, model lineage, immutable revision, region, terms, data-handling properties and security review. Preserve original selection, provider receipts and provenance. A ChatGPT subscription is not the same as developer API credit. Free endpoints have limited capacity and can have different data-retention terms; do not send private client data to a free API by default.
 
 Provider adapter interface: discoverCapabilities; validateConfig; quoteWorstCaseCost; runStructured; continueToolCalls; summarizeUsage; rateLimits; health; normalizeError; cancel (when supported). Canonical input includes snapshot ID, normalized system/developer instructions, messages, tool definitions, max output, timeout, structured schema, modality, privacy class, cache policy, idempotency trace. Canonical output includes selected model/version, text, schema-validated proposal, tool calls, token counts (input/output/reasoning/cache when available), finish/refusal reason, provider request ID, wall time, costs, safety metadata and provenance.
 
@@ -162,9 +157,7 @@ Current API basis and release review links:
 - OpenAI Responses and strict function/structured-output guidance: https://developers.openai.com/api/reference/responses/overview ; https://developers.openai.com/api/docs/guides/structured-outputs
 - Anthropic Messages and tool use: https://platform.claude.com/docs/en/api/typescript/messages/create
 - xAI API and function calling: https://docs.x.ai/overview ; https://docs.x.ai/developers/tools/function-calling
-- Xiaomi checkpoint: https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL
 - Z.ai checkpoint: https://huggingface.co/zai-org/GLM-5.3
-- Kimi checkpoint: https://huggingface.co/moonshotai/Kimi-K3
 - Muse alternative: https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
 
 ## 6. Multi-model evaluation, strategies and routing
@@ -318,7 +311,7 @@ Decisions:
 2. Modular monolith + durable workers first; defined extractable service boundaries for eventual scale.
 3. All agents are stateless executions with durable identities/checkpoints.
 4. True single-thread ownership at contact-sequence scope; many agents per product.
-5. Six-model catalog with per-campaign routing and structured adapter contract; no GPU weights in Git.
+5. Approved provider/model catalog with per-campaign routing, fail-closed origin verification and structured adapter contract; no GPU weights in Git.
 6. Model choice and strategy choice evaluated separately, champion/exploration configured in interface.
 7. Approved message/campaign owner authority; hard-stop budgets default $0.
 8. Visual and responsive dark UI, no sales quotes; avatar and activity evidence visible on hover/click.

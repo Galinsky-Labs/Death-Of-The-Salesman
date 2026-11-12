@@ -9,7 +9,7 @@
 - Standalone **API-native** commercial sales and lawful fundraising suite; no hybrid ChatGPT scheduled-task integration. Models run as bounded API/inference jobs, not permanent minds.
 - The owner's first two names are **Fast Eddie Felson** and **Harry Wormwood**; all 264 provided names remain reserved in `registry/approved-salesman-names.json`. Commercial tenants start empty. Original/rights-cleared avatars only.
 - Desktop should match the approved dark, avatar-rich bucket board closely, but adapt to tablets and phones. **No random salesman quote in any screen.**
-- Configurable champion vs experimental strategy ratio (proposed 50/50) and independent six-model routing, with real evidence and separate tests of model and strategy effects.
+- Configurable champion vs experimental strategy ratio (proposed 50/50) and independent approved-model routing, with real evidence and separate tests of model and strategy effects.
 - **All paid model, GPU, data, email and infrastructure spending is disabled at $0 by default.** Real sends, grants, regulated investor representations, contractual commitments and cash movements require explicit owner authorization and policy gates.
 - Security/privacy by default; deterministic checks after model output, per-lead ownership, universal opt-out, evidence-based statistics, no claims of verified outcomes from unverified model narratives.
 - Treat the architecture as a specification. It is not proof the application is working. Unit acceptance is not the same as production operational acceptance.
@@ -48,7 +48,7 @@
 
 ### DOTS-001 — Architecture and interaction baseline
 
-**Scope:** Preserve approved system boundaries, visual specification, character roster and six-model catalog already merged in PR #1.
+**Scope:** Preserve approved system boundaries, visual specification, character roster and the original architecture baseline merged in PR #1.
 
 **Acceptance & verification:** The baseline files exist on main and PR #1 is verifiably merged.
 
@@ -603,7 +603,7 @@
 
 ### DOTS-055 — Versioned model provider manifest and capability discovery
 
-**Scope:** Extend six-model catalog into validated snapshots, revisions, limits, privacy and routing configuration.
+**Scope:** Maintain reviewed model provenance, immutable model revisions, capability snapshots, privacy restrictions, approved origin/provider routing, and deny-by-default controls.
 
 **Acceptance & verification:** Each provider/model is displayed but disabled when missing credentials; upgrades do not rewrite history.
 
@@ -651,31 +651,31 @@
 **External prerequisites:** None  
 **Priority:** P1 · **GitHub PRs:** none created (planned only)
 
-### DOTS-060 — MiMo open-weight serving adapter
+### DOTS-060 — Approved model provenance enforcement
 
-**Scope:** Support pinned MiMo-V2.6-Pro-RL endpoint and immutable deployment metadata with self/hosted serving configs.
+**Scope:** Enforce allowlisted provider and model identity across direct API and broker-hosted inference; reject unreviewed or disallowed models before sending any customer data.
 
-**Acceptance & verification:** Manifest and mock health tests pass; repository contains no checkpoint weights.
-
-**Dependencies:** DOTS-056, DOTS-055  
-**External prerequisites:** None  
-**Priority:** P1 · **GitHub PRs:** none created (planned only)
-
-### DOTS-061 — GLM open-weight serving adapter
-
-**Scope:** Support pinned GLM-5.3 endpoint, provider-qualified schema and serving profiles.
-
-**Acceptance & verification:** Manifest, license gate and mock inference pass; no GPU provisioned by test.
+**Acceptance & verification:** Negative tests prove a disallowed model fails closed even when offered by an otherwise approved host.
 
 **Dependencies:** DOTS-056, DOTS-055  
 **External prerequisites:** None  
 **Priority:** P1 · **GitHub PRs:** none created (planned only)
 
-### DOTS-062 — Kimi open-weight serving adapter
+### DOTS-061 — Trusted inference endpoint and fallback policy
 
-**Scope:** Support pinned Kimi-K3 endpoint, context and reasoning parser config.
+**Scope:** Require explicit endpoint and model binding for all approved providers; block arbitrary inference hosts, silent model substitution and third-party fallback.
 
-**Acceptance & verification:** Manifest, license gate and mock inference pass; no GPU download or rental by default.
+**Acceptance & verification:** Endpoint override, unknown model, paid fallback, and mismatched host-model fixtures cannot dispatch.
+
+**Dependencies:** DOTS-056, DOTS-055  
+**External prerequisites:** None  
+**Priority:** P1 · **GitHub PRs:** none created (planned only)
+
+### DOTS-062 — Customer output isolation and security checks
+
+**Scope:** Constrain generated artifacts by content type and trust; require isolated execution and security validation before generated code, scripts, or uploads affect customer systems.
+
+**Acceptance & verification:** Dangerous or unexpected executable output cannot run or publish without explicit authorization and security checks.
 
 **Dependencies:** DOTS-056, DOTS-055  
 **External prerequisites:** None  
@@ -683,7 +683,7 @@
 
 ### DOTS-063 — Opt-in external checkpoint installer specification and verification
 
-**Scope:** Provide revision-pin/hash check, license confirmation, storage path, isolated inference setup and supply-chain controls.
+**Scope:** Provide verified revisions, license checks, isolated inference setup, cost safeguards and supply-chain controls for approved checkpoints only.
 
 **Acceptance & verification:** Dry-run reports weight volume and costs; real download is impossible without approved funding/storage.
 
@@ -693,7 +693,7 @@
 
 ### DOTS-064 — Budget/privacy-aware model router
 
-**Scope:** Select from six configurations by enabled capabilities, task class, owner weights and funded budget.
+**Scope:** Select only approved provider-model pairs by enabled capabilities, task class, privacy, owner choices and available budget; fail closed when none qualifies.
 
 **Acceptance & verification:** Private-data rules prevent unauthorized fallback; zero-budget provider skipped without network.
 
@@ -731,11 +731,11 @@
 **External prerequisites:** None  
 **Priority:** P1 · **GitHub PRs:** none created (planned only)
 
-### DOTS-068 — Deterministic six-model adapter benchmark harness
+### DOTS-068 — Deterministic approved-model adapter benchmark harness
 
-**Scope:** Run fixture-based draft, tool, compliance, quality and latency tests with stub provider responses.
+**Scope:** Run fixture-based quality, safety, tool, compliance and latency tests against approved adapter configurations with stub responses.
 
-**Acceptance & verification:** Six candidates compared without fabricated live performance or API charges.
+**Acceptance & verification:** Approved candidates are compared without fabricated live performance or real API charges.
 
 **Dependencies:** DOTS-057, DOTS-058, DOTS-059, DOTS-060, DOTS-061, DOTS-062, DOTS-054  
 **External prerequisites:** None  

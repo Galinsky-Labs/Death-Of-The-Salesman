@@ -332,10 +332,10 @@ function parseIds(value:unknown):string[]{if(value==null)return [];if(!Array.isA
 function revisionHash(content:{subject:string;body:string;to:string[];cc:string[];headers:Record<string,unknown>;attachmentIds:string[];replyMode:string;expiresAt:string}){return digest(content);}
 
 export class CommunicationsWorkspace {
- constructor(private readonly client:Client,private readonly ctx:Context,private readonly environment:Env=process.env,private readonly transport:typeof fetch=fetch,private readonly clock:()=>Date=()=>new Date()){}
+ constructor(private readonly client:Client,private readonly ctx:Context,private readonly environment:Env=process.env,private readonly transport:typeof fetch=fetch,private readonly clock:()=>Date=()=>new Date(),private readonly dispatchChecks:readonly DispatchCheck[]=communicationDispatchChecks){}
  private run<T>(fn:(tx:Client)=>Promise<T>){return tenant(this.client,this.ctx,fn);}
  private now(){return this.clock();}
- gateway(){return communicationsGateway(this.client,this.ctx,this.environment,this.transport,this.clock);}
+ gateway(){return new DeliveryGateway(this.client,this.ctx,this.environment,this.transport,this.clock,{beforeDispatch:this.dispatchChecks});}
 
  // DOTS-094 / DOTS-102: sender profile, mailbox onboarding, consent, authentication and token rotation.
  async setSenderProfile(input:{legalName:unknown;postalAddress:unknown}){const legalName=text(input.legalName,'legal_name',200),postal=text(input.postalAddress,'postal_address',500);if(postal.length<10||!/\d/.test(postal))return fail('POSTAL_ADDRESS_INCOMPLETE',400);

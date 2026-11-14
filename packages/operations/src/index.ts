@@ -17,3 +17,4 @@ export * from "./runtime.js";
 export * from "./campaigns.js";
 export * from "./crm.js";
 export * from "./communications.js";
+export * from "./dispatch.js";

@@ -2,11 +2,11 @@
 import {ownerSession} from '../../../../lib/auth';
 import {hasTrustedOrigin} from '../../../../lib/request-origin';
 import {withOperations} from '../../../../lib/operations';
-import {OperationError,CommunicationsWorkspace,DeliveryGateway,identifier,text,ControlPlane,type OptOutChannel} from '@dots/operations';
+import {OperationError,CommunicationsWorkspace,DeliveryGateway,productionDispatchChecks,identifier,text,ControlPlane,type OptOutChannel} from '@dots/operations';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store'};
 function errorResponse(error:unknown){if(error instanceof OperationError)return Response.json({error:error.code},{status:error.status,headers});return Response.json({error:'COMMUNICATIONS_UNAVAILABLE'},{status:503,headers});}
-const workspace=(client:Parameters<Parameters<typeof withOperations>[0]>[0],ctx:Parameters<Parameters<typeof withOperations>[0]>[1])=>new CommunicationsWorkspace(client,ctx,process.env,fetch);
+const workspace=(client:Parameters<Parameters<typeof withOperations>[0]>[0],ctx:Parameters<Parameters<typeof withOperations>[0]>[1])=>new CommunicationsWorkspace(client,ctx,process.env,fetch,()=>new Date(),productionDispatchChecks);
 const whole=(value:unknown,name:string)=>{if(typeof value!=='number'||!Number.isSafeInteger(value)||value<1)throw new OperationError(`INVALID_${name}`,400);return value;};
 
 export async function GET(request:Request){try{

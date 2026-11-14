@@ -1,6 +1,6 @@
 // DOTS-094..DOTS-109 communications track. Synthetic data only; every transport is injected and no network is used.
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import {createHmac} from 'node:crypto';
-import {SalesWorkspace,ControlPlane,CommunicationsWorkspace,DeliveryGateway,communicationsGateway,communicationDispatchChecks,tenant,digest,verifyWebhook,verifySvix,
+import {productionDispatchChecks,KillSwitches,SalesWorkspace,ControlPlane,CommunicationsWorkspace,DeliveryGateway,communicationsGateway,communicationDispatchChecks,tenant,digest,verifyWebhook,verifySvix,
  normalizeMessageId,parseReferences,normalizeSubject,classifyReply,stripQuotedText,sniffContentType,containsEicar,attachmentDownloadHeaders,nextAllowedSendTime,inQuietHours,deliveryLabel,normalizeInbound,signedOptOut,verifyOptOut} from '../packages/operations/dist/index.js';
 import {setup,org,owner,project,ctx} from './helpers/operations-fixture.mjs';
 import {preflight,verifyEvidence,checklist} from '../scripts/mailbox-canary.mjs';
@@ -450,4 +450,16 @@ test('migration 0019 rolls back and re-applies cleanly',async()=>{
  const {db}=await setup();try{const dir=new URL('../database/migrations/',import.meta.url);await db.exec(await readFile(new URL('0019_unified_communications.down.sql',dir),'utf8'));
   assert.equal((await one(db,"SELECT to_regclass('app.message_revisions') AS t")).t,null);assert.equal((await one(db,"SELECT count(*)::int AS n FROM information_schema.columns WHERE table_schema='app' AND table_name='messages' AND column_name='message_id_header'")).n,0);
   await db.exec(await readFile(new URL('0019_unified_communications.up.sql',dir),'utf8'));assert.ok((await one(db,"SELECT to_regclass('app.message_revisions') AS t")).t);}finally{await db.close();}
+});
+
+test('production send path composes governance, CRM contactability and campaign approval gates before any provider request',async()=>{
+ const w=await world();try{
+  const production=new CommunicationsWorkspace(w.client,ctx,w.env,w.net.transport,w.clock,productionDispatchChecks);
+  const draft=await approvedDraft(w,0);
+  await assert.rejects(production.send(draft.id),/REGION_UNREVIEWED|REGION_NOT_ALLOWED|CAMPAIGN_|REAPPROVAL_REQUIRED|BUDGET_EXCEEDED|CONSENT_MISSING/);
+  assert.equal(w.net.sends().length,0,'no provider request when a composed gate fails');
+  assert.equal((await one(w.db,'SELECT state FROM app.messages WHERE id=$1',[draft.id])).state,'pending_approval','the approved draft is preserved, not consumed');
+  await new KillSwitches(w.client,ctx).engage('channel','email','Synthetic email outage drill');
+  await assert.rejects(production.send(draft.id),/KILL_SWITCH_ACTIVE/);assert.equal(w.net.sends().length,0);
+ }finally{await w.db.close();}
 });

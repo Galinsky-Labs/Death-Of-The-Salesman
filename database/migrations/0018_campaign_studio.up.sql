@@ -210,9 +210,6 @@ CREATE TABLE app.campaign_work_items (
 CREATE INDEX campaign_work_items_campaign ON app.campaign_work_items(organization_id, campaign_id, created_at);
 CREATE INDEX campaign_work_items_contact ON app.campaign_work_items(organization_id, contact_id, created_at);
 
-ALTER TABLE app.project_buckets ADD CONSTRAINT project_buckets_campaign_fk_0018
- FOREIGN KEY (organization_id, campaign_id) REFERENCES app.campaigns(organization_id, id) NOT VALID;
-
 DO $$ DECLARE name text; BEGIN
  FOREACH name IN ARRAY ARRAY['message_templates','message_template_revisions','campaign_audience_revisions','campaign_budget_revisions','campaign_variants','offer_price_rules','campaign_price_exceptions','campaign_simulations','campaign_work_items'] LOOP
   EXECUTE format('ALTER TABLE app.%I ENABLE ROW LEVEL SECURITY', name);

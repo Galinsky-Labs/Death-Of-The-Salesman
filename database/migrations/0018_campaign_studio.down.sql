@@ -1,6 +1,5 @@
 DROP TRIGGER campaign_variants_lineage ON app.campaign_variants;
 DROP FUNCTION app.preserve_campaign_variant();
-ALTER TABLE app.project_buckets DROP CONSTRAINT project_buckets_campaign_fk_0018;
 ALTER TABLE app.campaigns
  DROP CONSTRAINT campaigns_offer_fk,
  DROP CONSTRAINT campaigns_mailbox_fk,

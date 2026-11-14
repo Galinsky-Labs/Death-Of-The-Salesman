@@ -8,6 +8,7 @@ import {GovernanceView} from './governance-view';
 import {FundingView} from './funding-view';
 import {ModelsView} from './models-view';
 import {RevenueView} from './revenue-view';
+import {RuntimeView} from './runtime-view';
 const BudgetGovernance=()=><GovernanceView section="budget"/>;
 const ApprovalGovernance=()=><GovernanceView section="approvals"/>;
 const SafetyGovernance=()=><GovernanceView section="safety"/>;
@@ -18,6 +19,8 @@ export const roadmapViews:Record<string,ComponentType[]>={
  "Funding":[FundingView],
  "Models":[ModelsView],
  "Revenue":[RevenueView],
+ "Work queue":[RuntimeView],
+ "Agents":[RuntimeView],
  "Budget":[BudgetGovernance],
  "Approvals":[ApprovalGovernance],
  "Safety":[SafetyGovernance],

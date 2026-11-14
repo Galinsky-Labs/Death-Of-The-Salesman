@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS app.runtime_dispatch_log;
+DROP TABLE IF EXISTS app.run_memories;
+DROP TABLE IF EXISTS app.tool_proposals;
+DROP TABLE IF EXISTS app.context_snapshots;
+DROP TABLE IF EXISTS app.run_controls;
+DROP TABLE IF EXISTS app.runtime_dead_letters;
+DROP TABLE IF EXISTS app.lead_locks;
+DROP TABLE IF EXISTS app.work_item_transitions;
+DROP TABLE IF EXISTS app.work_items;
+DROP TABLE IF EXISTS app.agent_capabilities;

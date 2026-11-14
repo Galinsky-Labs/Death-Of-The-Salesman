@@ -1,9 +1,16 @@
 import { type Client,type Context,rows,tenant,event,digest,fail } from "./common.js";
+/** DOTS-039: transient failure codes eligible for bounded retry with backoff; everything else is final. */
+export const RETRYABLE_TASK_CODES: readonly string[] = ["EXECUTION_FAILED","PROVIDER_RATE_LIMITED","PROVIDER_UNAVAILABLE"];
+export function backoffMs(attempt: number, random: () => number = Math.random, baseMs = 30_000, capMs = 3_600_000): number {
+  const exp = Math.min(capMs, baseMs * 2 ** Math.min(Math.max(1, Math.floor(attempt)) - 1, 30));
+  return Math.floor(exp / 2 + Math.min(1, Math.max(0, Number(random()) || 0)) * (exp / 2));
+}
 export class DurableQueue {
   constructor(private readonly client: Client,private readonly ctx: Context,readonly workerId: string) {}
   async claim() {return tenant(this.client,this.ctx,async tx=>{
     const candidate=rows(await tx.query(`SELECT q.* FROM app.task_queue q JOIN app.policy_controls p USING(organization_id)
       WHERE q.organization_id=$1 AND q.state='queued' AND q.available_at<=app.utc_now() AND q.attempts<q.max_attempts AND NOT p.paused
+      AND NOT (q.payload ? 'runtime')
       ORDER BY q.priority DESC,q.created_at FOR UPDATE OF q SKIP LOCKED LIMIT 1`,[this.ctx.organizationId]))[0];if(!candidate)return null;
     const locked=rows(await tx.query('SELECT pg_try_advisory_xact_lock(hashtextextended($1,0)) AS acquired',[`queue-agent:${this.ctx.organizationId}:${candidate.agent_identity_id}`]))[0];if(!locked?.acquired)return null;
     const assignment=rows(await tx.query("SELECT a.concurrency_cap FROM app.agent_project_assignments a JOIN app.agent_identities i ON i.organization_id=a.organization_id AND i.id=a.agent_identity_id JOIN app.projects p ON p.organization_id=a.organization_id AND p.id=a.project_id WHERE a.organization_id=$1 AND a.agent_identity_id=$2 AND a.project_id=$3 AND i.status='active' AND p.status='active'",[this.ctx.organizationId,candidate.agent_identity_id,candidate.project_id]))[0];
@@ -37,13 +44,24 @@ export class DurableQueue {
     await tx.query("UPDATE app.agent_runs SET state=$3,result=$4::jsonb,reason_code=$5,ended_at=app.utc_now() WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,runId,state,JSON.stringify(result),reason??null]);
     await event(tx,this.ctx,`task.${state}`,taskId,{runId,reasonCode:reason??"OK"},"worker");
   });}
+  /** Bounded retry: requeue with exponential backoff + jitter while attempts remain, else dead-letter. Fenced like finish(). */
+  async retryLater(taskId: string,fence: number,runId: string,reason: string,random: () => number = Math.random) {return tenant(this.client,this.ctx,async tx=>{
+    const task=rows(await tx.query("SELECT attempts,max_attempts,payload FROM app.task_queue WHERE organization_id=$1 AND id=$2 AND fencing_token=$3 AND lease_owner=$4 AND state='running' AND lease_expires_at>app.utc_now() FOR UPDATE",[this.ctx.organizationId,taskId,fence,this.workerId]))[0];
+    if(!task)return fail("LEASE_LOST");
+    const dead=Number(task.attempts)>=Number(task.max_attempts);
+    await tx.query("UPDATE app.task_queue SET state=$3,last_reason=$4,lease_expires_at=NULL,lease_owner=NULL,available_at=app.utc_now()+($5::bigint*interval '1 millisecond'),updated_at=app.utc_now() WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,taskId,dead?"failed":"queued",dead?`DEAD_LETTER:${reason}`.slice(0,200):reason,dead?0:backoffMs(Number(task.attempts),random)]);
+    await tx.query("UPDATE app.agent_runs SET state='failed',reason_code=$3,ended_at=app.utc_now() WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,runId,reason]);
+    if(dead)await tx.query("INSERT INTO app.runtime_dead_letters(organization_id,task_id,reason_code,attempts,payload_hash) VALUES($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING",[this.ctx.organizationId,taskId,`MAX_ATTEMPTS:${reason}`.slice(0,120),Number(task.attempts),digest(task.payload)]);
+    await event(tx,this.ctx,dead?"task.dead_lettered":"task.retry_scheduled",taskId,{runId,reasonCode:reason,attempts:Number(task.attempts)},"worker");
+    return dead?"dead_lettered":"retry_scheduled";
+  });}
   async recoverExpired() {return tenant(this.client,this.ctx,async tx=>{
-    const lost=rows(await tx.query("UPDATE app.task_queue SET state='quarantined',last_reason='LEASE_EXPIRED',updated_at=app.utc_now() WHERE organization_id=$1 AND state='running' AND lease_expires_at<=app.utc_now() RETURNING id",[this.ctx.organizationId]));
+    const lost=rows(await tx.query("UPDATE app.task_queue q SET state='quarantined',last_reason='LEASE_EXPIRED',updated_at=app.utc_now() WHERE q.organization_id=$1 AND q.state='running' AND q.lease_expires_at<=app.utc_now() AND NOT (q.payload ? 'runtime') RETURNING q.id",[this.ctx.organizationId]));
     for(const task of lost){await tx.query("UPDATE app.agent_runs SET state='quarantined',reason_code='LEASE_EXPIRED',ended_at=app.utc_now() WHERE organization_id=$1 AND task_id=$2 AND state='running'",[this.ctx.organizationId,task.id]);await event(tx,this.ctx,"task.quarantined",task.id,{reasonCode:"LEASE_EXPIRED"},"worker");}
     return lost.length;
   });}
   async cancel(taskId: string) {return tenant(this.client,this.ctx,async tx=>{
-    const result=rows(await tx.query("UPDATE app.task_queue SET state='cancelled',last_reason='OWNER_CANCELLED',fencing_token=fencing_token+1,lease_expires_at=NULL,updated_at=app.utc_now() WHERE organization_id=$1 AND id=$2 AND state IN ('queued','waiting','running') RETURNING id",[this.ctx.organizationId,taskId]));
+    const result=rows(await tx.query("UPDATE app.task_queue q SET state='cancelled',last_reason='OWNER_CANCELLED',fencing_token=fencing_token+1,lease_expires_at=NULL,updated_at=app.utc_now() WHERE q.organization_id=$1 AND q.id=$2 AND q.state IN ('queued','waiting','running') AND NOT (q.payload ? 'runtime') RETURNING q.id",[this.ctx.organizationId,taskId]));
     if(!result.length)return fail("TASK_NOT_CANCELLABLE");await tx.query("UPDATE app.agent_runs SET state='quarantined',reason_code='OWNER_CANCELLED',ended_at=app.utc_now() WHERE organization_id=$1 AND task_id=$2 AND state='running'",[this.ctx.organizationId,taskId]);await event(tx,this.ctx,"task.cancelled",taskId);
   });}
 }

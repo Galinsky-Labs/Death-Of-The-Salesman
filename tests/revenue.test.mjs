@@ -349,3 +349,13 @@ test('migration 0022 rolls back cleanly when no revenue evidence exists',async()
  assert.equal((await db.query("SELECT to_regclass('app.quotes') AS t")).rows[0].t,null);await assert.rejects(db.query("INSERT INTO app.money_entries(organization_id,idempotency_key,kind,amount_cents,source,evidence_ref) VALUES($1,'k','processor_fee',1,'simulation','x')",[org]),/check constraint/);
  await db.exec(await readFile(new URL('0022_revenue_operations.up.sql',directory),'utf8'));assert.ok((await db.query("SELECT to_regclass('app.quotes') AS t")).rows[0].t);
 }finally{await db.close();}});
+
+test('revenue routes: owner API requires session and trusted origin; public lead and portal routes never require or expose owner data',async()=>{
+ const ownerRoute=await readFile(new URL('../apps/web/app/api/v1/revenue/route.ts',import.meta.url),'utf8');
+ assert.match(ownerRoute,/export const dynamic='force-dynamic'/);assert.match(ownerRoute,/hasTrustedOrigin\(request\)\)return/);assert.equal((ownerRoute.match(/ownerSession\(\)/g)??[]).length,2);assert.match(ownerRoute,/private, no-store/);
+ const lead=await readFile(new URL('../apps/web/app/api/public/lead/route.ts',import.meta.url),'utf8');
+ assert.doesNotMatch(lead,/ownerSession/);assert.match(lead,/raw\.length>8192/);assert.match(lead,/submitLead/);assert.doesNotMatch(lead,/DeliveryGateway|enqueue/);assert.match(lead,/SUBMISSION_REJECTED/);
+ const portal=await readFile(new URL('../apps/web/app/portal/[token]/page.tsx',import.meta.url),'utf8');
+ assert.doesNotMatch(portal,/ownerSession|app\.messages|contact_events/);assert.match(portal,/portalView/);assert.match(portal,/index:false/);
+ const view=await readFile(new URL('../apps/web/app/views/revenue-view.tsx',import.meta.url),'utf8');assert.match(view,/export function RevenueView\(\)/);assert.match(view,/aria-live="polite"/);assert.match(view,/role="alert"/);
+});

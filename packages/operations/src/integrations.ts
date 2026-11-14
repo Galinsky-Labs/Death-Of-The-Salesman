@@ -96,33 +96,84 @@ export class DeliveryGateway {
   });
  }
 }
+/** Stripe connector (DOTS-136/137). Opt-in only: no key, no checkout. Sandbox keys work; live requires an owner production
+ * authorization, PAYMENTS_LIVE_MODE=true, a restricted live key and a webhook secret. Ledger rows come only from signed webhook events. */
+export function paymentMode(environment:Record<string,string|undefined>):'sandbox'|'live'|'invalid'{const key=environment.STRIPE_SECRET_KEY??'';return /^(sk|rk)_test_[A-Za-z0-9_]+$/.test(key)?'sandbox':/^(sk|rk)_live_[A-Za-z0-9_]+$/.test(key)?'live':'invalid';}
 export class PaymentGateway {
  constructor(private readonly client:Client,private readonly ctx:Context,private readonly environment:Record<string,string|undefined>=process.env,private readonly transport:typeof fetch=fetch){}
- async checkout(invoiceId:string){const env=this.environment;if(env.PAYMENTS_ENABLED!=='true'||!env.STRIPE_SECRET_KEY||!env.OWNER_MERCHANT_AUTHORIZATION_ID||!env.APP_ORIGIN)return fail('MERCHANT_SETUP_REQUIRED',403);if(!/^(sk|rk)_test_/.test(env.STRIPE_SECRET_KEY)&&!env.PRODUCTION_PAYMENTS_AUTHORIZATION_ID)return fail('LIVE_PAYMENTS_NOT_AUTHORIZED',403);
+ private liveAuthorized(){const env=this.environment;return Boolean(env.PRODUCTION_PAYMENTS_AUTHORIZATION_ID)&&env.PAYMENTS_LIVE_MODE==='true';}
+ async checkout(invoiceId:string){const env=this.environment;if(env.PAYMENTS_ENABLED!=='true'||!env.STRIPE_SECRET_KEY||!env.OWNER_MERCHANT_AUTHORIZATION_ID||!env.APP_ORIGIN)return fail('MERCHANT_SETUP_REQUIRED',403);
+  const mode=paymentMode(env);if(mode==='invalid')return fail('MERCHANT_SETUP_REQUIRED',403);
+  if(mode==='live'){if(!this.liveAuthorized())return fail('LIVE_PAYMENTS_NOT_AUTHORIZED',403);if(!env.STRIPE_SECRET_KEY.startsWith('rk_live_'))return fail('LIVE_PAYMENTS_REQUIRE_RESTRICTED_KEY',403);if(!env.STRIPE_WEBHOOK_SECRET)return fail('WEBHOOK_SECRET_REQUIRED',403);}
   const invoice=await tenant(this.client,this.ctx,async tx=>rows(await tx.query("SELECT * FROM app.invoices WHERE organization_id=$1 AND id=$2 AND state='issued'",[this.ctx.organizationId,invoiceId]))[0]);if(!invoice)return fail('ISSUED_INVOICE_REQUIRED');const cap=Number(env.MAX_PAYMENT_CENTS??0);if(!Number.isSafeInteger(cap)||cap<=0||Number(invoice.amount_cents)>cap)return fail('PAYMENT_LIMIT_EXCEEDED',403);
-  const body=new URLSearchParams({mode:'payment','line_items[0][price_data][currency]':'usd','line_items[0][price_data][unit_amount]':String(invoice.amount_cents),'line_items[0][price_data][product_data][name]':invoice.label,'line_items[0][quantity]':'1','payment_intent_data[metadata][organization_id]':this.ctx.organizationId,'payment_intent_data[metadata][invoice_id]':invoiceId,success_url:`${env.APP_ORIGIN}/dashboard?payment=received`,cancel_url:`${env.APP_ORIGIN}/dashboard?payment=cancelled`});
-  const response=await this.transport('https://api.stripe.com/v1/checkout/sessions',{method:'POST',headers:{authorization:`Bearer ${env.STRIPE_SECRET_KEY}`,'content-type':'application/x-www-form-urlencoded','Idempotency-Key':`invoice:${invoiceId}`},body,signal:AbortSignal.timeout(20000),redirect:'error'});if(!response.ok)return fail('PAYMENT_PROVIDER_REJECTED',503);const result=await response.json() as {url?:string};if(!result.url||new URL(result.url).hostname!=='checkout.stripe.com')return fail('PAYMENT_RESPONSE_INVALID',503);return {url:result.url};
+  const body=new URLSearchParams({mode:'payment','line_items[0][price_data][currency]':'usd','line_items[0][price_data][unit_amount]':String(invoice.amount_cents),'line_items[0][price_data][product_data][name]':invoice.label,'line_items[0][quantity]':'1','payment_intent_data[metadata][organization_id]':this.ctx.organizationId,'payment_intent_data[metadata][invoice_id]':invoiceId,'payment_intent_data[metadata][payment_mode]':mode,success_url:`${env.APP_ORIGIN}/dashboard?payment=received`,cancel_url:`${env.APP_ORIGIN}/dashboard?payment=cancelled`});
+  const response=await this.transport('https://api.stripe.com/v1/checkout/sessions',{method:'POST',headers:{authorization:`Bearer ${env.STRIPE_SECRET_KEY}`,'content-type':'application/x-www-form-urlencoded','Idempotency-Key':`invoice:${invoiceId}`},body,signal:AbortSignal.timeout(20000),redirect:'error'});if(!response.ok)return fail('PAYMENT_PROVIDER_REJECTED',503);const result=await response.json() as {url?:string;livemode?:boolean};if(!result.url||new URL(result.url).hostname!=='checkout.stripe.com')return fail('PAYMENT_RESPONSE_INVALID',503);if(typeof result.livemode==='boolean'&&result.livemode!==(mode==='live'))return fail('PAYMENT_MODE_MISMATCH',503);return {url:result.url,mode};
  }
+ /** Resolve a processor payment intent to the tenant's invoice or subscription receipt it settled. */
+ private async target(tx:Client,paymentIntent:unknown){if(typeof paymentIntent!=='string'||!paymentIntent)return null;
+  const invoice=rows(await tx.query("SELECT * FROM app.invoices WHERE organization_id=$1 AND provider_payment_id=$2 FOR UPDATE",[this.ctx.organizationId,paymentIntent]))[0];
+  if(invoice)return {invoice:invoice as Row|null,subscriptionId:null as string|null,projectId:invoice.project_id as string,receiptCents:Number(invoice.amount_cents)};
+  const receipt=rows(await tx.query("SELECT e.subscription_id,(e.details->>'amountCents')::bigint AS amount,s.project_id FROM app.retention_events e JOIN app.revenue_subscriptions s ON s.organization_id=e.organization_id AND s.id=e.subscription_id WHERE e.organization_id=$1 AND e.details->>'paymentIntent'=$2 ORDER BY e.occurred_at LIMIT 1",[this.ctx.organizationId,paymentIntent]))[0];
+  if(receipt)return {invoice:null as Row|null,subscriptionId:receipt.subscription_id as string|null,projectId:receipt.project_id as string,receiptCents:Number(receipt.amount)};return null;}
+ private async ledger(tx:Client,entry:{projectId:string|null;invoiceId:string|null;subscriptionId:string|null;key:string;kind:string;amount:number;source:string;evidence:string}){
+  return rows(await tx.query("INSERT INTO app.money_entries(organization_id,project_id,invoice_id,subscription_id,idempotency_key,kind,amount_cents,source,evidence_ref) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT(organization_id,idempotency_key) DO NOTHING RETURNING id",[this.ctx.organizationId,entry.projectId,entry.invoiceId,entry.subscriptionId,entry.key,entry.kind,entry.amount,entry.source,entry.evidence])).length>0;}
+ private fee(value:unknown):number{const fee=Number(value);return Number.isSafeInteger(fee)&&fee>0?fee:0;}
  async ingestStripe(eventId:string,payload:any){return tenant(this.client,this.ctx,async tx=>{
   const existing=rows(await tx.query("SELECT payload_hash FROM app.provider_receipts WHERE organization_id=$1 AND provider='stripe' AND event_id=$2",[this.ctx.organizationId,eventId]))[0];if(existing){if(existing.payload_hash!==digest(payload))return fail('RECEIPT_CONFLICT');return {duplicate:true};}
-  if(payload.livemode===true&&!this.environment.PRODUCTION_PAYMENTS_AUTHORIZATION_ID)return fail('LIVE_PAYMENTS_NOT_AUTHORIZED',403);const receiptSource=payload.livemode===true?'provider':'simulation';
+  if(payload.livemode===true&&!this.liveAuthorized())return fail('LIVE_PAYMENTS_NOT_AUTHORIZED',403);const receiptSource=payload.livemode===true?'provider':'simulation';
   const object=payload.data?.object;if(!object||typeof object.id!=='string')return fail('INVALID_RECEIPT',400);
   await tx.query("INSERT INTO app.provider_receipts(organization_id,provider,event_id,payload_hash) VALUES($1,'stripe',$2,$3)",[this.ctx.organizationId,eventId,digest(payload)]);
   if(payload.type==='payment_intent.succeeded'){
+   if(!object.metadata?.invoice_id&&typeof object.invoice==='string')return {ignored:true,reason:'SUBSCRIPTION_PAYMENT_RECONCILED_BY_INVOICE_EVENT'};
    if(object.metadata?.organization_id!==this.ctx.organizationId)return fail('PAYMENT_TENANT_MISMATCH',403);
    const invoice=rows(await tx.query("SELECT * FROM app.invoices WHERE organization_id=$1 AND id=$2 FOR UPDATE",[this.ctx.organizationId,object.metadata?.invoice_id]))[0];if(!invoice)return fail('INVOICE_NOT_FOUND',404);
    if(object.currency!=='usd'||Number(object.amount_received)!==Number(invoice.amount_cents))return fail('PAYMENT_AMOUNT_MISMATCH',400);
    if(invoice.state==='paid')return {duplicate:true};if(invoice.state!=='issued')return fail('INVOICE_NOT_ISSUED');
    await tx.query("UPDATE app.invoices SET state='paid',provider_payment_id=$3,test_mode=$4,version=version+1 WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,invoice.id,object.id,payload.livemode!==true]);
-   await tx.query("INSERT INTO app.money_entries(organization_id,project_id,invoice_id,idempotency_key,kind,amount_cents,source,evidence_ref) VALUES($1,$2,$3,$4,'sale_receipt',$5,$7,$6)",[this.ctx.organizationId,invoice.project_id,invoice.id,`stripe:${object.id}`,invoice.amount_cents,eventId,receiptSource]);
+   await this.ledger(tx,{projectId:invoice.project_id,invoiceId:invoice.id,subscriptionId:null,key:`stripe:${object.id}`,kind:'sale_receipt',amount:Number(invoice.amount_cents),source:receiptSource,evidence:eventId});
+   const fee=this.fee(object.latest_charge?.balance_transaction?.fee);if(fee)await this.ledger(tx,{projectId:invoice.project_id,invoiceId:invoice.id,subscriptionId:null,key:`stripe-fee:${object.id}`,kind:'processor_fee',amount:fee,source:receiptSource,evidence:eventId});
    if(invoice.contact_id&&receiptSource==='provider')await tx.query("UPDATE app.experiment_enrollments SET converted_at=COALESCE(converted_at,app.utc_now()) WHERE organization_id=$1 AND contact_id=$2 AND source='provider' AND exposed_at>app.utc_now()-interval '30 days' AND experiment_id IN(SELECT id FROM app.experiments WHERE organization_id=$1 AND project_id=$3 AND state='active')",[this.ctx.organizationId,invoice.contact_id,invoice.project_id]);
-   await event(tx,this.ctx,'invoice.paid',invoice.id,{source:receiptSource,amountCents:Number(invoice.amount_cents)},'provider');
+   await event(tx,this.ctx,'invoice.paid',invoice.id,{source:receiptSource,amountCents:Number(invoice.amount_cents),feeCents:fee},'provider');
   }else if(payload.type==='charge.refunded'){
-   const invoice=rows(await tx.query("SELECT * FROM app.invoices WHERE organization_id=$1 AND provider_payment_id=$2 FOR UPDATE",[this.ctx.organizationId,object.payment_intent]))[0];if(!invoice)return {ignored:true};
-   const refunded=rows(await tx.query("SELECT COALESCE(sum(amount_cents),0) AS total FROM app.money_entries WHERE organization_id=$1 AND invoice_id=$2 AND kind='refund'",[this.ctx.organizationId,invoice.id]))[0]!;
-   const total=Number(object.amount_refunded);cents(total);const delta=total-Number(refunded.total);if(delta<0||total>Number(invoice.amount_cents))return fail('REFUND_AMOUNT_MISMATCH',400);
-   if(delta>0)await tx.query("INSERT INTO app.money_entries(organization_id,project_id,invoice_id,idempotency_key,kind,amount_cents,source,evidence_ref) VALUES($1,$2,$3,$4,'refund',$5,$7,$6)",[this.ctx.organizationId,invoice.project_id,invoice.id,`stripe-refund:${object.id}:${total}`,delta,eventId,receiptSource]);
-   if(total===Number(invoice.amount_cents))await tx.query("UPDATE app.invoices SET state='refunded',version=version+1 WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,invoice.id]);await event(tx,this.ctx,'invoice.refund_received',invoice.id,{amountCents:delta},'provider');
+   const target=await this.target(tx,object.payment_intent);if(!target)return {ignored:true};
+   const total=Number(object.amount_refunded);cents(total);
+   if(target.invoice){const invoice=target.invoice;
+    const refunded=rows(await tx.query("SELECT COALESCE(sum(amount_cents),0) AS total FROM app.money_entries WHERE organization_id=$1 AND invoice_id=$2 AND kind='refund'",[this.ctx.organizationId,invoice.id]))[0]!;
+    const delta=total-Number(refunded.total);if(delta<0||total>Number(invoice.amount_cents))return fail('REFUND_AMOUNT_MISMATCH',400);
+    if(delta>0)await this.ledger(tx,{projectId:invoice.project_id,invoiceId:invoice.id,subscriptionId:null,key:`stripe-refund:${object.id}:${total}`,kind:'refund',amount:delta,source:receiptSource,evidence:eventId});
+    if(total===Number(invoice.amount_cents))await tx.query("UPDATE app.invoices SET state='refunded',version=version+1 WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,invoice.id]);await event(tx,this.ctx,'invoice.refund_received',invoice.id,{amountCents:delta},'provider');
+   }else{const prefix=`stripe-refund-pi:${object.payment_intent}:`;
+    const refunded=rows(await tx.query("SELECT COALESCE(sum(amount_cents),0) AS total FROM app.money_entries WHERE organization_id=$1 AND subscription_id=$2 AND kind='refund' AND starts_with(idempotency_key,$3)",[this.ctx.organizationId,target.subscriptionId,prefix]))[0]!;
+    const delta=total-Number(refunded.total);if(delta<0||total>target.receiptCents)return fail('REFUND_AMOUNT_MISMATCH',400);
+    if(delta>0)await this.ledger(tx,{projectId:target.projectId,invoiceId:null,subscriptionId:target.subscriptionId,key:`${prefix}${total}`,kind:'refund',amount:delta,source:receiptSource,evidence:eventId});
+    await event(tx,this.ctx,'subscription.refund_received',target.subscriptionId,{amountCents:delta},'provider');}
+  }else if(payload.type==='charge.dispute.created'||payload.type==='charge.dispute.closed'){
+   const target=await this.target(tx,object.payment_intent);if(!target)return {ignored:true};
+   const amount=Number(object.amount);if(!Number.isSafeInteger(amount)||amount<=0||amount>target.receiptCents||(object.currency&&object.currency!=='usd'))return fail('DISPUTE_AMOUNT_MISMATCH',400);
+   const base={projectId:target.projectId,invoiceId:(target.invoice?.id as string|undefined)??null,subscriptionId:target.subscriptionId,source:receiptSource,evidence:eventId};
+   await this.ledger(tx,{...base,key:`stripe-dispute:${object.id}:hold`,kind:'dispute_hold',amount});
+   const fee=Array.isArray(object.balance_transactions)?object.balance_transactions.reduce((sum:number,item:any)=>sum+this.fee(item?.fee),0):0;if(fee)await this.ledger(tx,{...base,key:`stripe-dispute-fee:${object.id}`,kind:'processor_fee',amount:fee});
+   let outcome='opened';
+   if(payload.type==='charge.dispute.closed'){outcome=String(object.status??'unknown');if(['won','warning_closed'].includes(outcome))await this.ledger(tx,{...base,key:`stripe-dispute:${object.id}:reversal`,kind:'dispute_reversal',amount});}
+   if(target.invoice){const next=payload.type==='charge.dispute.created'||!['won','warning_closed'].includes(outcome)?'disputed':'paid';await tx.query("UPDATE app.invoices SET state=$3,version=version+1 WHERE organization_id=$1 AND id=$2 AND state IN ('paid','disputed') AND state<>$3",[this.ctx.organizationId,target.invoice.id,next]);}
+   await event(tx,this.ctx,payload.type==='charge.dispute.created'?'payment.dispute_opened':'payment.dispute_closed',(target.invoice?.id as string|undefined)??target.subscriptionId,{amountCents:amount,outcome,source:receiptSource},'provider');
+  }else if(payload.type==='invoice.paid'||payload.type==='invoice.payment_failed'||payload.type==='customer.subscription.deleted'){
+   const providerSubscription=payload.type==='customer.subscription.deleted'?object.id:object.subscription;if(typeof providerSubscription!=='string')return {ignored:true};
+   const tenantRef=object.subscription_details?.metadata?.organization_id??object.metadata?.organization_id;if(tenantRef!==undefined&&tenantRef!==this.ctx.organizationId)return fail('PAYMENT_TENANT_MISMATCH',403);
+   const subscription=rows(await tx.query("SELECT * FROM app.revenue_subscriptions WHERE organization_id=$1 AND provider_subscription_id=$2 FOR UPDATE",[this.ctx.organizationId,providerSubscription]))[0];if(!subscription)return {ignored:true};
+   if(Boolean(subscription.test_mode)!==(payload.livemode!==true))return fail('PAYMENT_MODE_MISMATCH',409);
+   const retention=(kind:string,details:Record<string,unknown>={})=>tx.query("INSERT INTO app.retention_events(organization_id,subscription_id,kind,source,evidence_ref,details) VALUES($1,$2,$3,$4,$5,$6::jsonb)",[this.ctx.organizationId,subscription.id,kind,receiptSource,eventId,JSON.stringify(details)]);
+   if(payload.type==='customer.subscription.deleted'){if(['cancelled','churned'].includes(subscription.state))return {duplicate:true};
+    await tx.query("UPDATE app.revenue_subscriptions SET state='cancelled',ended_at=app.utc_now(),version=version+1,updated_at=app.utc_now() WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,subscription.id]);
+    await retention('cancelled',{reason:String(object.cancellation_details?.reason??'unspecified').slice(0,80)});await event(tx,this.ctx,'subscription.cancelled',subscription.id,{source:receiptSource},'provider');return {received:true};}
+   if(payload.type==='invoice.payment_failed'){await tx.query("UPDATE app.revenue_subscriptions SET state='past_due',version=version+1,updated_at=app.utc_now() WHERE organization_id=$1 AND id=$2 AND state IN ('active','trialing')",[this.ctx.organizationId,subscription.id]);await event(tx,this.ctx,'subscription.payment_failed',subscription.id,{source:receiptSource},'provider');return {received:true};}
+   const amount=Number(object.amount_paid);if(object.currency!=='usd'||!Number.isSafeInteger(amount)||amount<0)return fail('PAYMENT_AMOUNT_MISMATCH',400);if(amount===0)return {ignored:true,reason:'ZERO_AMOUNT_INVOICE'};
+   if(['cancelled','churned'].includes(subscription.state))return fail('SUBSCRIPTION_ENDED',409);
+   const recorded=await this.ledger(tx,{projectId:subscription.project_id,invoiceId:null,subscriptionId:subscription.id,key:`stripe-invoice:${object.id}`,kind:'subscription_receipt',amount,source:receiptSource,evidence:eventId});if(!recorded)return {duplicate:true};
+   const periodEnd=Number(object.lines?.data?.[0]?.period?.end??object.period_end);const details={paymentIntent:typeof object.payment_intent==='string'?object.payment_intent:null,stripeInvoice:object.id,amountCents:amount};
+   await tx.query("UPDATE app.revenue_subscriptions SET state='active',current_period_end=COALESCE($3::timestamptz,current_period_end),version=version+1,updated_at=app.utc_now() WHERE organization_id=$1 AND id=$2",[this.ctx.organizationId,subscription.id,Number.isSafeInteger(periodEnd)&&periodEnd>0?new Date(periodEnd*1000).toISOString():null]);
+   await retention(object.billing_reason==='subscription_cycle'?'renewed':'payment_received',details);if(subscription.state==='trialing')await retention('trial_converted',details);
+   await event(tx,this.ctx,'subscription.paid',subscription.id,{source:receiptSource,amountCents:amount},'provider');
   }
   return {received:true};
  });}

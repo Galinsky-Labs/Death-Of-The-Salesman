@@ -12,3 +12,4 @@ export * from "./strategy.js";
 export * from "./governance.js";
 export * from "./funding.js";
 export * from "./models.js";
+export * from "./revenue.js";

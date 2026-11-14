@@ -541,7 +541,7 @@ export function routeModel(input: { taskClass: TaskClass; request: ModelRequest;
 /* ───────────────────────── DOTS-065 retries and circuit breaker ───────────────────────── */
 
 export const breakerDefaults = { failureThreshold: 3, cooldownMs: 30_000, maxCooldownMs: 15 * 60_000 };
-export function backoffDelayMs(attempt: number, random: () => number = Math.random, baseMs = 500, maxMs = 8_000, retryAfterMs: number | null = null): number {
+export function providerBackoffDelayMs(attempt: number, random: () => number = Math.random, baseMs = 500, maxMs = 8_000, retryAfterMs: number | null = null): number {
   if (!Number.isSafeInteger(attempt) || attempt < 0) return fail("INVALID_ATTEMPT", 400);
   const ceiling = Math.min(maxMs, baseMs * 2 ** Math.min(attempt, 20));
   const jitter = Math.min(1, Math.max(0, random()));
@@ -958,7 +958,7 @@ export class ModelOperations {
           }
           breaker = await this.recordBreaker(binding.provider, binding.model, "failure", now(), code);
           if (attempt + 1 < maxAttempts && breaker.state !== "open") {
-            const delay = backoffDelayMs(attempt, random, 500, 8_000, call.retryAfterMs);
+            const delay = providerBackoffDelayMs(attempt, random, 500, 8_000, call.retryAfterMs);
             await tenant(this.client, this.ctx, tx => event(tx, this.ctx, "model.retry_scheduled", executionId, { provider: binding.provider, attempt: attempt + 1, delayMs: delay, reason: code }, "worker"));
             await sleep(delay);
           }

@@ -5,7 +5,7 @@ import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {
   MODEL_MANIFEST,modelBinding,modelCatalogStatus,assertTrustedBinding,assertFailoverAllowed,validateModelRequest,invokeModel,buildProviderRequest,
-  classifyGeneratedOutput,planCheckpointInstall,routeModel,backoffDelayMs,nextBreakerState,runAdapterBenchmark,BENCHMARK_CASES,providerStubBody,
+  classifyGeneratedOutput,planCheckpointInstall,routeModel,providerBackoffDelayMs,nextBreakerState,runAdapterBenchmark,BENCHMARK_CASES,providerStubBody,
   planModelSmoke,runModelSmoke,ModelOperations,ProviderCallError,detectGrokModels,schemaErrors,worstCaseCostCents,complete,providerConfiguration,
   disallowedModelLineage,tenant,ControlPlane
 } from '../packages/operations/dist/index.js';
@@ -306,9 +306,9 @@ test('DOTS-064 router selects only approved, configured, permitted and funded pa
 });
 
 test('DOTS-065 bounded backoff and breaker transitions are deterministic and capped',()=>{
-  for(let attempt=0;attempt<12;attempt++){const ceiling=Math.min(8000,500*2**attempt);for(const r of [0,0.5,1]){const d=backoffDelayMs(attempt,()=>r);assert.ok(d>=ceiling/2&&d<=ceiling,`${attempt}:${d}`);}}
-  assert.equal(backoffDelayMs(0,()=>0,500,8000,60000),8000,'retry-after is honoured but bounded');
-  assert.equal(backoffDelayMs(1,()=>2),1000,'jitter is clamped');
+  for(let attempt=0;attempt<12;attempt++){const ceiling=Math.min(8000,500*2**attempt);for(const r of [0,0.5,1]){const d=providerBackoffDelayMs(attempt,()=>r);assert.ok(d>=ceiling/2&&d<=ceiling,`${attempt}:${d}`);}}
+  assert.equal(providerBackoffDelayMs(0,()=>0,500,8000,60000),8000,'retry-after is honoured but bounded');
+  assert.equal(providerBackoffDelayMs(1,()=>2),1000,'jitter is clamped');
   let s={state:'closed',consecutiveFailures:0,openedCount:0,retryAt:null};
   s=nextBreakerState(s,'failure',0);s=nextBreakerState(s,'failure',0);assert.equal(s.state,'closed');
   s=nextBreakerState(s,'failure',1000);assert.equal(s.state,'open');assert.equal(s.retryAt,31000);

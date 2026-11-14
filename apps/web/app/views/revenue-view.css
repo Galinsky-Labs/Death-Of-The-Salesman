@@ -1,0 +1,12 @@
+.revenue-view .ops-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.revenue-view .ops-tabs button{min-height:44px;padding:0 14px}
+.revenue-view .revenue-form{margin-top:12px}
+.revenue-view .revenue-form input,.revenue-view .revenue-form select,.revenue-view .revenue-form textarea{min-height:44px;background:#0f131a;color:#e8edf5;border:1px solid #2c323e;border-radius:7px;padding:8px 10px;font:inherit}
+.revenue-view .revenue-form textarea{min-height:96px}
+.revenue-view .revenue-check span{display:flex;align-items:center;gap:8px;min-height:44px}
+.revenue-view .revenue-check input{width:22px;height:22px}
+.revenue-view button{min-height:44px}
+.revenue-view .revenue-secret code{display:block;margin-top:8px;word-break:break-all;user-select:all}
+.revenue-view .ops-checklist li{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.revenue-view :focus-visible{outline:2px solid #8fb4ff;outline-offset:2px}
+@media(max-width:767px){.revenue-view .ops-table-wrap{overflow-x:auto}}

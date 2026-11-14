@@ -7,6 +7,7 @@ import {StrategyLabView} from './strategy-lab-view';
 import {GovernanceView} from './governance-view';
 import {FundingView} from './funding-view';
 import {ModelsView} from './models-view';
+import {RevenueView} from './revenue-view';
 const BudgetGovernance=()=><GovernanceView section="budget"/>;
 const ApprovalGovernance=()=><GovernanceView section="approvals"/>;
 const SafetyGovernance=()=><GovernanceView section="safety"/>;
@@ -16,6 +17,7 @@ export const roadmapViews:Record<string,ComponentType[]>={
  "Strategy Lab":[StrategyLabView],
  "Funding":[FundingView],
  "Models":[ModelsView],
+ "Revenue":[RevenueView],
  "Budget":[BudgetGovernance],
  "Approvals":[ApprovalGovernance],
  "Safety":[SafetyGovernance],

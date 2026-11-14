@@ -1,9 +1,15 @@
 import {type Client,type Context,rows,tenant,event,digest,OperationError,fail} from './common.js';
 import {ControlPlane} from './control.js';
-import {DurableQueue} from './queue.js';
+import {DurableQueue,RETRYABLE_TASK_CODES} from './queue.js';
+import {RunCoordinator,RuntimeQueue,simulationExecutor} from './runtime.js';
 import {complete,providerConfiguration,usageCost,type ProviderId} from './providers.js';
+/** DOTS-049/054: runtime work items run through the bounded coordinator with the $0 deterministic executor only. */
+async function runRuntimeWork(client:Client,ctx:Context,workerId:string){
+ try{await new RuntimeQueue(client,ctx).recoverOrphans();const outcome=await new RunCoordinator(client,ctx).execute(workerId,simulationExecutor());return outcome?{taskId:outcome.workItemId,runId:outcome.runId,state:outcome.state,reasonCode:outcome.reasonCode}:null;}
+ catch(error){return {taskId:'runtime',runId:null,state:'failed',reasonCode:error instanceof OperationError?error.code:'RUNTIME_FAILED'};}
+}
 export async function runOneTask(client:Client,ctx:Context,workerId:string,environment:Record<string,string|undefined>=process.env,transport:typeof fetch=fetch) {
- const queue=new DurableQueue(client,ctx,workerId);await queue.recoverExpired();const task=await queue.claim();if(!task)return null;
+ const queue=new DurableQueue(client,ctx,workerId);await queue.recoverExpired();const task=await queue.claim();if(!task)return runRuntimeWork(client,ctx,workerId);
  const fence=Number(task.fencing_token),mode=task.payload.mode==='live'?'live':'simulation';
  const run=await queue.startRun(task.id,fence,mode,task.payload.provider);let reservationId:string|undefined;
  const budget=new ControlPlane(client,ctx);
@@ -54,6 +60,7 @@ export async function runOneTask(client:Client,ctx:Context,workerId:string,envir
   const code=error instanceof OperationError?error.code:'EXECUTION_FAILED';
   const uncertain=Boolean(reservationId);
   if(reservationId&&['OWNER_PAUSED','PROVIDER_RATE_LIMITED'].includes(code)){await budget.settle(reservationId,0,`released:${run.id}`,true);reservationId=undefined;}
+  if(code!=='LEASE_LOST'&&!reservationId&&RETRYABLE_TASK_CODES.includes(code)){const retried=await queue.retryLater(task.id,fence,run.id,code).catch(()=>undefined);if(retried)return {taskId:task.id,runId:run.id,state:retried==='dead_lettered'?'failed':'retry_scheduled',reasonCode:code};}
   if(code!=='LEASE_LOST')await queue.finish(task.id,fence,run.id,{mode,reasonCode:code,budgetReservationHeld:Boolean(reservationId)},uncertain&&reservationId?'quarantined':'failed',code).catch(()=>undefined);
   return {taskId:task.id,runId:run.id,state:uncertain&&reservationId?'quarantined':'failed',reasonCode:code};
  }

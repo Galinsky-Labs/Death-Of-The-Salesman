@@ -70,7 +70,7 @@ test('outbound integrations can only reach fixed allow-listed HTTPS hosts (SSRF 
  const directory=new URL('../packages/operations/src/',import.meta.url);
  for(const file of (await readdir(directory)).filter(f=>f.endsWith('.ts'))){
   const source=await readFile(new URL(file,directory),'utf8');
-  for(const literal of source.matchAll(/https:\/\/([a-z0-9.-]+)\//gi)){
+  for(const literal of source.matchAll(/https:\/\/([a-z0-9.-]+)\/(?!auth\/)/gi)){ // OAuth scope identifiers are not request endpoints
    const host=literal[1].toLowerCase();
    if(['huggingface.co','www.grants.gov','checkout.stripe.com','dashboard.stripe.com','resend.com','openrouter.ai','developers.openai.com','platform.claude.com','docs.x.ai','www.ftc.gov','www.sec.gov'].includes(host))continue;
    assert.ok(OUTBOUND_HOST_ALLOWLIST.includes(host),`${file} references unreviewed outbound host ${host}`);

@@ -11,6 +11,7 @@ import {RevenueView} from './revenue-view';
 import {RuntimeView} from './runtime-view';
 import {CampaignStudioView} from './campaign-studio-view';
 import {CrmView} from './crm-view';
+import {ConversationCenterView} from './conversation-center-view';
 const ContactsCrm=()=><CrmView section="contacts"/>;
 const PipelineCrm=()=><CrmView section="pipeline"/>;
 const BudgetGovernance=()=><GovernanceView section="budget"/>;
@@ -25,6 +26,7 @@ export const roadmapViews:Record<string,ComponentType[]>={
  "Revenue":[RevenueView],
  "Campaign Studio":[CampaignStudioView],
  "Contacts":[ContactsCrm],
+ "Conversations":[ConversationCenterView],
  "Pipeline":[PipelineCrm],
  "Work queue":[RuntimeView],
  "Agents":[RuntimeView],

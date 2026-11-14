@@ -16,3 +16,4 @@ export * from "./revenue.js";
 export * from "./runtime.js";
 export * from "./campaigns.js";
 export * from "./crm.js";
+export * from "./communications.js";

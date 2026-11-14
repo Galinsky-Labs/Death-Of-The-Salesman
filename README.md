@@ -11,6 +11,7 @@ Paid providers and real outreach require separately configured owner credentials
 - [Responsive product interaction design](docs/PRODUCT_INTERACTION_DESIGN.md) — dark dashboard, avatars, drag-and-drop project buckets, Strategy Lab, CRM and Conversation Center. **No random corner salesman quote.**
 - [Complete development plan](docs/DEVELOPMENT_PLAN.md) — all phases and acceptance gates. Generated from one canonical plan.
 - [Canonical machine-readable PR registry](registry/prs.json) — real PR mapping and dependency DAG, compatible with Boardroom's v1 contract.
+- [Roadmap completion record](docs/ROADMAP_COMPLETION.md) — source status of every unit and the remaining external prerequisites.
 - [Development-agent instructions](AGENTS.md) — implementation and checkpoint discipline.
 - [Zero-credential developer runbook](docs/DEVELOPER_RUNBOOK.md) — safe demo setup, daily commands, secret names and ownership boundaries.
 - [Outage and rollback runbook](docs/OUTAGE_ROLLBACK_RUNBOOK.md) — fail-closed stabilization, rollback decisions and recovery verification.

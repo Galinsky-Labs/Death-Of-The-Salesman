@@ -1,13 +1,17 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-10-18",
+  "asOf": "2026-11-14",
   "note": "Model candidates are limited to approved providers. Chinese-developed code-capable model families and arbitrary inference endpoints are excluded; a new provider or model requires security review. Listed providers remain disabled until provisioned.",
+  "manifest": "packages/operations/src/models.ts (MODEL_MANIFEST v1); per-tenant reviewed model revisions are stored append-only in app.model_revisions",
   "candidates": [
     {
       "id": "openai",
       "provider": "openai",
       "type": "proprietary-api",
       "protocol": "responses",
+      "endpoint": "https://api.openai.com/v1/responses",
+      "credentialEnv": "OPENAI_API_KEY",
+      "privacyCeiling": "internal; private only with OPENAI_PRIVATE_DATA_APPROVED=true",
       "modelId": null,
       "enabled": false
     },
@@ -16,6 +20,9 @@
       "provider": "anthropic",
       "type": "proprietary-api",
       "protocol": "messages",
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "credentialEnv": "CLAUDE_API_KEY",
+      "privacyCeiling": "internal; private only with CLAUDE_PRIVATE_DATA_APPROVED=true",
       "modelId": null,
       "enabled": false
     },
@@ -23,7 +30,10 @@
       "id": "grok",
       "provider": "xai",
       "type": "proprietary-api",
-      "protocol": "provider-supported",
+      "protocol": "chat-completions",
+      "endpoint": "https://api.x.ai/v1/chat/completions",
+      "credentialEnv": "GROK_API_KEY",
+      "privacyCeiling": "internal; private only with GROK_PRIVATE_DATA_APPROVED=true",
       "modelId": null,
       "enabled": false
     }

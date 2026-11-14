@@ -1,0 +1,10 @@
+DROP TABLE app.generated_outputs;
+DROP TABLE app.model_provider_invoices;
+DROP TABLE app.model_usage_records;
+DROP TABLE app.model_executions;
+DROP TABLE app.model_breakers;
+DROP TABLE app.model_routing_weights;
+DROP TABLE app.model_pricing_versions;
+DROP TABLE app.model_revisions;
+DROP FUNCTION app.guard_generated_output();
+DROP FUNCTION app.guard_model_execution();

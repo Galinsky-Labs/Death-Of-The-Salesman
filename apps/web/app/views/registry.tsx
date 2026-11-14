@@ -9,16 +9,18 @@ import {FundingView} from './funding-view';
 import {ModelsView} from './models-view';
 import {RevenueView} from './revenue-view';
 import {RuntimeView} from './runtime-view';
+import {CampaignStudioView} from './campaign-studio-view';
 const BudgetGovernance=()=><GovernanceView section="budget"/>;
 const ApprovalGovernance=()=><GovernanceView section="approvals"/>;
 const SafetyGovernance=()=><GovernanceView section="safety"/>;
-export const dedicatedViews=["Models","Safety","Operations health"];
+export const dedicatedViews=["Campaign Studio","Models","Safety","Operations health"];
 export const roadmapViews:Record<string,ComponentType[]>={
  "Operations health":[PlatformView],
  "Strategy Lab":[StrategyLabView],
  "Funding":[FundingView],
  "Models":[ModelsView],
  "Revenue":[RevenueView],
+ "Campaign Studio":[CampaignStudioView],
  "Work queue":[RuntimeView],
  "Agents":[RuntimeView],
  "Budget":[BudgetGovernance],

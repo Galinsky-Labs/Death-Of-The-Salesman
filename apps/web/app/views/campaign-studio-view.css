@@ -1,0 +1,47 @@
+.cs-root{display:grid;gap:20px;min-width:0;color:#e2e5eb}
+.cs-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:16px}
+.cs-header h2{margin:0;font-size:22px}
+.cs-header p{margin:6px 0 0;font-size:12px;color:#aeb7c6;max-width:720px;line-height:1.7}
+.cs-split{display:grid;grid-template-columns:minmax(220px,300px) minmax(0,1fr);gap:20px;align-items:start}
+.cs-list{display:grid;gap:10px;border:1px solid #2c323e;border-radius:9px;background:#13171f;padding:16px;min-width:0}
+.cs-list h3,.cs-panel h3{margin:0 0 6px;font-size:15px}
+.cs-list-item{display:grid;gap:4px;width:100%;text-align:left;min-height:48px;padding:10px 12px;border-radius:7px;border:1px solid #2b313c;background:#171c25;color:#e2e5eb;cursor:pointer}
+.cs-list-item[aria-current="true"]{border-color:#c4b3ff;background:#221e31}
+.cs-list-item small{color:#9aa4b6;font-size:10px}
+.cs-panel{display:grid;gap:16px;border:1px solid #2c323e;border-radius:9px;background:#13171f;padding:20px;min-width:0}
+.cs-sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.cs-section{border:1px solid #262c37;border-radius:8px;padding:16px;display:grid;gap:12px;min-width:0;align-content:start}
+.cs-section.wide{grid-column:1/-1}
+.cs-section h4{margin:0;font-size:13px;color:#d6cdf0}
+.cs-field{display:grid;gap:6px;font-size:11px;color:#b9c1ce}
+.cs-field input,.cs-field select,.cs-field textarea{min-height:44px;padding:9px 11px;border-radius:6px;border:1px solid #353b47;background:#0f1218;color:#e7eaf0;font:inherit;font-size:12px;width:100%;box-sizing:border-box}
+.cs-field textarea{min-height:120px;resize:vertical;font-family:ui-monospace,monospace}
+.cs-field input:focus-visible,.cs-field select:focus-visible,.cs-field textarea:focus-visible,.cs-list-item:focus-visible,.cs-root button:focus-visible{outline:2px solid #c4b3ff;outline-offset:2px}
+.cs-check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:12px}
+.cs-check input{width:20px;height:20px}
+.cs-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.cs-row>.live-primary,.cs-row>.live-secondary{min-height:44px}
+.cs-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.cs-lifecycle{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.cs-lifecycle li{font-size:10px;padding:6px 8px;border-radius:5px;border:1px solid #2f3541;color:#8f99ab}
+.cs-lifecycle li[aria-current="step"]{border-color:#c4b3ff;color:#191426;background:#c4b3ff;font-weight:600}
+.cs-issues{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.cs-issues li{font-size:12px;line-height:1.6;padding:10px 12px;border-radius:6px;border:1px solid #3b4250;background:#171b23}
+.cs-issues li.blocking{border-color:#664753;background:#2a1d24}
+.cs-issues li code{font-size:10px;color:#c6badb;margin-right:8px}
+.cs-contacts{max-height:240px;overflow:auto;display:grid;gap:4px;border:1px solid #262c37;border-radius:6px;padding:8px}
+.cs-preview{display:grid;gap:12px}
+.cs-preview article{border:1px solid #2b313c;border-radius:8px;padding:12px;display:grid;gap:8px}
+.cs-preview pre{white-space:pre-wrap;font-size:12px;margin:0;color:#d5dae3}
+.cs-preview iframe{width:100%;min-height:140px;border:1px solid #2b313c;border-radius:6px;background:#fff}
+.cs-funnel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cs-funnel article{border:1px solid #2c323c;border-radius:8px;padding:12px;display:grid;gap:6px}
+.cs-funnel strong{font-size:20px}
+.cs-funnel small,.cs-source{font-size:10px;color:#9aa4b6;line-height:1.6}
+.cs-timeline{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:300px;overflow:auto}
+.cs-timeline li{font-size:11px;border-left:2px solid #3b4250;padding:4px 10px}
+.cs-empty{border:1px dashed #3b4250;border-radius:9px;padding:24px;text-align:center;color:#aeb7c6;font-size:12px;line-height:1.8}
+.cs-error{border:1px solid #664753;background:#30222b;color:#f0c7cf;border-radius:7px;padding:10px 14px;font-size:12px}
+.cs-notice{font-size:12px;color:#b4d4be;min-height:18px}
+@media(max-width:1100px){.cs-split{grid-template-columns:minmax(0,1fr)}.cs-funnel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.cs-sections,.cs-grid2{grid-template-columns:minmax(0,1fr)}.cs-funnel{grid-template-columns:minmax(0,1fr)}.cs-panel{padding:14px}}

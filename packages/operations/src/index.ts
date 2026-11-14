@@ -14,3 +14,4 @@ export * from "./funding.js";
 export * from "./models.js";
 export * from "./revenue.js";
 export * from "./runtime.js";
+export * from "./campaigns.js";

@@ -1,0 +1,11 @@
+.runtime-view .runtime-subheading { margin-top: 2rem; }
+.runtime-view .runtime-status { display: inline-flex; align-items: center; gap: 0.4rem; }
+.runtime-view .runtime-dot { width: 0.7rem; height: 0.7rem; border-radius: 999px; display: inline-block; }
+.runtime-view .runtime-green .runtime-dot { background: var(--color-ready); }
+.runtime-view .runtime-yellow .runtime-dot { background: var(--color-waiting); }
+.runtime-view .runtime-red .runtime-dot { background: var(--color-inactive); }
+.runtime-view .runtime-reasons { margin: 0.5rem 0; padding-left: 1.1rem; }
+.runtime-view .runtime-reasons li { margin-bottom: 0.25rem; overflow-wrap: anywhere; }
+.runtime-view fieldset label { display: inline-flex; align-items: center; gap: 0.3rem; min-height: var(--control-min); margin-right: 0.75rem; }
+.runtime-view .ops-hash { overflow-wrap: anywhere; }
+.runtime-view .ops-row-actions button { min-height: var(--control-min); }

@@ -1,0 +1,17 @@
+DROP TABLE app.portfolio_access_tokens;
+DROP TABLE app.incident_events;
+DROP TABLE app.incidents;
+DROP INDEX IF EXISTS app.provider_receipts_pending;
+DROP INDEX IF EXISTS app.agent_identities_name;
+DROP INDEX IF EXISTS app.approvals_pending;
+DROP INDEX IF EXISTS app.funding_stage_deadline;
+DROP INDEX IF EXISTS app.deals_stage;
+DROP INDEX IF EXISTS app.money_entries_kind;
+DROP INDEX IF EXISTS app.agent_runs_task;
+DROP INDEX IF EXISTS app.task_queue_agent_state;
+DROP INDEX IF EXISTS app.messages_outbound_window;
+DROP INDEX IF EXISTS app.messages_thread;
+DROP INDEX IF EXISTS app.conversations_recent;
+DROP INDEX IF EXISTS app.contact_events_timeline;
+DROP INDEX IF EXISTS app.crm_contacts_status;
+DROP INDEX IF EXISTS app.crm_contacts_recent;

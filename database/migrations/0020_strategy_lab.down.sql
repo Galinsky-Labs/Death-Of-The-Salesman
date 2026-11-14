@@ -1,0 +1,15 @@
+DROP VIEW app.strategy_arm_metrics;
+DROP TABLE app.strategy_variant_backlog;
+DROP TABLE app.strategy_promotions;
+DROP TABLE app.strategy_metric_snapshots;
+DROP TABLE app.strategy_outcome_events;
+DROP TABLE app.strategy_enrollments;
+DROP TABLE app.strategy_experiment_arms;
+DROP TABLE app.strategy_experiments;
+DROP TABLE app.strategy_allocation_history;
+DROP TABLE app.strategy_allocation_rules;
+DROP TABLE app.strategy_lineage;
+DROP TABLE app.strategy_revisions;
+DROP TABLE app.strategy_families;
+DROP FUNCTION app.preserve_strategy_experiment();
+DROP FUNCTION app.preserve_strategy_revision();

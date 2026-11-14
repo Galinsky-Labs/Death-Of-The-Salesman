@@ -1,0 +1,30 @@
+.crm-view{min-width:0}
+.crm-view button{min-height:44px;cursor:pointer;font:inherit}
+.crm-view :focus-visible{outline:3px solid #c3b0ff;outline-offset:3px}
+.crm-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.crm-live{min-height:1px;font-size:11px;color:#b4d4be;margin:0 0 8px}
+.crm-error{border-color:#664753;background:#30222b;color:#e4b2bb}
+.crm-subheading{font-size:13px;color:#c7b7eb;margin:28px 0 14px;font-weight:500}
+.crm-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,380px);gap:18px;align-items:start}
+.crm-cards,.crm-accounts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.crm-lead.selected{border-color:#6e5989;background:#1e1a28}
+.crm-lead h3{font-size:14px!important;margin:0!important}
+.crm-check{display:flex;align-items:center;gap:10px;font-size:11px;color:#c2c9d5;min-height:44px}
+.crm-check input{width:20px;height:20px;accent-color:#c5b1fc}
+.crm-bulk{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border:1px solid #2c323e;border-radius:9px;padding:12px 16px;margin-bottom:18px;font-size:11px;color:#b7bfcb}
+.crm-inspector{position:sticky;top:12px;max-height:calc(100dvh - 24px);overflow:auto}
+.crm-chips{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.crm-chips button{background:#1a1f29;border:1px solid #353c4a;border-radius:16px;color:#d2dae7;padding:8px 14px;font-size:11px}
+.crm-reasons,.crm-preview{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;font-size:11px;color:#b7bfcb}
+.crm-preview small{color:#929fb1}
+.crm-forms .ops-card{display:grid;gap:12px;align-content:start}
+.crm-move{display:grid;gap:6px;margin-top:12px;font-size:10px;color:#acb7c8}
+.crm-move input,.crm-move select,.crm-move textarea{background:#11151c;color:#e7eaf0;border:1px solid #353b48;border-radius:5px;padding:10px;font-size:12px;min-height:44px;min-width:0}
+.crm-board .ops-mini-card{cursor:grab}
+.crm-timeline{list-style:none}
+.crm-timeline li{display:block;padding:4px 0}
+.crm-timeline p{font-size:11px;color:#c8ced9;margin:6px 0;overflow-wrap:anywhere}
+.crm-more{margin-top:14px}
+@media(max-width:1000px){.crm-layout{grid-template-columns:1fr}.crm-inspector{position:static;max-height:none}}
+@media(max-width:767px){.crm-board{flex-direction:column}.crm-board .ops-lane{flex:1 1 auto;min-height:0}.crm-cards,.crm-accounts{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.crm-view *{transition:none!important;animation:none!important}}

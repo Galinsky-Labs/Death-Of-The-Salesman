@@ -1,0 +1,56 @@
+# DOTS-151: declarative Render resources for Death Of The Salesman.
+# Free plan only. Applying this blueprint never enables paid execution, outbound email or payments:
+# every secret is `sync: false` (entered privately in the Render dashboard) and spend defaults to $0.
+# Creating any additional billable resource requires explicit owner cost approval first.
+services:
+  - type: web
+    name: death-of-the-salesman
+    runtime: node
+    plan: free
+    region: ohio
+    branch: main
+    autoDeploy: false
+    healthCheckPath: /api/health
+    buildCommand: npx --yes pnpm@11.25.0 install --frozen-lockfile --prod=false && npx --yes pnpm@11.25.0 build
+    startCommand: node apps/web/node_modules/next/dist/bin/next start apps/web --hostname 0.0.0.0 --port $PORT
+    envVars:
+      - key: NODE_VERSION
+        value: 24.19.0
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: APP_ENV
+        value: production
+      - key: PAID_SPEND_LIMIT_CENTS
+        value: "0"
+      - key: MODEL_API_ENABLED
+        value: "false"
+      - key: EMAIL_DELIVERY_ENABLED
+        value: "false"
+      - key: EMAIL_RECEIVING_ENABLED
+        value: "false"
+      - key: PAYMENTS_ENABLED
+        value: "false"
+      - key: COMMERCIAL_SIGNUP_ENABLED
+        value: "false"
+      - key: JOB_WORKER_ENABLED
+        value: "true"
+      - key: APP_ORIGIN
+        value: https://death-of-the-salesman.onrender.com
+      - key: DATABASE_URL
+        sync: false
+      - key: NEON_AUTH_BASE_URL
+        sync: false
+      - key: NEON_AUTH_COOKIE_SECRET
+        sync: false
+      - key: OWNER_EMAIL
+        sync: false
+      - key: OWNER_ORGANIZATION_ID
+        sync: false
+      - key: OWNER_MEMBERSHIP_ID
+        sync: false
+      - key: DOCUMENT_ENCRYPTION_KEY
+        sync: false
+      - key: UNSUBSCRIBE_SIGNING_KEY
+        sync: false
+      - key: CREDENTIAL_ENCRYPTION_KEY
+        sync: false

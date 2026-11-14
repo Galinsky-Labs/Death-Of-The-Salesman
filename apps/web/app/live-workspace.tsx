@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { WorkspaceData, Project, Agent } from "../lib/workspace";
 import type { OperationsSnapshot } from "../lib/operations";
 import { OperationsConsole } from "./operations-console";
+import { roadmapViews, dedicatedViews } from "./views/registry";
 import { authClient } from "../lib/auth-client";
 
 const categories = { product:"Product sales",grant:"Grants",investment:"Investor relations" };
@@ -22,7 +23,8 @@ export function LiveWorkspace({ initial, initialOperations }: { initial: Workspa
   const [selectedProject, setSelectedProject] = useState("");
   const [allocation, setAllocation] = useState(50);
   const [dragging, setDragging] = useState<string | null>(null);
-  const operationViews=["Work queue","Campaigns","Contacts","Pipeline","Conversations","Strategy Lab","Funding","Revenue","Documents","Catalog","Approvals","Budget","Settings","Activity"];
+  const consoleViews=["Work queue","Campaigns","Contacts","Pipeline","Conversations","Strategy Lab","Funding","Revenue","Documents","Catalog","Approvals","Budget","Settings","Activity"];
+  const operationViews=[...consoleViews,...dedicatedViews.filter(label=>!consoleViews.includes(label))];
   async function refreshWorkspace(){const response=await fetch('/api/workspace',{cache:'no-store'});if(response.ok)setData(await response.json());}
   useEffect(()=>{const timer=setInterval(()=>setEvidenceNow(Date.now()),5000);return()=>clearInterval(timer);},[]);
   useEffect(()=>{if(view!=="Work queue"&&view!=="Agents")return;let pending=false;const timer=setInterval(async()=>{if(document.hidden||pending)return;pending=true;try{const response=await fetch('/api/operations',{cache:'no-store'});if(response.ok)setOperations(await response.json());}finally{pending=false;}},5000);return()=>clearInterval(timer);},[view]);
@@ -113,7 +115,8 @@ export function LiveWorkspace({ initial, initialOperations }: { initial: Workspa
           ["Assignments",data.assignments.filter(a=>data.projects.some(p=>p.id===a.project_id)).length,"Saved team allocations"],["Execution hard cap",new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(operations?.capabilities.hardCapCents??0)/100),"Owner-authorized limit"],
         ].map(([label,value,caption])=><article key={label}><span>{label}</span><strong>{value}</strong><small>{caption}</small></article>)}</section>}
         {view==="Overview"&&operations&&<div className="ops-overview-strip"><div><span>Contacts</span><strong>{operations.totals.contacts??0}</strong></div><div><span>Campaigns</span><strong>{operations.totals.campaigns??0}</strong></div><div><span>Verified sales receipts</span><strong>{new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(operations.summary.received_sales_cents??0)/100)}</strong></div></div>}
-        {operationViews.includes(view)&&<OperationsConsole view={view} data={operations} workspace={data} onData={setOperations} onWorkspaceChange={()=>void refreshWorkspace()}/>}
+        {consoleViews.includes(view)&&<OperationsConsole view={view} data={operations} workspace={data} onData={setOperations} onWorkspaceChange={()=>void refreshWorkspace()}/>}
+        {(roadmapViews[view]??[]).map((View,index)=><View key={`${view}-${index}`} />)}
         {(view==="Overview" || view==="Projects") && <section aria-labelledby="projects-title"><div className="live-section-heading"><div><h2 id="projects-title">Your projects <span>{data.projects.length}</span></h2><p className="muted">A place for every opportunity.</p></div>
           <input className="live-search" type="search" aria-label="Search projects" placeholder="Search projects…" value={query} onChange={e=>setQuery(e.target.value)} /></div>
           {projects.length ? <div className="project-board">{projects.map(projectCard)}</div> : <div className="live-empty"><span aria-hidden="true">◈</span><h3>{query ? "No matching projects" : "Start with your first project"}</h3>

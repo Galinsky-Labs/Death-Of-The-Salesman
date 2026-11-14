@@ -3,7 +3,7 @@ export type ProviderId="openai"|"claude"|"grok"|"openrouter";
 export type ProviderConfig={id:ProviderId;model:string;endpoint:string;apiKey:string;inputCentsPerMillion:number;outputCentsPerMillion:number;maxOutputTokens:number;billingMode?:"free"|"paid"};
 export type Completion={text:string;inputTokens:number;outputTokens:number;providerRequestId:string|null};
 export const providerIds:ProviderId[]=["openai","claude","grok","openrouter"];
-const defaults:Record<ProviderId,string>={openai:"https://api.openai.com/v1/responses",claude:"https://api.anthropic.com/v1/messages",grok:"https://api.x.ai/v1/chat/completions",openrouter:"https://openrouter.ai/api/v1/chat/completions"};
+export const providerEndpoints:Readonly<Record<ProviderId,string>>={openai:"https://api.openai.com/v1/responses",claude:"https://api.anthropic.com/v1/messages",grok:"https://api.x.ai/v1/chat/completions",openrouter:"https://openrouter.ai/api/v1/chat/completions"};
 export function providerConfiguration(id:ProviderId,source:Record<string,string|undefined>=process.env):ProviderConfig|null {
   const prefix=id.toUpperCase();
   if(!providerIds.includes(id)||source[`${prefix}_ENABLED`]!=="true")return null;
@@ -12,11 +12,11 @@ export function providerConfiguration(id:ProviderId,source:Record<string,string|
     if(!apiKey)return null;
     const maxOutputTokens=Number(source.OPENROUTER_MAX_OUTPUT_TOKENS??1000);
     if(!freeModelId(model)||!Number.isSafeInteger(maxOutputTokens)||maxOutputTokens<1||maxOutputTokens>4096)return fail('FREE_PROVIDER_CONFIGURATION_INVALID',503);
-    return {id,model,apiKey,endpoint:defaults.openrouter,inputCentsPerMillion:0,outputCentsPerMillion:0,maxOutputTokens,billingMode:'free'};
+    return {id,model,apiKey,endpoint:providerEndpoints.openrouter,inputCentsPerMillion:0,outputCentsPerMillion:0,maxOutputTokens,billingMode:'free'};
   }
   const model=source[`${prefix}_MODEL`],apiKey=source[`${prefix}_API_KEY`];
-  if(model&&/(?:deepseek|qwen|moonshot|kimi|mimo|chatglm|glm[-_.0-9]|zai|baichuan|minimax|doubao|hunyuan|internlm|stepfun|longcat)/i.test(model))return fail('PROVIDER_MODEL_NOT_ALLOWED',403);
-  const endpoint=defaults[id];
+  if(model&&disallowedModelLineage(model))return fail('PROVIDER_MODEL_NOT_ALLOWED',403);
+  const endpoint=providerEndpoints[id];
   const inputCentsPerMillion=Number(source[`${prefix}_INPUT_CENTS_PER_MILLION`]);
   const outputCentsPerMillion=Number(source[`${prefix}_OUTPUT_CENTS_PER_MILLION`]);
   const maxOutputTokens=Number(source[`${prefix}_MAX_OUTPUT_TOKENS`]??1000);
@@ -30,8 +30,9 @@ export function usageCost(config:ProviderConfig,input:number,output:number):numb
 }
 export async function complete(config:ProviderConfig,system:string,prompt:string,signal?:AbortSignal,transport:typeof fetch=fetch):Promise<Completion> {
   if(!providerIds.includes(config.id))return fail('PROVIDER_NOT_ALLOWED',403);
-  if(config.id==='openrouter'&&(!freeModelId(config.model)||config.endpoint!==defaults.openrouter||config.inputCentsPerMillion!==0||config.outputCentsPerMillion!==0||config.billingMode!=='free'))return fail('FREE_PROVIDER_CONFIGURATION_INVALID',503);
-  if(config.id!=='openrouter'&&(config.endpoint!==defaults[config.id]||/(?:deepseek|qwen|moonshot|kimi|mimo|chatglm|glm[-_.0-9]|zai|baichuan|minimax|doubao|hunyuan|internlm|stepfun|longcat)/i.test(config.model)))return fail('PROVIDER_MODEL_NOT_ALLOWED',403);
+  if(config.id==='openrouter'&&(!freeModelId(config.model)||config.endpoint!==providerEndpoints.openrouter||config.inputCentsPerMillion!==0||config.outputCentsPerMillion!==0||config.billingMode!=='free'))return fail('FREE_PROVIDER_CONFIGURATION_INVALID',503);
+  if(config.id!=='openrouter'&&(config.endpoint!==providerEndpoints[config.id]||disallowedModelLineage(config.model)))return fail('PROVIDER_MODEL_NOT_ALLOWED',403);
+  if(config.id!=='openrouter'&&modelFamilyMismatch(config.id,config.model))return fail('PROVIDER_MODEL_MISMATCH',403);
   if(config.id==='openrouter'&&!(await discoverFreeModels(transport)).models.some(model=>model.id===config.model))return fail('FREE_MODEL_NOT_AVAILABLE',503);
   const headers:Record<string,string>={"content-type":"application/json"};let payload:Record<string,unknown>;
   if(config.id==="claude") {headers["x-api-key"]=config.apiKey;headers["anthropic-version"]="2023-06-01";payload={model:config.model,max_tokens:config.maxOutputTokens,system,messages:[{role:"user",content:prompt}]};}
@@ -65,4 +66,15 @@ export async function checkFreeModelConnection(source:Record<string,string|undef
  if(!response.ok)return fail(response.status===401?'PROVIDER_KEY_REJECTED':'PROVIDER_UNAVAILABLE',503);
  const available=await discoverFreeModels(transport);if(!available.models.some(model=>model.id===config.model))return fail('FREE_MODEL_NOT_AVAILABLE',503);
  return {authenticated:true,model:config.model,costCents:0,paidFallback:false,inferencePerformed:false,note:'API key and current free catalog verified. No inference request or spend occurred.'};
+}
+
+/** Chinese-developed code-capable model lineages are prohibited for application inference (AGENTS.md). Matched anywhere in a model id, including broker namespaces such as `vendor/model` or `accounts/x/models/y`. */
+const disallowedLegacy=/(?:deepseek|qwen|moonshot|kimi|mimo|chatglm|glm[-_.0-9]|zai|baichuan|minimax|doubao|hunyuan|internlm|stepfun|longcat)/i;
+const disallowedBounded=/(?:^|[\/:_.\s-])(?:qwq|glm|z-ai|zhipu|abab|seed-?(?:oss|coder|\d)|intern-?s1|step-?\d|yi-|01-ai|ernie|wenxin|sensenova|skywork|codegeex|telechat|pangu|xverse|bailing|ling-|ring-|iflytek|spark-?desk|ark-)/i;
+export function disallowedModelLineage(model:string):boolean{return disallowedLegacy.test(model)||disallowedBounded.test(model);}
+/** Direct-provider model id families. A model id that clearly belongs to another approved provider, or carries a broker namespace, is a host/model mismatch. */
+export const modelFamilies:Readonly<Record<ProviderId,RegExp>>={openai:/^(?:gpt-|o[1-9](?:$|-)|chatgpt-)/,claude:/^claude-/,grok:/^grok-/,openrouter:/^google\/gemma-/};
+export function modelFamilyMismatch(id:ProviderId,model:string):boolean{
+ if(id!=='openrouter'&&/[/@]/.test(model))return true;
+ return providerIds.some(other=>other!==id&&modelFamilies[other].test(model)&&!modelFamilies[id].test(model));
 }

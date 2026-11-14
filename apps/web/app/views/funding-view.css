@@ -1,0 +1,22 @@
+.funding-view { display: grid; gap: 1.25rem; }
+.funding-notice:empty { display: none; }
+.funding-notice { padding: 0.75rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface-raised); }
+.funding-error { color: var(--color-inactive); font-weight: 600; }
+.funding-stats .ops-card { display: grid; gap: 0.35rem; }
+.funding-board { display: grid; gap: 0.75rem; }
+.funding-lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; }
+.funding-lane { display: grid; align-content: start; gap: 0.6rem; padding: 0.75rem; border-radius: var(--radius-panel); background: var(--color-surface); border: 1px solid var(--color-border); }
+.funding-card { border-left-width: 6px; border-left-style: solid; }
+.funding-card.funding-lead { border-left-style: dashed; border-left-color: var(--color-text-muted); }
+.funding-card.funding-pending_award { border-left-style: dotted; border-left-color: var(--color-waiting); }
+.funding-card.funding-commitment { border-left-style: double; border-left-color: var(--color-strategy); }
+.funding-card.funding-received { border-left-style: solid; border-left-color: var(--color-ready); }
+.funding-status-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.funding-facts { display: grid; gap: 0.35rem; }
+.funding-facts div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 0.5rem; }
+.funding-filter { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: end; }
+.funding-filter label { display: grid; gap: 0.25rem; }
+.funding-filter input, .funding-filter select, .funding-form input, .funding-form select, .funding-form textarea { min-height: var(--control-min); }
+.funding-view button, .funding-view a.live-secondary { min-height: var(--control-min); }
+.funding-view :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (max-width: 640px) { .funding-facts div { grid-template-columns: 1fr; } }

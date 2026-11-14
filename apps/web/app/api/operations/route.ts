@@ -54,10 +54,10 @@ export async function POST(request:Request){try{
  case 'discoverGrants':outcome=await discoverGrants(text(body.keyword,'keyword',120));break;
  case 'verifyMailbox':outcome=await delivery.verifyMailbox(identifier(body.id));break;
  case 'createFunding':outcome=await sales.createFunding({projectId:identifier(body.projectId),kind:body.kind,label:body.label,funder:body.funder,sourceUrl:body.sourceUrl,eligibility:body.eligibility,deadline:body.deadline,requestedCents:cents(body.requestedCents??0),restrictions:body.restrictions});break;
- case 'fundingStage':outcome=await sales.fundingStage(identifier(body.id),body.stage,version(body.version),body.authority);break;
+ case 'fundingStage':if(['submitted','committed','awarded'].includes(String(body.stage)))throw new OperationError('USE_FUNDING_WORKFLOW',409);outcome=await sales.fundingStage(identifier(body.id),body.stage,version(body.version),body.authority);break;
  case 'fundingChecklist':await sales.updateChecklist(identifier(body.id),body.completed===true);break;
  case 'fundingDraft':outcome=await sales.saveFundingDraft(identifier(body.id),body.draft,version(body.version));break;
- case 'recordFundingReceipt':await tenant(client,ctx,async tx=>{const opportunity=rows(await tx.query('SELECT * FROM app.funding_opportunities WHERE organization_id=$1 AND id=$2',[ctx.organizationId,identifier(body.id)]))[0];if(!opportunity)throw new OperationError('NOT_FOUND',404);const amount=cents(body.amountCents);if(!amount)throw new OperationError('POSITIVE_AMOUNT_REQUIRED',400);await tx.query("INSERT INTO app.money_entries(organization_id,project_id,idempotency_key,kind,amount_cents,source,evidence_ref) VALUES($1,$2,$3,$4,$5,'owner_attested',$6) ON CONFLICT DO NOTHING",[ctx.organizationId,opportunity.project_id,text(body.idempotencyKey,'idempotency_key',200),opportunity.kind==='investment'?'investment_receipt':'grant_disbursement',amount,text(body.evidence,'evidence',240)]);await event(tx,ctx,'funding.receipt_attested',body.id,{amountCents:amount,source:'owner_attested'});});break;
+ case 'recordFundingReceipt':throw new OperationError('USE_FUNDING_WORKFLOW',409);
  case 'createInvoice':outcome=await sales.createInvoice(identifier(body.projectId),body.label,body.description,cents(body.amountCents),optionalId(body.contactId),body.dueAt);break;
  case 'issueInvoice':outcome=await sales.issueInvoice(identifier(body.id),version(body.version));break;
  case 'invoiceCheckout':outcome=await payments.checkout(identifier(body.id));break;

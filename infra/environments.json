@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "note": "DOTS-151/152/153 environment inventory. Names and non-secret identifiers only; secret values live in Render/Neon/GitHub secret stores.",
+  "environments": {
+    "staging": {
+      "neonProject": "muddy-mountain-84355519",
+      "neonBranch": "staging-acceptance-20261109",
+      "renderService": null,
+      "purpose": "Synthetic tenant acceptance against the restricted runtime role. No real contacts, outbound or paid calls.",
+      "paidResources": false
+    },
+    "production": {
+      "neonProject": "muddy-mountain-84355519",
+      "neonBranch": "production",
+      "renderService": "srv-dbp58hm1egvs73b3inug",
+      "publicOrigin": "https://death-of-the-salesman.onrender.com",
+      "paidResources": false
+    }
+  },
+  "costPolicy": {
+    "monthlyUsdMax": 0,
+    "requiresOwnerApprovalFor": ["any paid Render plan", "any paid Neon plan", "object storage", "custom domain with paid TLS", "paid model or email provider usage"]
+  }
+}

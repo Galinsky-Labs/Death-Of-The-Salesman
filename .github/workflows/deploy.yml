@@ -1,0 +1,62 @@
+name: Owner-authorized deploy
+
+# DOTS-153: manual promotion only. Deploys an exact commit that already passed CI on main to a
+# Render service, then verifies the live revision. Configure the GitHub environment with required
+# reviewers so a human approves every production promotion. Secrets (names only):
+# RENDER_API_KEY (environment secret), RENDER_SERVICE_ID (environment variable), PUBLIC_ORIGIN (environment variable).
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options: [production]
+      sha:
+        description: Exact 40-character commit SHA on main that passed CI
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+      - name: Verify the commit is on main and passed CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ inputs.sha }}
+        run: |
+          set -euo pipefail
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "SHA must be a full commit id"; exit 1; }
+          git fetch --no-tags --depth=200 origin main
+          git merge-base --is-ancestor "$SHA" origin/main || { echo "Commit is not on main"; exit 1; }
+          conclusion=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${SHA}/check-runs?per_page=100" --jq '[.check_runs[] | select(.name=="verify" or .name=="database" or .name=="validate-roadmap") | .conclusion] | if length < 3 then "missing" elif all(. == "success") then "success" else "failure" end')
+          [ "$conclusion" = "success" ] || { echo "Required CI checks are $conclusion for $SHA"; exit 1; }
+      - name: Deploy exact commit and wait for live
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ vars.RENDER_SERVICE_ID }}
+          SHA: ${{ inputs.sha }}
+        run: node scripts/render-deploy.mjs
+      - name: Verify live revision, readiness and access boundaries
+        env:
+          PUBLIC_ORIGIN: ${{ vars.PUBLIC_ORIGIN }}
+          EXPECTED_REVISION: ${{ inputs.sha }}
+        run: node scripts/smoke.mjs

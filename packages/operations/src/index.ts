@@ -7,3 +7,4 @@ export * from "./engine.js";
 export * from "./growth.js";
 export * from "./integrations.js";
 export * from "./discovery.js";
+export * from "./platform.js";

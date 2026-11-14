@@ -3,7 +3,9 @@
 // these views beneath it; labels listed in `dedicatedViews` get their own navigation entry.
 import type {ComponentType} from 'react';
 import {PlatformView} from './platform-view';
+import {StrategyLabView} from './strategy-lab-view';
 export const dedicatedViews=["Operations health"];
 export const roadmapViews:Record<string,ComponentType[]>={
  "Operations health":[PlatformView],
+ "Strategy Lab":[StrategyLabView],
 };

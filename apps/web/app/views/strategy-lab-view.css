@@ -1,0 +1,21 @@
+.strategy-lab h4{font-size:12px;color:#c9bfe0;margin:22px 0 10px}
+.strategy-lab button{min-height:44px}
+.strategy-lab .ops-row-actions button{min-height:44px;padding:10px 4px}
+.strategy-notice{min-height:1px;font-size:11px;color:#b4d4be}
+.strategy-single{grid-template-columns:1fr}
+.strategy-list{list-style:none;padding:0;margin:10px 0;display:grid;gap:8px;font-size:11px;line-height:1.7;color:#c3cad6}
+.strategy-warnings{margin:12px 0;padding-left:18px;font-size:11px;line-height:1.7;color:#e7cf9a}
+.strategy-bar{display:block;height:6px;background:#232937;border-radius:3px;overflow:hidden;margin-top:6px}
+.strategy-bar>i{display:block;height:100%;background:#b6a2e2}
+.strategy-chart{margin:14px 0}
+.strategy-chart figcaption{font-size:10px;color:#a4aebf;margin-top:6px}
+.strategy-grid{stroke:#2c323e;stroke-width:1}
+.strategy-axis{fill:#a4aebf;font-size:9px}
+.strategy-ci-champion{fill:#729d91}
+.strategy-ci-experimental{fill:#b6a2e2}
+.strategy-point{stroke:#f4f7fb;stroke-width:2}
+.strategy-sr-table{margin-top:10px}
+.strategy-check{display:flex;gap:10px;align-items:center;font-size:11px;color:#c2c9d5;min-height:44px}
+.strategy-check input{width:20px;height:20px;accent-color:#c5b1fc}
+.strategy-lab input[type=range]{accent-color:#c5b1fc;min-height:44px;width:100%}
+.strategy-lab :focus-visible{outline:3px solid #c3b0ff;outline-offset:3px}

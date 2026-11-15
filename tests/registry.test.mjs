@@ -38,7 +38,12 @@ test('canonical plan validates and planned unit count matches',()=>{
  assert.deepEqual(items[21].numbers,[27]);
  assert.deepEqual(items[22].numbers,[28]);
  assert.deepEqual(items[24].numbers,[29]);
- assert.ok(items.slice(25).every(x=>x.sourceItemId === 'DOTS-028' ? x.numbers[0] === 32 : x.sourceItemId === 'DOTS-030' ? x.numbers[0] === 34 : x.sourceItemId === 'DOTS-031' ? x.numbers[0] === 43 : x.numbers.length === 0));
+ assert.deepEqual(items[27].numbers,[32]);
+ assert.deepEqual(items[29].numbers,[34,48]);
+ assert.deepEqual(items[30].numbers,[43,48]);
+ // DOTS-030..160 source landed in merged PR #48; 026/027/029 remain without a sole implementing PR.
+ assert.deepEqual(items.slice(25,29).filter(x=>x.sourceItemId!=='DOTS-028').map(x=>x.numbers),[[],[],[]]);
+ assert.ok(items.slice(29).every(x=>x.numbers.includes(48)));
 });
 
 test('future PR titles use stable exact work IDs',()=>{
@@ -78,7 +83,9 @@ test('rejects cross-repo dependencies using this repository',()=>{
 
 test('only real created PR numbers are linked; future work does not claim completed PRs',()=>{
  const refs=source.units.flatMap(u=>u.prs);
- assert.deepEqual(refs,[1,2,4,5,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,27,28,30,29,32,34,43]);
+ assert.deepEqual([...new Set(refs)].sort((a,b)=>a-b),[1,2,4,5,7,8,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,27,28,29,30,32,34,43,47,48]);
+ // Every linked PR is a real observed GitHub PR that actually merged.
+ for(const n of new Set(refs))assert.ok(source.pullRequests.find(p=>p.number===n)?.mergedAt,`PR #${n} must be an observed merged PR`);
  assert.ok(source.pullRequests.find(p=>p.number===1)?.mergedAt);
  assert.ok(['open','closed'].includes(source.pullRequests.find(p=>p.number===2)?.state), 'dated snapshot may be open or closed');
 });

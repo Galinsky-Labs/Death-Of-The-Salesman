@@ -8,7 +8,7 @@ test('render blueprint provisions only free resources, keeps paid paths off and 
  const vars=[...blueprint.matchAll(/- key:\s*(\S+)\n\s+(value|sync):\s*(.+)/g)].map(m=>({key:m[1],kind:m[2],value:m[3].trim().replace(/^"|"$/g,'')}));
  const get=key=>vars.find(v=>v.key===key);
  for(const [key,value] of Object.entries({PAID_SPEND_LIMIT_CENTS:'0',MODEL_API_ENABLED:'false',EMAIL_DELIVERY_ENABLED:'false',PAYMENTS_ENABLED:'false',COMMERCIAL_SIGNUP_ENABLED:'false',APP_ENV:'production'}))assert.equal(get(key)?.value,value,key);
- for(const key of ['DATABASE_URL','NEON_AUTH_BASE_URL','NEON_AUTH_COOKIE_SECRET','OWNER_EMAIL','OWNER_ORGANIZATION_ID','OWNER_MEMBERSHIP_ID','DOCUMENT_ENCRYPTION_KEY','UNSUBSCRIBE_SIGNING_KEY'])assert.deepEqual([get(key)?.kind,get(key)?.value],['sync','false'],`${key} must be entered privately`);
+ for(const key of ['DATABASE_URL','NEON_AUTH_BASE_URL','NEON_AUTH_COOKIE_SECRET','OWNER_EMAIL','OWNER_ORGANIZATION_ID','OWNER_MEMBERSHIP_ID','DOCUMENT_ENCRYPTION_KEY','UNSUBSCRIBE_SIGNING_KEY','CREDENTIAL_ENCRYPTION_KEY'])assert.deepEqual([get(key)?.kind,get(key)?.value],['sync','false'],`${key} must be entered privately`);
  for(const v of vars.filter(v=>v.kind==='value'))assert.doesNotMatch(v.key,/(SECRET|TOKEN|KEY|PASSWORD|URL)$/.test(v.key)&&v.key!=='APP_ORIGIN'?/./:/^$/,`${v.key} must not carry a committed value`);
 });
 test('environment inventory declares zero monthly spend and no paid resources',async()=>{
@@ -22,6 +22,12 @@ test('deploy workflow is manual, environment-gated, pinned to a CI-verified SHA 
  assert.match(workflow,/environment: \$\{\{ inputs.environment \}\}/);assert.match(workflow,/merge-base --is-ancestor/);assert.match(workflow,/check-runs/);
  assert.match(workflow,/EXPECTED_REVISION/);assert.match(workflow,/secrets\.RENDER_API_KEY/);assert.doesNotMatch(workflow,/rnd_[A-Za-z0-9]{10,}/);
  for(const script of ['render-deploy.mjs','smoke.mjs'])assert.ok((await readdir(new URL('../scripts/',import.meta.url))).includes(script));
+});
+test('production smoke workflow is manual, read-only and uses no secrets or deploy step',async()=>{
+ const workflow=await read('.github/workflows/production-smoke.yml');
+ assert.match(workflow,/^on:\n\s+workflow_dispatch:/m);assert.doesNotMatch(workflow,/^\s+push:|^\s+pull_request:|schedule:/m);
+ assert.match(workflow,/^permissions:\n\s+contents: read\n/m);assert.doesNotMatch(workflow,/secrets\.|render-deploy|environment:/);
+ assert.match(workflow,/node scripts\/smoke\.mjs/);assert.match(workflow,/EXPECTED_REVISION/);
 });
 test('operational scripts fail closed without explicit targets and refuse unsafe restore or scale targets',async()=>{
  const {spawnSync}=await import('node:child_process');const run=(script,env)=>spawnSync(process.execPath,[`scripts/${script}`],{env:{PATH:process.env.PATH,...env},encoding:'utf8',cwd:new URL('..',import.meta.url).pathname});

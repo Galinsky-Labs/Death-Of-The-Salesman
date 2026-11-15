@@ -11,7 +11,7 @@
   ],
   "schemaVersion": 1,
   "roadmapVersion": 1,
-  "observedAt": "2026-11-10T01:49:39Z",
+  "observedAt": "2026-11-15T18:33:17Z",
   "units": [
     {
       "id": "DOTS-001",
@@ -735,7 +735,8 @@
       "title": "Append-only audit and actor provenance",
       "origin": "original",
       "prs": [
-        34
+        34,
+        48
       ],
       "phase": "F3",
       "priority": "P0",
@@ -760,7 +761,8 @@
       "title": "Transactional outbox and idempotent event intake",
       "origin": "original",
       "prs": [
-        43
+        43,
+        48
       ],
       "phase": "F3",
       "priority": "P0",
@@ -786,7 +788,9 @@
       "id": "DOTS-032",
       "title": "Money and invoice ledger domain",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -811,7 +815,9 @@
       "id": "DOTS-033",
       "title": "Hierarchical $0 spending policies",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -836,7 +842,9 @@
       "id": "DOTS-034",
       "title": "Atomic estimate/reserve/settle/refund protocol",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -862,7 +870,9 @@
       "id": "DOTS-035",
       "title": "Visual campaign funding allocation console",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -886,7 +896,9 @@
       "id": "DOTS-036",
       "title": "Deterministic policy decision service",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -913,7 +925,9 @@
       "id": "DOTS-037",
       "title": "Owner Action inbox and exact-hash approvals",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -938,7 +952,9 @@
       "id": "DOTS-038",
       "title": "Emergency pause-all and scoped kill switches",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -963,7 +979,9 @@
       "id": "DOTS-039",
       "title": "Durable database task queue",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -988,7 +1006,9 @@
       "id": "DOTS-040",
       "title": "Worker lease, fencing and heartbeat",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -1013,7 +1033,9 @@
       "id": "DOTS-041",
       "title": "Encrypted integration credential reference store",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -1037,7 +1059,9 @@
       "id": "DOTS-042",
       "title": "Traces, metrics and privacy-safe operational events",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -1061,7 +1085,9 @@
       "id": "DOTS-043",
       "title": "Data retention, export and correction foundations",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F3",
       "priority": "P0",
       "dependsOn": [
@@ -1087,7 +1113,9 @@
       "id": "DOTS-044",
       "title": "Work-item state machine and legal transitions",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1110,7 +1138,9 @@
       "id": "DOTS-045",
       "title": "Safe agent schedule and project priority engine",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1134,7 +1164,9 @@
       "id": "DOTS-046",
       "title": "Agent capability and role configuration",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1160,7 +1192,9 @@
       "id": "DOTS-047",
       "title": "Versioned agent context assembly",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1186,7 +1220,9 @@
       "id": "DOTS-048",
       "title": "Typed action-proposal and tool broker",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1209,7 +1245,9 @@
       "id": "DOTS-049",
       "title": "Short-lived execution run coordinator",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1235,7 +1273,9 @@
       "id": "DOTS-050",
       "title": "Durable memory and per-run checkpoints",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1260,7 +1300,9 @@
       "id": "DOTS-051",
       "title": "Owner-gated external action dispatcher",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1287,7 +1329,9 @@
       "id": "DOTS-052",
       "title": "Orphan-run recovery and disputed action quarantine",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1313,7 +1357,9 @@
       "id": "DOTS-053",
       "title": "Run history, evidence and error timeline UI",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1339,7 +1385,9 @@
       "id": "DOTS-054",
       "title": "$0 two-agent simulation end-to-end gate",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F4",
       "priority": "P0",
       "dependsOn": [
@@ -1364,7 +1412,10 @@
       "id": "DOTS-055",
       "title": "Versioned model provider manifest and capability discovery",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        47,
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1385,7 +1436,9 @@
       "id": "DOTS-056",
       "title": "Unified typed provider adapter contract",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1412,7 +1465,9 @@
       "id": "DOTS-057",
       "title": "OpenAI Responses API adapter",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1437,7 +1492,9 @@
       "id": "DOTS-058",
       "title": "Claude Messages API adapter",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1462,7 +1519,9 @@
       "id": "DOTS-059",
       "title": "Grok API adapter",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1487,7 +1546,9 @@
       "id": "DOTS-060",
       "title": "Approved model provenance enforcement",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1510,7 +1571,9 @@
       "id": "DOTS-061",
       "title": "Trusted inference endpoint and fallback policy",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1533,7 +1596,9 @@
       "id": "DOTS-062",
       "title": "Customer output isolation and security checks",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1556,7 +1621,9 @@
       "id": "DOTS-063",
       "title": "Opt-in external checkpoint installer specification and verification",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1578,7 +1645,9 @@
       "id": "DOTS-064",
       "title": "Budget/privacy-aware model router",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1604,7 +1673,9 @@
       "id": "DOTS-065",
       "title": "Rate-limit, outage and circuit-breaker behavior",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1627,7 +1698,9 @@
       "id": "DOTS-066",
       "title": "Canonical metered usage reconciliation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1653,7 +1726,9 @@
       "id": "DOTS-067",
       "title": "Model catalog and per-agent/provider UI",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1680,7 +1755,9 @@
       "id": "DOTS-068",
       "title": "Deterministic approved-model adapter benchmark harness",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1706,7 +1783,9 @@
       "id": "DOTS-069",
       "title": "Opt-in credential-backed live model smoke gate",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F5",
       "priority": "P1",
       "dependsOn": [
@@ -1732,7 +1811,9 @@
       "id": "DOTS-070",
       "title": "CRM accounts and contacts domain",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1757,7 +1838,9 @@
       "id": "DOTS-071",
       "title": "Lawful lead source and import staging",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1782,7 +1865,9 @@
       "id": "DOTS-072",
       "title": "Entity dedupe and contact identity resolution",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1806,7 +1891,9 @@
       "id": "DOTS-073",
       "title": "Universal do-not-contact and consent status",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1831,7 +1918,9 @@
       "id": "DOTS-074",
       "title": "Prospect ownership and overlap conflict controls",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1855,7 +1944,9 @@
       "id": "DOTS-075",
       "title": "Audience segmentation and saved lead filters",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1878,7 +1969,9 @@
       "id": "DOTS-076",
       "title": "Evidence-backed relationship event timeline",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1903,7 +1996,9 @@
       "id": "DOTS-077",
       "title": "Configurable product sales pipeline state machine",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1928,7 +2023,9 @@
       "id": "DOTS-078",
       "title": "Deal, quote and opportunity objects",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1954,7 +2051,9 @@
       "id": "DOTS-079",
       "title": "Conservative touchpoint attribution",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -1977,7 +2076,9 @@
       "id": "DOTS-080",
       "title": "Visual lead cards, account maps and pipeline boards",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -2003,7 +2104,9 @@
       "id": "DOTS-081",
       "title": "Synthetic CRM scale and privacy regression",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F6",
       "priority": "P1",
       "dependsOn": [
@@ -2028,7 +2131,9 @@
       "id": "DOTS-082",
       "title": "Campaign lifecycle and immutable revisions",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2054,7 +2159,9 @@
       "id": "DOTS-083",
       "title": "Visual campaign builder and offer selection",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2078,7 +2185,9 @@
       "id": "DOTS-084",
       "title": "Rich email, pitch and landing-copy editor",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2101,7 +2210,9 @@
       "id": "DOTS-085",
       "title": "Claim registry, citations and freshness checks",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2127,7 +2238,9 @@
       "id": "DOTS-086",
       "title": "Offer price and discount guardrails",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2150,7 +2263,9 @@
       "id": "DOTS-087",
       "title": "Jurisdiction, business-hours and cadence rules",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2176,7 +2291,9 @@
       "id": "DOTS-088",
       "title": "Editable campaign strategy and copy variants",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2199,7 +2316,9 @@
       "id": "DOTS-089",
       "title": "Campaign simulation and send-plan preview",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2226,7 +2345,9 @@
       "id": "DOTS-090",
       "title": "Owner campaign approval and revision invalidation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2251,7 +2372,9 @@
       "id": "DOTS-091",
       "title": "Campaign work generation and safe scheduling",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2275,7 +2398,9 @@
       "id": "DOTS-092",
       "title": "Visual campaign timeline, goals and control room",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2298,7 +2423,9 @@
       "id": "DOTS-093",
       "title": "Policy-oriented campaign E2E tests",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F7",
       "priority": "P1",
       "dependsOn": [
@@ -2321,7 +2448,9 @@
       "id": "DOTS-094",
       "title": "Tenant-scoped mailbox onboarding",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2346,7 +2475,9 @@
       "id": "DOTS-095",
       "title": "Authenticated inbound webhooks and bounded polling",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2371,7 +2502,9 @@
       "id": "DOTS-096",
       "title": "Canonical conversations and provider threading",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2397,7 +2530,9 @@
       "id": "DOTS-097",
       "title": "Visual Conversation Center with full timelines",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2422,7 +2557,9 @@
       "id": "DOTS-098",
       "title": "Versioned outbound draft pipeline",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2448,7 +2585,9 @@
       "id": "DOTS-099",
       "title": "Owner message composer and approvals",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2473,7 +2612,9 @@
       "id": "DOTS-100",
       "title": "Least-privilege outbound email transport gateway",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2502,7 +2643,9 @@
       "id": "DOTS-101",
       "title": "Outbound status, retries and ambiguity quarantine",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2527,7 +2670,9 @@
       "id": "DOTS-102",
       "title": "Unsubscribe headers and cross-campaign opt-out ingestion",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2552,7 +2697,9 @@
       "id": "DOTS-103",
       "title": "Bounce, spam complaint and sender health controls",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2577,7 +2724,9 @@
       "id": "DOTS-104",
       "title": "Reply triage and safe suggested response",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2601,7 +2750,9 @@
       "id": "DOTS-105",
       "title": "Cadenced follow-up sequence scheduler",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2625,7 +2776,9 @@
       "id": "DOTS-106",
       "title": "Human takeover, conversation ownership and SLA",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2651,7 +2804,9 @@
       "id": "DOTS-107",
       "title": "Attachment handling, scanning and safe downloads",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2674,7 +2829,9 @@
       "id": "DOTS-108",
       "title": "Simulated end-to-end inbox and send reconciliation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2701,7 +2858,9 @@
       "id": "DOTS-109",
       "title": "Owner-authorized real mailbox canary",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F8",
       "priority": "P1",
       "dependsOn": [
@@ -2727,7 +2886,9 @@
       "id": "DOTS-110",
       "title": "Strategy definitions, versioning and constraints",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2752,7 +2913,9 @@
       "id": "DOTS-111",
       "title": "Strategy Lab cards, sliders and allocation rules",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2775,7 +2938,9 @@
       "id": "DOTS-112",
       "title": "Deterministic randomized experiment enrollment",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2800,7 +2965,9 @@
       "id": "DOTS-113",
       "title": "Verified exposure and outcome event accounting",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2826,7 +2993,9 @@
       "id": "DOTS-114",
       "title": "Materialized performance metrics and source visibility",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2850,7 +3019,9 @@
       "id": "DOTS-115",
       "title": "Confidence intervals, sample floors and false discovery rules",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2874,7 +3045,9 @@
       "id": "DOTS-116",
       "title": "Model x strategy factorial comparison",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2898,7 +3071,9 @@
       "id": "DOTS-117",
       "title": "Auditable champion promotion and rollback",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2924,7 +3099,9 @@
       "id": "DOTS-118",
       "title": "Experiment strategy hybrids and new-variant backlog",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2947,7 +3124,9 @@
       "id": "DOTS-119",
       "title": "Analytics visualization, funnel and experiment reports",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2972,7 +3151,9 @@
       "id": "DOTS-120",
       "title": "Controlled experiment fairness and safety tests",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F9",
       "priority": "P1",
       "dependsOn": [
@@ -2996,7 +3177,9 @@
       "id": "DOTS-121",
       "title": "Funding source and grant program directory",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3019,7 +3202,9 @@
       "id": "DOTS-122",
       "title": "Funding opportunity discovery connectors",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3044,7 +3229,9 @@
       "id": "DOTS-123",
       "title": "Grant eligibility rules and fit explanation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3067,7 +3254,9 @@
       "id": "DOTS-124",
       "title": "Visual funding pipeline and opportunity cards",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3092,7 +3281,9 @@
       "id": "DOTS-125",
       "title": "Grant application and task checklist domain",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3117,7 +3308,9 @@
       "id": "DOTS-126",
       "title": "Grant document repository and source-grounded drafting",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3143,7 +3336,9 @@
       "id": "DOTS-127",
       "title": "Deadline calendar and application reminders",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3166,7 +3361,9 @@
       "id": "DOTS-128",
       "title": "Human-reviewed grant submission workflow",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3192,7 +3389,9 @@
       "id": "DOTS-129",
       "title": "Award, restriction and disbursement reconciliation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3217,7 +3416,9 @@
       "id": "DOTS-130",
       "title": "Investor relations policy and opportunity pipeline",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3243,7 +3444,9 @@
       "id": "DOTS-131",
       "title": "Investor pitch asset workspace and review",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3269,7 +3472,9 @@
       "id": "DOTS-132",
       "title": "Commitment, diligence and investment funds bookkeeping",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3295,7 +3500,9 @@
       "id": "DOTS-133",
       "title": "Sponsorship and partnership opportunity workflows",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3319,7 +3526,9 @@
       "id": "DOTS-134",
       "title": "Funding performance and portfolio allocation dashboard",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F10",
       "priority": "P1",
       "dependsOn": [
@@ -3345,7 +3554,9 @@
       "id": "DOTS-135",
       "title": "Configurable pricing and owner-approved quotation flow",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3369,7 +3580,9 @@
       "id": "DOTS-136",
       "title": "Optional payment processor connector foundation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3395,7 +3608,9 @@
       "id": "DOTS-137",
       "title": "Payments, refunds, disputes and subscription receipts",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3421,7 +3636,9 @@
       "id": "DOTS-138",
       "title": "Renewals and post-sale retention workflows",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3444,7 +3661,9 @@
       "id": "DOTS-139",
       "title": "Calendar and meeting scheduling adapters",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3467,7 +3686,9 @@
       "id": "DOTS-140",
       "title": "CRM import/export and external sync connectors",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3493,7 +3714,9 @@
       "id": "DOTS-141",
       "title": "Opt-in website lead form and inbound widget",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3517,7 +3740,9 @@
       "id": "DOTS-142",
       "title": "Client/account dashboard and invoices view",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3543,7 +3768,9 @@
       "id": "DOTS-143",
       "title": "Cohort profitability, CAC and revenue reporting",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3567,7 +3794,9 @@
       "id": "DOTS-144",
       "title": "Opt-in sandbox and live payment acceptance gate",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F11",
       "priority": "P2",
       "dependsOn": [
@@ -3595,7 +3824,9 @@
       "id": "DOTS-145",
       "title": "End-to-end threat model and authorization audit",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3620,7 +3851,9 @@
       "id": "DOTS-146",
       "title": "Consent, privacy, correction and deletion end-to-end",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3646,7 +3879,9 @@
       "id": "DOTS-147",
       "title": "Sender reputation, compliance and abuse readiness",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3670,7 +3905,9 @@
       "id": "DOTS-148",
       "title": "WCAG mobile/accessibility audit and repairs",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3695,7 +3932,9 @@
       "id": "DOTS-149",
       "title": "Queries, caches, load and database indexes",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3719,7 +3958,9 @@
       "id": "DOTS-150",
       "title": "Encrypted backup/restore, object recovery and continuity drill",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3743,7 +3984,9 @@
       "id": "DOTS-151",
       "title": "Infrastructure as code and isolated resources",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3770,7 +4013,9 @@
       "id": "DOTS-152",
       "title": "Isolated staging environment and rehearsal",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3798,7 +4043,9 @@
       "id": "DOTS-153",
       "title": "Owner-authorized production deployment workflow",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3827,7 +4074,9 @@
       "id": "DOTS-154",
       "title": "Scoped real-world first outreach acceptance",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3855,7 +4104,9 @@
       "id": "DOTS-155",
       "title": "Operational dashboard, incident response and kill-switch drills",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3879,7 +4130,9 @@
       "id": "DOTS-156",
       "title": "Horizontal workers, fair-share quotas and tenant backpressure",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3903,7 +4156,9 @@
       "id": "DOTS-157",
       "title": "Million registered identity scale and cold-start test",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3927,7 +4182,9 @@
       "id": "DOTS-158",
       "title": "Optional commercial multi-tenant onboarding and isolation",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3954,7 +4211,9 @@
       "id": "DOTS-159",
       "title": "Read-only Boardroom/Engine Room portfolio interoperability",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -3979,7 +4238,9 @@
       "id": "DOTS-160",
       "title": "Production acceptance, runbooks and definition of done",
       "origin": "original",
-      "prs": [],
+      "prs": [
+        48
+      ],
       "phase": "F12",
       "priority": "P1",
       "dependsOn": [
@@ -4011,39 +4272,147 @@
   ],
   "pullRequests": [
     {
+      "id": 5317482900,
+      "number": 48,
+      "title": "DOTS-030/160: Complete remaining roadmap tracks (control plane through production hardening)",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/48",
+      "createdAt": "2026-11-14T23:42:14Z",
+      "updatedAt": "2026-11-14T23:53:13Z",
+      "mergedAt": "2026-11-14T23:53:13Z",
+      "closedAt": "2026-11-14T23:53:13Z",
+      "draft": false
+    },
+    {
+      "id": 5269306130,
+      "number": 47,
+      "title": "DOTS-055: Remove Chinese code-capable model integrations",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/47",
+      "createdAt": "2026-11-12T00:59:07Z",
+      "updatedAt": "2026-11-12T01:06:52Z",
+      "mergedAt": "2026-11-12T01:06:51Z",
+      "closedAt": "2026-11-12T01:06:51Z",
+      "draft": false
+    },
+    {
+      "id": 5234329538,
+      "number": 46,
+      "title": "DOTS-056: Record deployed free-integration support and live acceptance",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/46",
+      "createdAt": "2026-11-10T01:48:54Z",
+      "updatedAt": "2026-11-10T01:51:25Z",
+      "mergedAt": "2026-11-10T01:51:25Z",
+      "closedAt": "2026-11-10T01:51:25Z",
+      "draft": false
+    },
+    {
+      "id": 5234272702,
+      "number": 45,
+      "title": "DOTS-056: Add free open-weight inference and free email integration paths",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/45",
+      "createdAt": "2026-11-10T01:43:47Z",
+      "updatedAt": "2026-11-10T01:47:19Z",
+      "mergedAt": "2026-11-10T01:45:56Z",
+      "closedAt": "2026-11-10T01:45:56Z",
+      "draft": false
+    },
+    {
+      "id": 5233960277,
+      "number": 44,
+      "title": "DOTS-031: Record verified production Render and Neon acceptance",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/44",
+      "createdAt": "2026-11-10T01:12:21Z",
+      "updatedAt": "2026-11-10T01:13:55Z",
+      "mergedAt": "2026-11-10T01:13:55Z",
+      "closedAt": "2026-11-10T01:13:55Z",
+      "draft": false
+    },
+    {
+      "id": 5233677960,
+      "number": 43,
+      "title": "DOTS-031: Implement durable sales and funding operations workspace",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/43",
+      "createdAt": "2026-11-10T00:42:58Z",
+      "updatedAt": "2026-11-10T00:48:56Z",
+      "mergedAt": "2026-11-10T00:48:56Z",
+      "closedAt": "2026-11-10T00:48:56Z",
+      "draft": false
+    },
+    {
+      "id": 5232893376,
+      "number": 42,
+      "title": "DOTS-026: Record live Render deployment and Neon acceptance evidence",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/42",
+      "createdAt": "2026-11-09T23:25:35Z",
+      "updatedAt": "2026-11-09T23:27:10Z",
+      "mergedAt": "2026-11-09T23:27:10Z",
+      "closedAt": "2026-11-09T23:27:10Z",
+      "draft": false
+    },
+    {
+      "id": 5232827440,
+      "number": 41,
+      "title": "DOTS-026: Fix owner POST requests behind Render TLS proxy",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/41",
+      "createdAt": "2026-11-09T23:19:38Z",
+      "updatedAt": "2026-11-09T23:22:05Z",
+      "mergedAt": "2026-11-09T23:22:05Z",
+      "closedAt": "2026-11-09T23:22:05Z",
+      "draft": false
+    },
+    {
+      "id": 5232765977,
+      "number": 40,
+      "title": "DOTS-026/027: Deploy persistent owner workspace on Render with Neon",
+      "state": "closed",
+      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/40",
+      "createdAt": "2026-11-09T23:13:57Z",
+      "updatedAt": "2026-11-09T23:15:47Z",
+      "mergedAt": "2026-11-09T23:15:47Z",
+      "closedAt": "2026-11-09T23:15:47Z",
+      "draft": false
+    },
+    {
       "id": 5113290346,
       "number": 39,
       "title": "DOTS-043: Data retention, export and correction foundations",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/39",
       "createdAt": "2026-11-02T00:53:32Z",
-      "updatedAt": "2026-11-02T00:58:45Z",
+      "updatedAt": "2026-11-15T18:30:49Z",
       "mergedAt": null,
-      "closedAt": null,
+      "closedAt": "2026-11-15T18:30:49Z",
       "draft": true
     },
     {
       "id": 5113196900,
       "number": 38,
       "title": "DOTS-041: Encrypted integration credential reference store",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/38",
       "createdAt": "2026-11-02T00:41:24Z",
-      "updatedAt": "2026-11-02T00:45:14Z",
+      "updatedAt": "2026-11-15T18:30:47Z",
       "mergedAt": null,
-      "closedAt": null,
+      "closedAt": "2026-11-15T18:30:47Z",
       "draft": true
     },
     {
       "id": 5113101561,
       "number": 37,
       "title": "DOTS-031: Transactional outbox and idempotent event intake",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/37",
       "createdAt": "2026-11-02T00:29:15Z",
-      "updatedAt": "2026-11-02T00:29:15Z",
+      "updatedAt": "2026-11-15T18:30:44Z",
       "mergedAt": null,
-      "closedAt": null,
+      "closedAt": "2026-11-15T18:30:44Z",
       "draft": true
     },
     {
@@ -4062,12 +4431,12 @@
       "id": 5110472219,
       "number": 35,
       "title": "DOTS-032: Money and invoice ledger domain",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/35",
       "createdAt": "2026-11-01T18:50:50Z",
-      "updatedAt": "2026-11-02T00:17:06Z",
+      "updatedAt": "2026-11-15T18:30:42Z",
       "mergedAt": null,
-      "closedAt": null,
+      "closedAt": "2026-11-15T18:30:42Z",
       "draft": true
     },
     {
@@ -4086,12 +4455,12 @@
       "id": 5110157069,
       "number": 33,
       "title": "DOTS-026: Desktop visual drag-and-drop deployment board",
-      "state": "open",
+      "state": "closed",
       "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/33",
       "createdAt": "2026-11-01T18:14:57Z",
-      "updatedAt": "2026-11-04T23:23:04Z",
+      "updatedAt": "2026-11-15T18:30:40Z",
       "mergedAt": null,
-      "closedAt": null,
+      "closedAt": "2026-11-15T18:30:40Z",
       "draft": true
     },
     {
@@ -4476,42 +4845,6 @@
       "updatedAt": "2026-10-18T16:45:33Z",
       "mergedAt": "2026-10-18T16:45:33Z",
       "closedAt": "2026-10-18T16:45:33Z",
-      "draft": false
-    },
-    {
-      "id": 5232765977,
-      "number": 40,
-      "title": "DOTS-026/027: Deploy persistent owner workspace on Render with Neon",
-      "state": "closed",
-      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/40",
-      "createdAt": "2026-11-09T23:13:57Z",
-      "updatedAt": "2026-11-09T23:15:47Z",
-      "mergedAt": "2026-11-09T23:15:47Z",
-      "closedAt": "2026-11-09T23:15:47Z",
-      "draft": false
-    },
-    {
-      "id": 5232827440,
-      "number": 41,
-      "title": "DOTS-026: Fix owner POST requests behind Render TLS proxy",
-      "state": "closed",
-      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/41",
-      "createdAt": "2026-11-09T23:19:38Z",
-      "updatedAt": "2026-11-09T23:22:05Z",
-      "mergedAt": "2026-11-09T23:22:05Z",
-      "closedAt": "2026-11-09T23:22:05Z",
-      "draft": false
-    },
-    {
-      "id": 5232893376,
-      "number": 42,
-      "title": "DOTS-026: Record live Render deployment and Neon acceptance evidence",
-      "state": "open",
-      "url": "https://github.com/Galinsky-Labs/Death-Of-The-Salesman/pull/42",
-      "createdAt": "2026-11-09T23:25:35Z",
-      "updatedAt": "2026-11-09T23:25:35Z",
-      "mergedAt": null,
-      "closedAt": null,
       "draft": false
     }
   ]

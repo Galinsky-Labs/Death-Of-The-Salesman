@@ -14,7 +14,14 @@
       "neonBranch": "production",
       "renderService": "srv-dbp58hm1egvs73b3inug",
       "publicOrigin": "https://death-of-the-salesman.onrender.com",
-      "paidResources": false
+      "paidResources": false,
+      "recoveryBranches": [
+        {
+          "neonBranch": "pre-dots-0014-backup",
+          "createdAt": "2026-11-15",
+          "reason": "Snapshot of production before migrations 0014-0023; no compute attached."
+        }
+      ]
     }
   },
   "costPolicy": {

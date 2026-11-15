@@ -1,0 +1,73 @@
+{
+ "neonProject": "muddy-mountain-84355519",
+ "migrationsApplied": [
+  "0014_governance_control_plane",
+  "0015_agent_runtime",
+  "0016_model_execution",
+  "0017_crm_lead_integrity",
+  "0018_campaign_studio",
+  "0019_unified_communications",
+  "0020_strategy_lab",
+  "0021_funding_agents",
+  "0022_revenue_operations",
+  "0023_platform_operations"
+ ],
+ "runtimeGrantFilesApplied": [
+  "database/runtime-grants-0014.sql",
+  "database/runtime-grants-0015.sql",
+  "database/runtime-grants-0016.sql",
+  "database/runtime-grants-0017.sql",
+  "database/runtime-grants-0018.sql",
+  "database/runtime-grants-0019.sql",
+  "database/runtime-grants-0020.sql",
+  "database/runtime-grants-0021.sql",
+  "database/runtime-grants-0022.sql",
+  "database/runtime-grants-0023.sql"
+ ],
+ "sourceRevision": "dd6dfe143b6cf3b447172e60bf5204548279fcbf",
+ "method": "Same per-migration transaction and ledger semantics as scripts/migrate.mjs, run with the administrative role over Neon's WebSocket protocol (the operator sandbox cannot open TCP 5432). The administrative credential was never installed on Render.",
+ "privilegeInventory": {
+  "appTables": 187,
+  "runtimeSelect": 179,
+  "rlsEnabledAndForced": 186,
+  "tenantTablesWithoutRls": 0,
+  "runtimeTruncate": 0,
+  "runtimeDeleteTables": [
+   "agent_project_assignments",
+   "campaign_audience",
+   "lead_locks",
+   "lead_rate_limits"
+  ],
+  "runtimeRoles": {
+   "dots_runtime": "NOLOGIN NOSUPERUSER NOBYPASSRLS NOCREATEROLE NOCREATEDB",
+   "dots_service": "LOGIN NOSUPERUSER NOBYPASSRLS NOCREATEROLE NOCREATEDB"
+  }
+ },
+ "loaderMethod": "Every authenticated /api/v1 GET loader (governance, runtime, models, crm, campaigns, communications, strategy, funding, revenue, platform) executed from the built @dots/operations package with the restricted dots_service login switching to SET LOCAL ROLE dots_runtime, exactly as apps/web/lib/operations.ts does; portfolio checked for anonymous rejection.",
+ "notVerified": [
+  "Owner mailbox OTP round trip",
+  "Any live provider call (model, email, payment)",
+  "HTTPS route smoke from the operator sandbox (host not reachable); see the production smoke workflow"
+ ],
+ "environment": "staging",
+ "branch": "br-blue-union-bdjoyszi (staging-acceptance-20261109)",
+ "writeChecks": "/bin/bash governed reservation,  paid reservation blocked by default cap, pause-all kill-switch drill (restores previous pause state)",
+ "results": {
+  "login": "dots_service",
+  "at": "2026-11-15T18:29:42.278Z",
+  "governance": "ok (19 keys)",
+  "runtime": "ok (8 keys)",
+  "models": "ok (13 keys)",
+  "crm": "ok (18 keys)",
+  "campaigns": "ok (16 keys)",
+  "communications": "ok (10 keys)",
+  "strategy": "ok (10 keys)",
+  "funding": "ok (25 keys)",
+  "revenue": "ok (28 keys)",
+  "platform": "ok (4 keys)",
+  "writeFreeReservation": "reserved",
+  "writePaidBlocked": "BUDGET_EXCEEDED",
+  "writePauseAllDrill": "passed",
+  "portfolioRejectsMissingToken": "PORTFOLIO_TOKEN_INVALID"
+ }
+}

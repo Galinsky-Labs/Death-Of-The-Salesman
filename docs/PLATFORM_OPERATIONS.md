@@ -23,6 +23,8 @@ once. Tokens expire within 366 days. The response contract `dots-portfolio-summa
 projects (id, label, category), campaign counts by state, open pipeline estimates (labelled *estimate, not
 cash*), provider-verified cash totals, active/total agent counts, open incident count and recent event types.
 It contains no contacts, messages, documents, credentials or owner identity. `POST` returns 405.
+Missing or malformed bearer tokens are rejected with 401 before a database connection is opened, so scanners
+cannot wake the free Neon compute; a database outage returns 503 `PORTFOLIO_UNAVAILABLE`.
 
 Counterpart changes (consuming this contract) must be tracked separately in the Boardroom and Engine Room
 repositories; nothing here mutates their data and they cannot mutate sales data.
@@ -58,6 +60,11 @@ runtime role. Promotion uses the manual **Owner-authorized deploy** workflow, wh
 3. deploys that exact commit through the Render API and waits for `live`;
 4. runs `scripts/smoke.mjs`: liveness, database readiness, exact revision, anonymous and cross-origin
    rejection, unsigned-webhook rejection and portfolio token requirement.
+
+`scripts/smoke.mjs` covers every owner route (anonymous `GET` and both forged-origin and anonymous same-origin
+`POST` must be rejected), Stripe and Resend unsigned webhooks, and portfolio token rejection. CI runs the same
+script on every PR against the production build over real HTTP (`SMOKE_EXPECT_DATABASE=false`, loopback only),
+where readiness must fail closed with 503. Against a public origin the database must always be ready.
 
 Required GitHub configuration (names only): environment `production`; secret `RENDER_API_KEY`;
 variables `RENDER_SERVICE_ID` and `PUBLIC_ORIGIN`. Until those exist, deploy with the documented Render

@@ -166,11 +166,15 @@ export class PortfolioAccess {
  * The caller supplies a client already restricted to the runtime role; tenant context comes from the token
  * prefix and is then proven by a constant-time hash comparison inside that tenant's row-level security scope.
  */
-export async function portfolioSummary(client: Client, bearer: string | null, now = new Date()) {
+/** Validates the bearer token's shape without touching the database, so malformed or anonymous requests never wake it. */
+export function portfolioBearer(bearer: string | null): { token: string; organizationId: string } {
   const token = bearer?.startsWith("Bearer ") ? bearer.slice(7).trim() : "";
   const match = token.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\.([A-Za-z0-9_-]{43})$/i);
   if (!match) return fail("PORTFOLIO_TOKEN_INVALID", 401);
-  const organizationId = match[1]!.toLowerCase();
+  return { token, organizationId: match[1]!.toLowerCase() };
+}
+export async function portfolioSummary(client: Client, bearer: string | null, now = new Date()) {
+  const { token, organizationId } = portfolioBearer(bearer);
   return withTransaction(client, async tx => {
     await tx.query("SELECT set_config('app.organization_id',$1,true)", [organizationId]);
     const record = rows(await tx.query("SELECT id,token_hash FROM app.portfolio_access_tokens WHERE organization_id=$1 AND token_hash=$2 AND revoked_at IS NULL AND expires_at > $3::timestamptz", [organizationId, sha256(token), now.toISOString()]))[0];

@@ -20,8 +20,14 @@ code with the $0 cap and outbound channels off; it is **not** production accepta
 - Retired Groq/Qwen variables (`GROQ_ENABLED`, `GROQ_MODEL`, `GROQ_MAX_OUTPUT_TOKENS`) were removed from Render:
   PR #47 removed the Groq adapter and Qwen is a prohibited model lineage. The only free model route is Google Gemma
   through OpenRouter, which stays inert until the owner adds `OPENROUTER_API_KEY`.
-- HTTPS smoke (`scripts/smoke.mjs`) cannot reach `*.onrender.com` from the operator sandbox; run the
-  **Production smoke** GitHub workflow (read-only, no secrets) for HTTPS evidence.
+- Follow-up deploy `dep-dbt03btckfvc73cd1740` of `6b2261814d371d203307367fa81ff17b1dccad5f` (PR #50, portfolio
+  token pre-check) became `live` at `2026-11-15T19:03:28Z`. No schema change.
+- HTTPS smoke: the **Production smoke** workflow
+  ([run 43750246714](https://github.com/Galinsky-Labs/Death-Of-The-Salesman/actions/runs/43750246714), 2026-11-15T19:04:31Z)
+  passed all 45 checks against https://death-of-the-salesman.onrender.com: liveness, readiness with
+  `database: connected`, exact revision `6b22618…`, anonymous and forged-origin rejection on every owner route,
+  unsigned Stripe/Resend webhook rejection, and portfolio token rejection. The operator sandbox cannot reach
+  `*.onrender.com` directly, so this workflow is the HTTPS evidence path.
 
 ## Still pending (owner accounts required)
 

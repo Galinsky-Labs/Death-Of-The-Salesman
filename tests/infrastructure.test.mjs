@@ -26,6 +26,8 @@ test('deploy workflow is manual, environment-gated, pinned to a CI-verified SHA 
 test('operational scripts fail closed without explicit targets and refuse unsafe restore or scale targets',async()=>{
  const {spawnSync}=await import('node:child_process');const run=(script,env)=>spawnSync(process.execPath,[`scripts/${script}`],{env:{PATH:process.env.PATH,...env},encoding:'utf8',cwd:new URL('..',import.meta.url).pathname});
  for(const script of ['backup.mjs','restore-drill.mjs','render-deploy.mjs','smoke.mjs'])assert.notEqual(run(script,{}).status,0,script);
+ assert.match(run('smoke.mjs',{PUBLIC_ORIGIN:'http://example.com'}).stderr,/https origin/,'plain http is only allowed on loopback');
+ assert.match(run('smoke.mjs',{PUBLIC_ORIGIN:'https://death-of-the-salesman.onrender.com',SMOKE_EXPECT_DATABASE:'false'}).stderr,/only allowed against a loopback/,'a public origin must always prove database readiness');
  assert.match(run('scale-identities.mjs',{SCALE_DATABASE_URL:'postgresql://user@prod.neon.tech/db'}).stderr,/local disposable/);
  assert.match(run('provision-tenant.mjs',{}).stderr,/COMMERCIAL_ONBOARDING_NOT_AUTHORIZED|ADMIN_DATABASE_URL/);
 });

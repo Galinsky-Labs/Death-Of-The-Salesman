@@ -52,6 +52,31 @@ jobs:
           grep --fixed-strings '"status":"ok"' /tmp/web-health.json
           grep --fixed-strings '"status":"ok"' /tmp/api-health.json
           pnpm start:worker
+      - name: Route boundary smoke against the production build
+        # Runs scripts/smoke.mjs over real HTTP against `next start` in production mode (no database,
+        # unreachable auth upstream): every owner route must reject anonymous and forged-origin
+        # requests, webhooks must require signatures, portfolio must reject tokens without waking the
+        # database, and readiness must fail closed.
+        shell: bash
+        env:
+          APP_ENV: production
+          APP_ORIGIN: http://127.0.0.1:3100
+          NEON_AUTH_BASE_URL: http://127.0.0.1:9/neondb/auth
+          OWNER_EMAIL: owner@example.invalid
+          NEXT_TELEMETRY_DISABLED: "1"
+          PUBLIC_ORIGIN: http://127.0.0.1:3100
+          SMOKE_EXPECT_DATABASE: "false"
+        run: |
+          set -euo pipefail
+          NEON_AUTH_COOKIE_SECRET="$(openssl rand -hex 24)" node apps/web/node_modules/next/dist/bin/next start apps/web --hostname 127.0.0.1 --port 3100 > /tmp/dots-routes.log 2>&1 &
+          route_pid=$!
+          trap 'kill "$route_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            curl --fail --silent http://127.0.0.1:3100/api/health > /dev/null && break
+            if [ "$attempt" = 30 ]; then cat /tmp/dots-routes.log; exit 1; fi
+            sleep 1
+          done
+          node scripts/smoke.mjs
 
   database:
     runs-on: ubuntu-latest

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
-import {operationalHealth,IncidentLog,runKillSwitchDrill,PortfolioAccess,portfolioSummary,provisionTenant,assertAllowedOutbound,OUTBOUND_HOST_ALLOWLIST,admissionDecision,SalesWorkspace,tenant} from '../packages/operations/dist/index.js';
+import {operationalHealth,IncidentLog,runKillSwitchDrill,PortfolioAccess,portfolioSummary,portfolioBearer,provisionTenant,assertAllowedOutbound,OUTBOUND_HOST_ALLOWLIST,admissionDecision,SalesWorkspace,tenant} from '../packages/operations/dist/index.js';
 import {setup,org,owner,agent,project,ctx} from './helpers/operations-fixture.mjs';
 
 test('operational health derives every alert from persisted rows and reports none it cannot evidence',async()=>{const {db,client,control}=await setup();try{
@@ -91,3 +91,16 @@ test('read-path indexes exist for roster, CRM, timeline, campaign and metrics qu
  const names=(await db.query("SELECT indexname FROM pg_indexes WHERE schemaname='app'")).rows.map(r=>r.indexname);
  for(const index of ['crm_contacts_recent','contact_events_timeline','messages_thread','task_queue_agent_state','agent_runs_task','money_entries_kind','agent_identities_name','approvals_pending'])assert.ok(names.includes(index),index);
 }finally{await db.close();}});
+
+test('DOTS-159 malformed or missing portfolio tokens are rejected before any database query',async()=>{
+ const untouched={query:async()=>{throw new Error('database must not be queried');}};
+ const valid=`Bearer ${org}.${'A'.repeat(43)}`;
+ assert.deepEqual(portfolioBearer(valid),{token:`${org}.${'A'.repeat(43)}`,organizationId:org});
+ assert.equal(portfolioBearer(valid.toUpperCase().replace('BEARER','Bearer')).organizationId,org,'organization id is normalized to lower case');
+ for(const bearer of [null,'',`Basic ${org}.${'A'.repeat(43)}`,'Bearer not-a-token',`Bearer ${org}.${'A'.repeat(42)}`,`Bearer ${org}.${'A'.repeat(43)}x`,`Bearer ${org}.${'A'.repeat(40)}+/=`]){
+  assert.throws(()=>portfolioBearer(bearer),error=>error.code==='PORTFOLIO_TOKEN_INVALID'&&error.status===401,String(bearer));
+  await assert.rejects(portfolioSummary(untouched,bearer),error=>error.code==='PORTFOLIO_TOKEN_INVALID',String(bearer));
+ }
+ const route=await readFile(new URL('../apps/web/app/api/v1/portfolio/route.ts',import.meta.url),'utf8');
+ assert.ok(route.indexOf('portfolioBearer(authorization)')<route.indexOf('database().connect()'),'token shape is checked before a connection is opened');
+});

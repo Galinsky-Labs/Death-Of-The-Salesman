@@ -1,0 +1,35 @@
+name: Production smoke
+
+# DOTS-152/153: read-only HTTPS smoke of an already deployed revision. Uses no secrets, sends no
+# messages, and never deploys. Verifies liveness, database readiness, the exact live revision,
+# anonymous and cross-origin rejection, unsigned-webhook rejection and the portfolio token requirement.
+on:
+  workflow_dispatch:
+    inputs:
+      origin:
+        description: Public HTTPS origin to check
+        required: true
+        default: https://death-of-the-salesman.onrender.com
+        type: string
+      expected_revision:
+        description: Optional full 40-character SHA the service must report
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+      - name: Run read-only smoke checks
+        env:
+          PUBLIC_ORIGIN: ${{ inputs.origin }}
+          EXPECTED_REVISION: ${{ inputs.expected_revision }}
+        run: node scripts/smoke.mjs

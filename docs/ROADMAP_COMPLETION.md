@@ -34,16 +34,23 @@ on PostgreSQL 16; every `database/runtime-grants*.sql` file applied cleanly to a
 - Legacy shortcuts were closed: deals cannot be dragged to *won* without verified evidence; funding
   submissions, commitments, awards and receipts must use the evidence-gated Funding workflow.
 
-## Deployment steps still required (owner/operator)
+## Deployment steps (operator)
 
-1. Apply migrations 0014–0023 to the staging branch, then `database/runtime-grants-0014.sql` … `-0023.sql`
-   with the administrative role; run acceptance; repeat on production. These are additive.
-2. Add `CREDENTIAL_ENCRYPTION_KEY` (32 random bytes, base64) to Render before storing provider credentials.
-3. Deploy the merged `main` revision and run `scripts/smoke.mjs` with `EXPECTED_REVISION`.
-4. Optional: configure the GitHub `production` environment (`RENDER_API_KEY`, `RENDER_SERVICE_ID`,
-   `PUBLIC_ORIGIN`) to use the owner-authorized deploy workflow.
+Done on 2026-11-15 (see [live release status](LIVE_RELEASE_STATUS.md)):
+
+1. ~~Apply migrations 0014–0023 to staging, then the matching runtime grants; run acceptance; repeat on production.~~
+   Done after creating the `pre-dots-0014-backup` Neon branch.
+2. ~~Add `CREDENTIAL_ENCRYPTION_KEY` to Render.~~ Done (hex form, accepted by `credentialKey`).
+3. ~~Deploy the merged `main` revision.~~ Done; `live` with the `/api/health` check. HTTPS smoke runs through the
+   **Production smoke** workflow because the operator sandbox cannot reach `*.onrender.com`.
+
+Still optional: configure the GitHub `production` environment (`RENDER_API_KEY`, `RENDER_SERVICE_ID`,
+`PUBLIC_ORIGIN`) to use the owner-authorized deploy workflow.
 
 ## External prerequisites (unchanged $0 default until provided)
+
+- Optional free model: `OPENROUTER_API_KEY` from a free OpenRouter account (Google Gemma, zero max price).
+  Public/non-personal prompts only. Without it the free model route reports key-required.
 
 - Model providers: funded OpenAI/Anthropic/xAI accounts, scoped keys, preapproved caps (DOTS-069).
 - Email: owner sending domain with SPF/DKIM/DMARC, Resend account, postal address, 1–5 test inboxes,

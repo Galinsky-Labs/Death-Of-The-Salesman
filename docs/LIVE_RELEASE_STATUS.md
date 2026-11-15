@@ -1,4 +1,34 @@
-# Live release status — 2026-11-09 (Eastern)
+# Live release status — 2026-11-15
+
+The full source roadmap (merged PR #48, `dd6dfe143b6cf3b447172e60bf5204548279fcbf`) is deployed at
+https://death-of-the-salesman.onrender.com. Owner authorization for this production rollout,
+including migrations 0014–0023, was given on 2026-11-15. This is a deployment of source-complete
+code with the $0 cap and outbound channels off; it is **not** production acceptance of DOTS-152–154/160.
+
+- Deploy `dep-dbsvketg1s2s738bget0` became `live` at `2026-11-15T18:31:45Z` (Render health check
+  `/api/health` passed; Next.js 16.4.2 started in 1.6 s). Service `srv-dbp58hm1egvs73b3inug`, free, Ohio, auto-deploy off.
+- Before migrating, Neon backup branch `pre-dots-0014-backup` (`br-hidden-firefly-bd46qouu`) was created from
+  production. It has no compute attached. Restore by resetting/repointing to it only if a migration regression is found.
+- Migrations 0014–0023 and `database/runtime-grants-0014.sql` … `-0023.sql` were applied first to the staging branch
+  and accepted, then to production. Both branches now record 23 migrations.
+  [Staging evidence](evidence/dots-0014-0023-staging-acceptance.json) ·
+  [Production evidence](evidence/dots-0014-0023-production-acceptance.json).
+- Acceptance ran every authenticated `/api/v1` loader with the restricted `dots_service` → `dots_runtime` login.
+  Staging additionally proved a $0 governed reservation, the default cap blocking a 1¢ paid reservation, and the
+  pause-all drill. Production checks were read-only.
+- `CREDENTIAL_ENCRYPTION_KEY` (32 random bytes, hex) is now set privately on Render; the value is not recorded anywhere.
+- Retired Groq/Qwen variables (`GROQ_ENABLED`, `GROQ_MODEL`, `GROQ_MAX_OUTPUT_TOKENS`) were removed from Render:
+  PR #47 removed the Groq adapter and Qwen is a prohibited model lineage. The only free model route is Google Gemma
+  through OpenRouter, which stays inert until the owner adds `OPENROUTER_API_KEY`.
+- HTTPS smoke (`scripts/smoke.mjs`) cannot reach `*.onrender.com` from the operator sandbox; run the
+  **Production smoke** GitHub workflow (read-only, no secrets) for HTTPS evidence.
+
+## Still pending (owner accounts required)
+
+DOTS-069 live model smoke, DOTS-109 mailbox canary, DOTS-144 live payment, and the DOTS-152–154/160 live
+acceptance gates. See [roadmap completion](ROADMAP_COMPLETION.md) for exact prerequisites.
+
+# Previous release status — 2026-11-09 (Eastern)
 
 The operations release is live at https://death-of-the-salesman.onrender.com in the
 Galinsky Labs Render workspace, connected to the production Neon database.
@@ -61,7 +91,7 @@ and unsubscribe signing key are configured; key values are never included in evi
 
 ## Free integrations
 
-PR #45 adds pinned Qwen3.8 27B on a confirmed Groq Free account, optional Gemma 4 31B
+PR #45 added pinned Qwen3.8 27B on a confirmed Groq Free account (removed by PR #47: prohibited lineage), optional Gemma 4 31B
 through OpenRouter with zero maximum prices and a pinned host, and Resend Free dispatch
 with organization ceilings of 100/day and 3,000/month. Free paths preserve the $0 funded
 cap. Paid fallback is disabled; exhaustion stops work instead of upgrading it. Free model
